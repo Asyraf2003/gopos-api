@@ -1,0 +1,17 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+.bin/
+
+# Secrets
+.env
+
+# Dependencies
+vendor/
+
+# OS files
+.DS_Store
