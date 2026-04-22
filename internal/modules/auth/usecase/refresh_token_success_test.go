@@ -9,34 +9,6 @@ import (
 	"pos-go/internal/modules/auth/ports"
 )
 
-type fakeRefreshSessionRepository struct {
-	session          ports.RefreshSession
-	findErr          error
-	rotateErr        error
-	findCalls        int
-	rotateCalls      int
-	lastLookupHash   string
-	lastSessionID    string
-	lastNewHash      string
-	lastNewExpiresAt time.Time
-}
-
-func (f *fakeRefreshSessionRepository) FindActiveByRefreshTokenHash(ctx context.Context, refreshTokenHash string) (ports.RefreshSession, error) {
-	_ = ctx
-	f.findCalls++
-	f.lastLookupHash = refreshTokenHash
-	return f.session, f.findErr
-}
-
-func (f *fakeRefreshSessionRepository) RotateRefreshToken(ctx context.Context, sessionID string, newRefreshTokenHash string, newExpiresAt time.Time) error {
-	_ = ctx
-	f.rotateCalls++
-	f.lastSessionID = sessionID
-	f.lastNewHash = newRefreshTokenHash
-	f.lastNewExpiresAt = newExpiresAt
-	return f.rotateErr
-}
-
 func TestRefreshToken_Success(t *testing.T) {
 	repo := &fakeRefreshSessionRepository{
 		session: ports.RefreshSession{
@@ -108,33 +80,5 @@ func TestRefreshToken_Success(t *testing.T) {
 	}
 	if tokenIssuer.lastReq.TrustLevel != "aal1" {
 		t.Fatalf("token issuer trust level = %q", tokenIssuer.lastReq.TrustLevel)
-	}
-}
-
-func TestRefreshToken_RejectsEmptyRefreshToken(t *testing.T) {
-	usecase := NewRefreshToken(&fakeRefreshSessionRepository{}, &fakeTokenIssuer{}, 24*time.Hour)
-
-	_, err := usecase.Execute(context.Background(), RefreshTokenInput{})
-	if err == nil {
-		t.Fatal("Execute() error = nil, want error")
-	}
-}
-
-func TestRefreshToken_RejectsExpiredRefreshToken(t *testing.T) {
-	repo := &fakeRefreshSessionRepository{
-		session: ports.RefreshSession{
-			SessionID: "sess-123",
-			AccountID: "acc-123",
-			ExpiresAt: time.Now().Add(-1 * time.Minute),
-		},
-	}
-
-	usecase := NewRefreshToken(repo, &fakeTokenIssuer{}, 24*time.Hour)
-
-	_, err := usecase.Execute(context.Background(), RefreshTokenInput{
-		RefreshToken: "old-refresh-token",
-	})
-	if err == nil {
-		t.Fatal("Execute() error = nil, want error")
 	}
 }

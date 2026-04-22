@@ -4,35 +4,19 @@ import (
 	"context"
 	"testing"
 	"time"
-
-	"pos-go/internal/modules/auth/ports"
 )
 
 func TestVerifierVerifyAccessToken_Success(t *testing.T) {
-	issuer, err := NewHMACIssuer(
-		"pos-go",
-		"pos-go-client",
-		"local-dev-key",
-		"test-secret-123",
+	token := mustIssueTestAccessToken(
+		t,
 		15*time.Minute,
+		"test-secret-123",
+		"356ef0e8-ea0a-4416-82b6-da91840815d0",
+		"fce0c7d0-903f-4bdf-82c8-393d1c292b48",
+		"aal1",
 	)
-	if err != nil {
-		t.Fatalf("NewHMACIssuer() error = %v", err)
-	}
 
-	token, _, err := issuer.IssueAccessToken(context.Background(), ports.AccessTokenRequest{
-		AccountID:  "356ef0e8-ea0a-4416-82b6-da91840815d0",
-		SessionID:  "fce0c7d0-903f-4bdf-82c8-393d1c292b48",
-		TrustLevel: "aal1",
-	})
-	if err != nil {
-		t.Fatalf("IssueAccessToken() error = %v", err)
-	}
-
-	verifier, err := NewHMACVerifier("pos-go", "pos-go-client", "test-secret-123")
-	if err != nil {
-		t.Fatalf("NewHMACVerifier() error = %v", err)
-	}
+	verifier := mustNewTestVerifier(t, "test-secret-123")
 
 	claims, err := verifier.VerifyAccessToken(context.Background(), token)
 	if err != nil {
@@ -51,67 +35,39 @@ func TestVerifierVerifyAccessToken_Success(t *testing.T) {
 }
 
 func TestVerifierVerifyAccessToken_RejectsWrongSecret(t *testing.T) {
-	issuer, err := NewHMACIssuer(
-		"pos-go",
-		"pos-go-client",
-		"local-dev-key",
-		"test-secret-123",
+	token := mustIssueTestAccessToken(
+		t,
 		15*time.Minute,
+		"test-secret-123",
+		"acc-1",
+		"sess-1",
+		"aal1",
 	)
-	if err != nil {
-		t.Fatalf("NewHMACIssuer() error = %v", err)
-	}
 
-	token, _, err := issuer.IssueAccessToken(context.Background(), ports.AccessTokenRequest{
-		AccountID:  "acc-1",
-		SessionID:  "sess-1",
-		TrustLevel: "aal1",
-	})
-	if err != nil {
-		t.Fatalf("IssueAccessToken() error = %v", err)
-	}
+	verifier := mustNewTestVerifier(t, "wrong-secret")
 
-	verifier, err := NewHMACVerifier("pos-go", "pos-go-client", "wrong-secret")
-	if err != nil {
-		t.Fatalf("NewHMACVerifier() error = %v", err)
-	}
-
-	_, err = verifier.VerifyAccessToken(context.Background(), token)
+	_, err := verifier.VerifyAccessToken(context.Background(), token)
 	if err == nil {
 		t.Fatal("VerifyAccessToken() error = nil, want error")
 	}
 }
 
 func TestVerifierVerifyAccessToken_RejectsExpiredToken(t *testing.T) {
-	issuer, err := NewHMACIssuer(
-		"pos-go",
-		"pos-go-client",
-		"local-dev-key",
-		"test-secret-123",
+	token := mustIssueTestAccessToken(
+		t,
 		1*time.Minute,
+		"test-secret-123",
+		"acc-1",
+		"sess-1",
+		"aal1",
 	)
-	if err != nil {
-		t.Fatalf("NewHMACIssuer() error = %v", err)
-	}
 
-	token, _, err := issuer.IssueAccessToken(context.Background(), ports.AccessTokenRequest{
-		AccountID:  "acc-1",
-		SessionID:  "sess-1",
-		TrustLevel: "aal1",
-	})
-	if err != nil {
-		t.Fatalf("IssueAccessToken() error = %v", err)
-	}
-
-	verifier, err := NewHMACVerifier("pos-go", "pos-go-client", "test-secret-123")
-	if err != nil {
-		t.Fatalf("NewHMACVerifier() error = %v", err)
-	}
+	verifier := mustNewTestVerifier(t, "test-secret-123")
 	verifier.nowFn = func() time.Time {
 		return time.Now().Add(2 * time.Minute)
 	}
 
-	_, err = verifier.VerifyAccessToken(context.Background(), token)
+	_, err := verifier.VerifyAccessToken(context.Background(), token)
 	if err == nil {
 		t.Fatal("VerifyAccessToken() error = nil, want error")
 	}
