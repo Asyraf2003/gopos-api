@@ -1,7 +1,7 @@
 # Capability Control Foundation Blueprint
 
 ## FACT
-- `docs/` is the canonical rulebook and standards package, not the active product implementation blueprint.
+- `docs/` is the canonical documentation root; standards live beside active product blueprints, ADRs, evidence, handoffs, and archive.
 - Active implementation blueprints live in `docs/blueprints/`.
 - Current repo stack is Go, Echo, PostgreSQL, and hexagonal ports/adapters.
 - Current runtime already has auth, JWT verification, DB-backed principal resolution, roles, permissions, refresh/logout, `/api/me`, `/api/authz/me`, and admin account-role routes.

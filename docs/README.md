@@ -2,7 +2,7 @@
 
 ## What This Is
 
-`docs/` is the working rules package for the future Go Echo API + PostgreSQL project.
+`docs/` is the single documentation root for the Go Echo API + PostgreSQL project.
 
 This folder is the first place to read before planning, coding, reviewing, or asking an AI assistant to work in the Go API repository.
 
@@ -17,7 +17,7 @@ It explains:
 
 ## Why This Exists
 
-The Go API project must be cleaner than the current Laravel transition docs.
+The Go API project must stay cleaner than the legacy transition docs.
 
 The goal is not only clean code. The goal is clean work:
 
@@ -51,17 +51,20 @@ Read in this order:
 5. `core/0010_scope_and_facts.md`
 6. `core/0011_blueprint_first.md`
 7. `architecture/0020_hexagonal_go_api.md`
-8. `architecture/0022_api_capability_control.md`
-9. `domain/0030_domain_contracts.md`
-10. `db/0040_postgresql_policy.md`
-11. `api/0050_echo_http_contract.md`
-12. `testing/0060_test_and_quality_gates.md`
-13. `workflow/0070_docs_go_workflow.md`
-14. `workflow/0071_handoff_protocol.md`
-15. `security/0080_security_baseline.md`
-16. `scripts/0090_makefile_and_scripts.md`
-17. `style/0100_go_style.md`
-18. `templates/0110_domain_scope_packet.md`
+8. `architecture/0021_package_boundaries.md`
+9. `architecture/0022_api_capability_control.md`
+10. `architecture/0023_public_contracts.md`
+11. `architecture/0024_current_repo_layout.md`
+12. `domain/0030_domain_contracts.md`
+13. `db/0040_postgresql_policy.md`
+14. `api/0050_echo_http_contract.md`
+15. `testing/0060_test_and_quality_gates.md`
+16. `workflow/0070_docs_go_workflow.md`
+17. `workflow/0071_handoff_protocol.md`
+18. `security/0080_security_baseline.md`
+19. `scripts/0090_makefile_and_scripts.md`
+20. `style/0100_go_style.md`
+21. `templates/0110_domain_scope_packet.md`
 
 `README.md` is the human entry point.
 
@@ -89,6 +92,11 @@ docs/
   scripts/
   style/
   templates/
+  adr/
+  blueprints/
+  evidence/
+  handoffs/
+  archive/
 ```
 
 ## Core Rule Summary

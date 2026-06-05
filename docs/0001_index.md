@@ -4,7 +4,7 @@
 
 This document is the mandatory entry point for AI work in the future Go Echo API workspace.
 
-`docs/` is intentionally separate from the current Laravel docs. It is a clean rule package for a pure Go API + PostgreSQL project.
+`docs/` is the canonical documentation root. It combines active project documentation with the clean rules package for a pure Go API + PostgreSQL project.
 
 ## Purpose
 
@@ -33,16 +33,17 @@ It prevents:
 8. `architecture/0021_package_boundaries.md`
 9. `architecture/0022_api_capability_control.md`
 10. `architecture/0023_public_contracts.md`
-11. `domain/0030_domain_contracts.md`
-12. `db/0040_postgresql_policy.md`
-13. `api/0050_echo_http_contract.md`
-14. `testing/0060_test_and_quality_gates.md`
-15. `workflow/0070_docs_go_workflow.md`
-16. `workflow/0071_handoff_protocol.md`
-17. `security/0080_security_baseline.md`
-18. `scripts/0090_makefile_and_scripts.md`
-19. `style/0100_go_style.md`
-20. `templates/0110_domain_scope_packet.md`
+11. `architecture/0024_current_repo_layout.md`
+12. `domain/0030_domain_contracts.md`
+13. `db/0040_postgresql_policy.md`
+14. `api/0050_echo_http_contract.md`
+15. `testing/0060_test_and_quality_gates.md`
+16. `workflow/0070_docs_go_workflow.md`
+17. `workflow/0071_handoff_protocol.md`
+18. `security/0080_security_baseline.md`
+19. `scripts/0090_makefile_and_scripts.md`
+20. `style/0100_go_style.md`
+21. `templates/0110_domain_scope_packet.md`
 
 ## Constitution Summary
 
@@ -71,6 +72,7 @@ It prevents:
 - `scripts/`: Makefile and command contracts for repeatable proof.
 - `style/`: Go writing style and forbidden patterns.
 - `templates/`: copyable work packet and handoff templates.
+- `adr/`, `blueprints/`, `evidence/`, `handoffs/`, `archive/`: active project decisions, plans, proof, continuation notes, and historical material.
 
 ## Non-Negotiable Behavior
 
