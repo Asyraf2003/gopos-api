@@ -20,7 +20,7 @@ internal/modules/
 migrations/
 tests/
 scripts/
-docsgo/
+docs/
 ```
 
 The exact folder names may change by owner decision, but the dependency direction may not.

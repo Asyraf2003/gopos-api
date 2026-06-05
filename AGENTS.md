@@ -1,14 +1,14 @@
 # AGENTS.md
 
-This repository uses `docsgo/` as the canonical AI and engineering rules package.
+This repository uses `docs/` as the canonical AI and engineering rules package.
 
 Before planning, editing, implementing, reviewing, or proposing commands, read:
 
-1. `docsgo/README.md`
-2. `docsgo/AGENTS.md`
-3. `docsgo/0001_index.md`
-4. `docsgo/0002_decision_policy.md`
-5. `docsgo/0003_session_start_protocol.md`
+1. `docs/README.md`
+2. `docs/AGENTS.md`
+3. `docs/0001_index.md`
+4. `docs/0002_decision_policy.md`
+5. `docs/0003_session_start_protocol.md`
 
 Then read the active blueprint in `docs/blueprints/`.
 

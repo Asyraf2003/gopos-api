@@ -1,8 +1,8 @@
-# docsgo
+# docs
 
 ## What This Is
 
-`docsgo/` is the working rules package for the future Go Echo API + PostgreSQL project.
+`docs/` is the working rules package for the future Go Echo API + PostgreSQL project.
 
 This folder is the first place to read before planning, coding, reviewing, or asking an AI assistant to work in the Go API repository.
 
@@ -72,7 +72,7 @@ Read in this order:
 ## Folder Map
 
 ```text
-docsgo/
+docs/
   README.md
   AGENTS.md
   0001_index.md
@@ -167,7 +167,7 @@ Every database-backed domain must declare create, update, delete, show, and list
 
 Documents must not overlap roles.
 
-- Standards live in `docsgo/`.
+- Standards live in `docs/`.
 - Blueprints describe planned work.
 - ADRs record accepted decisions.
 - Handoffs continue sessions.

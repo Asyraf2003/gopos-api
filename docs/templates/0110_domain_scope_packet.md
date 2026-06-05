@@ -38,15 +38,15 @@ REPLACE_WITH_FILES
 
 ## Required Rules To Read
 
-- `docsgo/README.md`
-- `docsgo/AGENTS.md`
-- `docsgo/0002_decision_policy.md`
-- `docsgo/architecture/0020_hexagonal_go_api.md`
-- `docsgo/architecture/0022_api_capability_control.md`
-- `docsgo/domain/0030_domain_contracts.md`
-- `docsgo/api/0050_echo_http_contract.md`
-- `docsgo/testing/0060_test_and_quality_gates.md`
-- `docsgo/workflow/0071_handoff_protocol.md`
+- `docs/README.md`
+- `docs/AGENTS.md`
+- `docs/0002_decision_policy.md`
+- `docs/architecture/0020_hexagonal_go_api.md`
+- `docs/architecture/0022_api_capability_control.md`
+- `docs/domain/0030_domain_contracts.md`
+- `docs/api/0050_echo_http_contract.md`
+- `docs/testing/0060_test_and_quality_gates.md`
+- `docs/workflow/0071_handoff_protocol.md`
 
 ## Domain Contract
 

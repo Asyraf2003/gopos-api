@@ -4,7 +4,7 @@
 
 This document is the mandatory entry point for AI work in the future Go Echo API workspace.
 
-`docsgo/` is intentionally separate from the current Laravel docs. It is a clean rule package for a pure Go API + PostgreSQL project.
+`docs/` is intentionally separate from the current Laravel docs. It is a clean rule package for a pure Go API + PostgreSQL project.
 
 ## Purpose
 

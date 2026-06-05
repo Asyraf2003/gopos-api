@@ -6,8 +6,8 @@ Every session must start with scope control before coding, planning, or commands
 
 ## Mandatory Opening Flow
 
-1. Read `docsgo/0001_index.md`.
-2. Read `docsgo/0002_decision_policy.md`.
+1. Read `docs/0001_index.md`.
+2. Read `docs/0002_decision_policy.md`.
 3. Identify the active scope from the latest user prompt.
 4. Identify named files, commands, branches, blueprints, ADRs, handoffs, APIs, domains, or tables.
 5. Classify those references as ACTIVE, CONSTRAINT, REFERENCE, or DEFERRED.

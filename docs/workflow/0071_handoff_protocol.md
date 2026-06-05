@@ -41,8 +41,8 @@ The packet must say:
 
 The receiving AI must:
 
-- read `docsgo/README.md`;
-- read `docsgo/AGENTS.md`;
+- read `docs/README.md`;
+- read `docs/AGENTS.md`;
 - read the scope packet;
 - stay inside active scope;
 - mark GAP instead of guessing missing files;

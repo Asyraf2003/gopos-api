@@ -2,7 +2,7 @@
 
 ## Status
 
-This document is the conflict protocol for all `docsgo/` rules.
+This document is the conflict protocol for all `docs/` rules.
 
 ## Rule Hierarchy
 

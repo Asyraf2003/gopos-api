@@ -6,7 +6,7 @@ Keep documentation clean and prevent handoff, blueprint, ADR, archive, and stand
 
 ## Document Classes
 
-- `docsgo/`: canonical AI and engineering rules.
+- `docs/`: canonical AI and engineering rules.
 - `docs/blueprints/`: active implementation plans.
 - `docs/adr/`: accepted decisions that change architecture or contract.
 - `docs/handoffs/`: session-to-session continuation notes.

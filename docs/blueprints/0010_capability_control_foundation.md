@@ -1,13 +1,13 @@
 # Capability Control Foundation Blueprint
 
 ## FACT
-- `docsgo/` is the canonical rulebook and standards package, not the active product implementation blueprint.
+- `docs/` is the canonical rulebook and standards package, not the active product implementation blueprint.
 - Active implementation blueprints live in `docs/blueprints/`.
 - Current repo stack is Go, Echo, PostgreSQL, and hexagonal ports/adapters.
 - Current runtime already has auth, JWT verification, DB-backed principal resolution, roles, permissions, refresh/logout, `/api/me`, `/api/authz/me`, and admin account-role routes.
 - Current authorization uses stable permission keys resolved from PostgreSQL.
 - Accepted ADRs already define roles, permissions, request principal, admin authz minimum, and centralized API output direction.
-- `docsgo/architecture/0022_api_capability_control.md` requires protected API operations to have capability metadata and a runtime capability check before request validation and use case execution.
+- `docs/architecture/0022_api_capability_control.md` requires protected API operations to have capability metadata and a runtime capability check before request validation and use case execution.
 
 ## GAP
 - There is no first-class capability registry, storage, middleware, or admin control surface yet.
@@ -154,7 +154,7 @@ disabled_reason
 - Middleware tests proving disabled capability returns `403` before handler/usecase execution.
 - Repository/integration tests for PostgreSQL capability state when `DATABASE_URL` is available.
 - `go test ./...` remains mandatory for Go changes.
-- Add or extend script proof later for route-to-capability coverage, aligned with `docsgo/scripts/0090_makefile_and_scripts.md`.
+- Add or extend script proof later for route-to-capability coverage, aligned with `docs/scripts/0090_makefile_and_scripts.md`.
 - Full local proof target should remain `make audit-all` or future `make verify` when available.
 
 ## STEP ORDER

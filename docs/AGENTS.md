@@ -2,31 +2,31 @@
 
 ## Repository instruction source
 
-This Go API workspace uses `docsgo/` as the canonical AI_RULES package.
+This Go API workspace uses `docs/` as the canonical AI_RULES package.
 
 Before giving technical guidance, planning implementation, editing files, or proposing commands, read and follow:
 
-1. `docsgo/0001_index.md`
-2. `docsgo/0002_decision_policy.md`
-3. `docsgo/0003_session_start_protocol.md`
-4. `docsgo/core/0010_scope_and_facts.md`
-5. `docsgo/core/0011_blueprint_first.md`
-6. `docsgo/core/0012_step_by_step_execution.md`
-7. `docsgo/core/0013_proof_and_progress.md`
-8. `docsgo/architecture/0020_hexagonal_go_api.md`
-9. `docsgo/architecture/0021_package_boundaries.md`
-10. `docsgo/architecture/0022_api_capability_control.md`
-11. `docsgo/architecture/0023_public_contracts.md`
-12. `docsgo/domain/0030_domain_contracts.md`
-13. `docsgo/db/0040_postgresql_policy.md`
-14. `docsgo/api/0050_echo_http_contract.md`
-15. `docsgo/testing/0060_test_and_quality_gates.md`
-16. `docsgo/workflow/0070_docs_go_workflow.md`
-17. `docsgo/workflow/0071_handoff_protocol.md`
-18. `docsgo/security/0080_security_baseline.md`
-19. `docsgo/scripts/0090_makefile_and_scripts.md`
-20. `docsgo/style/0100_go_style.md`
-21. `docsgo/templates/0110_domain_scope_packet.md`
+1. `docs/0001_index.md`
+2. `docs/0002_decision_policy.md`
+3. `docs/0003_session_start_protocol.md`
+4. `docs/core/0010_scope_and_facts.md`
+5. `docs/core/0011_blueprint_first.md`
+6. `docs/core/0012_step_by_step_execution.md`
+7. `docs/core/0013_proof_and_progress.md`
+8. `docs/architecture/0020_hexagonal_go_api.md`
+9. `docs/architecture/0021_package_boundaries.md`
+10. `docs/architecture/0022_api_capability_control.md`
+11. `docs/architecture/0023_public_contracts.md`
+12. `docs/domain/0030_domain_contracts.md`
+13. `docs/db/0040_postgresql_policy.md`
+14. `docs/api/0050_echo_http_contract.md`
+15. `docs/testing/0060_test_and_quality_gates.md`
+16. `docs/workflow/0070_docs_go_workflow.md`
+17. `docs/workflow/0071_handoff_protocol.md`
+18. `docs/security/0080_security_baseline.md`
+19. `docs/scripts/0090_makefile_and_scripts.md`
+20. `docs/style/0100_go_style.md`
+21. `docs/templates/0110_domain_scope_packet.md`
 
 If the user names a blueprint, ADR, handoff, error log, branch, commit, command output, API, domain, table, or module, that reference defines the active scope until the user changes it.
 
