@@ -88,7 +88,7 @@ for d in "${required_readme_dirs[@]}"; do
 done
 
 while IFS= read -r d; do
-  check_file "$d/README.md"
+  check_file "${d%/}/README.md"
 done < <(fd . docs -t d)
 
 echo
