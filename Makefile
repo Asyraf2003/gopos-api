@@ -3,17 +3,24 @@ SHELL := /usr/bin/env bash
 APP_BIN := .bin/pos-go-api
 HTTP_PORT ?= 8081
 
-.PHONY: help test audit-ai-rules audit-file-size security-gosec audit-all screening build run auth-start db-migrate db-status db-adopt-existing git-status push
+.PHONY: help fmt test vet audit-format audit-ai-rules audit-file-size audit-hex security-gosec audit-all screening check verify ci build run auth-start db-migrate db-status db-adopt-existing git-status push
 
 help:
 	@printf '%s\n' \
 	'Available targets:' \
+	'  make fmt               - run gofmt on all Go files' \
 	'  make test              - run go test ./...' \
+	'  make vet               - run go vet ./...' \
+	'  make audit-format      - check gofmt cleanliness' \
 	'  make audit-ai-rules    - run AI rules audit' \
 	'  make audit-file-size   - run file size audit' \
+	'  make audit-hex         - run strict hexagonal import-boundary audit' \
 	'  make security-gosec    - run gosec security audit' \
 	'  make audit-all         - run test + all audit scripts' \
 	'  make screening         - alias to audit-all' \
+	'  make check             - run format + vet + file size + hex + docs audits' \
+	'  make verify            - run aggregate audit gate' \
+	'  make ci                - alias to verify' \
 	'  make build             - build app binary' \
 	'  make run               - run app on HTTP_PORT (default 8081)' \
 	'  make auth-start        - start app, request Google auth URL, print it, and open browser' \
@@ -23,14 +30,26 @@ help:
 	'  make git-status        - show git status short' \
 	'  make push MSG="..."   - git add, commit with MSG, and push current branch'
 
+fmt:
+	gofmt -w $$(fd -e go .)
+
 test:
-	go test ./...
+	GOCACHE=$${GOCACHE:-/tmp/go-build-cache} go test ./...
+
+vet:
+	bash scripts/audit_go_vet.sh
+
+audit-format:
+	bash scripts/audit_format.sh
 
 audit-ai-rules:
 	bash scripts/audit_ai_rules.sh
 
 audit-file-size:
 	bash scripts/audit_file_size.sh
+
+audit-hex:
+	bash scripts/audit_hexagonal.sh
 
 security-gosec:
 	bash scripts/audit_security_gosec.sh
@@ -39,6 +58,12 @@ audit-all:
 	bash scripts/audit_all.sh
 
 screening: audit-all
+
+check: audit-format vet audit-file-size audit-hex audit-ai-rules
+
+verify: audit-all
+
+ci: verify
 
 build:
 	mkdir -p .bin

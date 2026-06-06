@@ -38,7 +38,8 @@ func New(ctx context.Context, cfg config.Config) (*App, error) {
 
 	api := e.Group("/api")
 
-	healthHandler := systemhttp.NewHealthHandler(pool)
+	healthChecker := postgres.NewHealthChecker(pool)
+	healthHandler := systemhttp.NewHealthHandler(healthChecker)
 	healthHandler.Register(api)
 
 	if cfg.Auth.Google.IsConfigured() || cfg.Auth.Debug.Enabled {

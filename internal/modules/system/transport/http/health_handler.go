@@ -1,20 +1,19 @@
 package http
 
 import (
-	"context"
 	"net/http"
-	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
+	"pos-go/internal/modules/system/ports"
+
 	"github.com/labstack/echo/v4"
 )
 
 type HealthHandler struct {
-	pool *pgxpool.Pool
+	checker ports.HealthChecker
 }
 
-func NewHealthHandler(pool *pgxpool.Pool) HealthHandler {
-	return HealthHandler{pool: pool}
+func NewHealthHandler(checker ports.HealthChecker) HealthHandler {
+	return HealthHandler{checker: checker}
 }
 
 func (h HealthHandler) Register(group *echo.Group) {
@@ -22,10 +21,7 @@ func (h HealthHandler) Register(group *echo.Group) {
 }
 
 func (h HealthHandler) Get(c echo.Context) error {
-	ctx, cancel := context.WithTimeout(c.Request().Context(), 2*time.Second)
-	defer cancel()
-
-	if err := h.pool.Ping(ctx); err != nil {
+	if err := h.checker.Check(c.Request().Context()); err != nil {
 		return c.JSON(http.StatusServiceUnavailable, map[string]any{
 			"status":   "degraded",
 			"database": "down",

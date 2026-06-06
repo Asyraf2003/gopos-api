@@ -19,6 +19,9 @@ make test-db
 make lint
 make fmt
 make arch
+make audit-format
+make audit-hex
+make vet
 make security
 make migrate-up
 make migrate-down
@@ -35,6 +38,9 @@ make seed
 - `make lint`: static analysis.
 - `make fmt`: formatting.
 - `make arch`: forbidden import and package boundary checks.
+- `make audit-format`: fail when Go files are not `gofmt` clean.
+- `make audit-hex`: strict hexagonal import-boundary audit.
+- `make vet`: `go vet ./...`.
 - `make security`: security-focused scanners/checks.
 - `make migrate-up`: apply migrations to configured local DB.
 - `make migrate-down`: rollback one safe step or documented rollback path.
@@ -76,4 +82,3 @@ Architecture checks should verify:
 - Do not let scripts mutate developer data without explicit target name.
 - Do not mix destructive DB reset into `make test`.
 - Do not hide required services or env vars.
-
