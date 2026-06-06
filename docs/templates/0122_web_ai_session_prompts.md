@@ -55,6 +55,11 @@ REPLACE_WITH_TASK
 RULES
 - Answer in English unless the requested user-facing app text must be Indonesian.
 - Do not invent files, tests, schema, or repo state.
+- Work in one focused active step.
+- Analyze enough context first, then provide a concise plan or patch plan.
+- Prefer compact, proof-linked output over long speculation.
+- If Laravel source data is missing, request the smallest specific folder, file, route, migration, seeder, test, or command output.
+- If an ADR or owner decision is needed, ask one concise question with 2-3 viable options, tradeoffs, and the recommended option first when clear.
 - Prefer GitHub connector reads for repository file facts, using read-only actions only.
 - Do not call GitHub mutation tools unless exact mutation permission is provided.
 - Treat "write docs/...", "update docs/...", "create evidence", "prepare handoff", and "close scope" as requests to draft paste-ready response content, not repository mutation.
@@ -67,6 +72,8 @@ RULES
 - Do not claim implementation completion, runtime success, tests passed, file creation, repository update, or scope closure without proof.
 - Do not use "ready", "done", "closed", or "complete" unless every stated acceptance gate has proof.
 - Keep one active step.
+- Since you usually cannot execute local CLI commands, provide exact commands for Terminal Codex or the owner under PROOF THE TERMINAL AGENT MUST RUN.
+- Separate proposed commands from command output that was actually provided.
 
 EXPECTED OUTPUT
 - FACT
@@ -76,6 +83,11 @@ EXPECTED OUTPUT
 - RISKS
 - PROOF THE TERMINAL AGENT MUST RUN
 - HANDOFF TEXT FOR CODEX
+
+STYLE
+- Be direct and concise.
+- Put blockers first only when they block the step.
+- Draft paste-ready text for docs/handoffs when requested, but do not claim it was written.
 ```
 
 ## Continue An Existing Web AI Problem
@@ -112,6 +124,9 @@ General phrases such as "write docs/...", "update docs/...", "create evidence", 
 RULES
 - Preserve existing decisions unless new evidence contradicts them.
 - If new evidence changes the plan, say exactly what changed and why.
+- Continue with one focused active step.
+- If source data is missing, ask for the smallest specific source batch.
+- If owner decision is needed, ask with 2-3 options and tradeoffs.
 - Use GitHub connector data for repository facts through read-only actions unless local-only proof is provided.
 - Do not call GitHub mutation tools unless exact mutation permission is provided.
 - Draft docs, evidence, handoffs, patch plans, and closeout text in the response only.
@@ -123,6 +138,7 @@ RULES
 - Do not propose an endpoint without a capability key.
 - Do not claim implementation completion, runtime success, tests passed, file creation, repository update, or scope closure without proof.
 - Keep output structured so it can be pasted into docs/handoffs or docs/evidence.
+- Provide exact CLI commands for Terminal Codex or the owner when execution is required.
 
 EXPECTED OUTPUT
 - FACT
@@ -159,6 +175,7 @@ Gaps:
 Recommended next active step:
 Proof commands Codex should run:
 Acceptance gates still requiring proof:
+Suggested short prompt to open the next Terminal Codex session:
 
 Do not include claims about commands being run unless command output was provided.
 Do not claim files were created, tests passed, runtime worked, or scope is closed unless proof was provided.

@@ -86,7 +86,19 @@ The receiving AI must return:
 - summary of implementation;
 - proof commands run or commands the owner must run;
 - gaps;
-- handoff for next step.
+- handoff for next step;
+- estimated progress percentage;
+- estimated context-window status.
+
+## Working Style
+
+The receiving AI should:
+
+- execute the largest safe slice that still fits one active step;
+- keep progress updates short;
+- keep the final report compact;
+- ask for the smallest specific source batch if source data is missing;
+- ask ADR-level decisions with 2-3 options, tradeoffs, and a recommended option when clear.
 
 ## Proof Required
 
@@ -109,4 +121,3 @@ Next valid active step:
 ```text
 REPLACE_WITH_NEXT_STEP
 ```
-

@@ -24,6 +24,12 @@ This folder contains copyable documentation templates.
 
 Templates are starting points. Fill them with concrete files, rules, proof commands, and next steps before use.
 
+## Work Cadence
+
+For terminal coding agents, prefer one focused batch that completes the largest safe slice inside one active step. Ask for short progress updates and a compact final report.
+
+For web AI, treat execution as draft-only by default: it should produce patch plans, exact CLI commands, docs text, evidence text, and handoff text. Terminal Codex or the owner runs commands and applies changes unless exact GitHub mutation permission is provided.
+
 ## Copy Safety
 
 For web AI prompts:

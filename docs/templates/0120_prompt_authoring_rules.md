@@ -39,6 +39,22 @@ OPEN GAPS
 
 For a tiny question, a shorter prompt is fine.
 
+## Working Style Rule
+
+For coding or migration work, prefer one focused work batch over many tiny back-and-forth prompts.
+
+The prompt should ask the AI to:
+
+- execute the largest safe slice that still fits one active step;
+- send short progress updates while working;
+- avoid long speculative discussion before inspecting files;
+- stop and ask only when missing data blocks the decision;
+- ask for the smallest specific Laravel source batch when source data is missing;
+- ask ADR-level questions with 2-3 options, tradeoffs, and a recommended option when clear;
+- finish with a compact report: files changed, proof, progress, context-window status, and next step.
+
+This is usually cheaper than many small chats because repeated prompts often resend or restate context.
+
 ## Web AI Source Rules
 
 When a web AI has a GitHub connector available:
@@ -57,6 +73,13 @@ When a web AI has a GitHub connector available:
 - If GitHub connector data and local evidence disagree, mark it as GAP and ask for the smallest proof instead of choosing silently.
 - Do not claim local commands, tests, database checks, runtime checks, or git-status checks were run unless exact output is provided.
 - Put local proof that Web AI cannot run under `PROOF THE TERMINAL AGENT MUST RUN`.
+
+Web AI execution model:
+
+- Web AI drafts patch plans, exact shell commands, docs text, evidence text, and handoff text.
+- Terminal Codex or the owner runs commands and applies repository changes unless exact GitHub mutation permission is provided.
+- Web AI must separate proposed commands from commands that actually ran.
+- Web AI should produce copyable CLI commands for the owner when terminal execution is required.
 
 ## Backtick Guidance For Web AI
 

@@ -26,6 +26,11 @@ RULES
 - Do not implement before reading the active blueprint.
 - Use fd for file discovery and rg for text search.
 - Use one active step.
+- Execute the largest safe slice that still fits that one active step.
+- Prefer short progress updates and a compact final report over many tiny question/answer turns.
+- Do not stop for discussion unless missing source data, missing proof, or an ADR-level decision blocks implementation.
+- If Laravel source data is missing, request the smallest specific folder, file, route, migration, seeder, test, or command output.
+- If an ADR or owner decision is needed, ask one concise question with 2-3 viable options, tradeoffs, and the recommended option first when clear.
 - Show proof before claiming progress.
 - Mark GAP instead of guessing missing repo state.
 - Do not touch files outside the active scope.
@@ -41,6 +46,12 @@ EXPECTED OUTPUT
 - Estimated progress percentage for the active scope.
 - Estimated context-window status.
 - Next valid step.
+
+STYLE
+- Keep analysis factual and proof-linked.
+- Keep the final answer concise.
+- Mention failed commands only when they matter, with the reason and recovery.
+- Do not repeat large command output; summarize the relevant result.
 ```
 
 ## Ask Codex To Implement One Blueprint Step
@@ -64,6 +75,9 @@ REPLACE_WITH_FOCUSED_COMMAND
 make verify
 
 Stop if the blueprint does not contain enough information. Mark the missing item as GAP.
+
+If blocked by missing data, ask for the smallest specific source batch.
+If blocked by owner decision, ask with 2-3 options and tradeoffs.
 ```
 
 ## Ask Codex To Review Local Changes
