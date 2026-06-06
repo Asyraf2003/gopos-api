@@ -14,7 +14,8 @@
 - There is no active business-domain blueprint for products, sale orders, payments, or inventory.
 - There is no domain contract yet for POS business CRUD or transaction lifecycle.
 - There is no route-to-capability audit script yet.
-- There is no API contract test proving disabled capabilities stop before use cases.
+- Runtime middleware tests prove disabled capabilities stop before the next handler.
+- There is no route-level API contract test proving disabled protected routes stop before validation and use case execution.
 
 ## DECISION
 - Capability-control foundation is the next active product blueprint before POS business APIs.
@@ -161,7 +162,7 @@ disabled_reason
 1. Add this active blueprint.
 2. Add capability domain and usecase contracts without HTTP wiring. Done with proof in `docs/handoffs/2026-06-07-capability-contracts.md`.
 3. Add PostgreSQL migration and adapter for capability state. Done with proof in `docs/handoffs/2026-06-07-capability-postgres-state.md`.
-4. Add runtime capability check middleware/policy.
+4. Add runtime capability check middleware/policy. Done with proof in `docs/handoffs/2026-06-07-capability-runtime-middleware.md`.
 5. Seed existing protected routes as capability records.
 6. Add admin capability HTTP surface.
 7. Add route-to-capability audit script.
@@ -176,4 +177,4 @@ disabled_reason
 - Proof includes file inspection and diff inspection.
 
 ## NEXT ACTIVE STEP
-Add runtime capability check middleware/policy.
+Seed existing protected routes as capability records.
