@@ -44,6 +44,9 @@ It prevents:
 19. `scripts/0090_makefile_and_scripts.md`
 20. `style/0100_go_style.md`
 21. `templates/0110_domain_scope_packet.md`
+22. `templates/0120_prompt_authoring_rules.md`
+23. `templates/0121_codex_session_prompts.md`
+24. `templates/0122_web_ai_session_prompts.md`
 
 ## Constitution Summary
 
@@ -71,7 +74,7 @@ It prevents:
 - `security/`: authentication, authorization, capability, input, output, secret, audit, and abuse-control rules.
 - `scripts/`: Makefile and command contracts for repeatable proof.
 - `style/`: Go writing style and forbidden patterns.
-- `templates/`: copyable work packet and handoff templates.
+- `templates/`: copyable work packet, Codex prompt, web AI prompt, proof, evidence, and resume templates.
 - `adr/`, `blueprints/`, `evidence/`, `handoffs/`, `archive/`: active project decisions, plans, proof, continuation notes, and historical material.
 
 ## Non-Negotiable Behavior
@@ -84,3 +87,4 @@ It prevents:
 - Do not expose an API without capability metadata.
 - Do not claim tests passed without visible output.
 - Do not hand work to another AI without a scope packet and handoff target.
+- For web AI with a GitHub connector, treat the connector as repository source of truth and avoid git operations unless the active task explicitly asks for GitHub, git, CI, branch, commit, or PR work.

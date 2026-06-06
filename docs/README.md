@@ -65,6 +65,9 @@ Read in this order:
 19. `scripts/0090_makefile_and_scripts.md`
 20. `style/0100_go_style.md`
 21. `templates/0110_domain_scope_packet.md`
+22. `templates/0120_prompt_authoring_rules.md`
+23. `templates/0121_codex_session_prompts.md`
+24. `templates/0122_web_ai_session_prompts.md`
 
 `README.md` is the human entry point.
 
@@ -142,6 +145,18 @@ The packet must include:
 - handoff target.
 
 The receiving AI may only work inside that packet unless the owner changes scope.
+
+Use `templates/0120_prompt_authoring_rules.md` before writing copyable prompts.
+
+Use `templates/0121_codex_session_prompts.md` for terminal Codex sessions.
+
+Use `templates/0122_web_ai_session_prompts.md` for GPT web or another browser-based AI.
+
+When GPT web has a GitHub connector, the connector is the source of truth for repository files, branches, pull requests, issues, and committed code. Do not ask web AI to manage git, branches, commits, pushes, pulls, merges, or PR actions unless the active task explicitly concerns GitHub, git, CI, a branch, a commit, or a PR.
+
+Use local Codex evidence for connector gaps only, such as `.env`, secrets, generated local output, `fd`/`rg` search results, local tests, local database state, and runtime logs.
+
+If GitHub connector facts and local evidence disagree, mark `GAP` and ask for the smallest proof.
 
 ## Architecture Rule In One Line
 

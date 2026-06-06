@@ -28,6 +28,9 @@ Before giving technical guidance, planning implementation, editing files, or pro
 20. `docs/scripts/0090_makefile_and_scripts.md`
 21. `docs/style/0100_go_style.md`
 22. `docs/templates/0110_domain_scope_packet.md`
+23. `docs/templates/0120_prompt_authoring_rules.md`
+24. `docs/templates/0121_codex_session_prompts.md`
+25. `docs/templates/0122_web_ai_session_prompts.md`
 
 If the user names a blueprint, ADR, handoff, error log, branch, commit, command output, API, domain, table, or module, that reference defines the active scope until the user changes it.
 
@@ -46,4 +49,5 @@ If the user names a blueprint, ADR, handoff, error log, branch, commit, command 
 - Every domain database resource must have explicit create, edit/update, delete, show, list, and capability rules unless the domain contract marks an operation forbidden.
 - Tests and scripts are required gates, not optional polish.
 - Cross-AI work must use a scope packet and handoff.
+- Web AI with a GitHub connector must use the connector as repository source of truth and must not manage git unless the active task explicitly asks for GitHub, git, CI, branch, commit, or PR work.
 - Makefile/script contracts must stay stable so terminal Codex and GPT web workflows use the same proof language.
