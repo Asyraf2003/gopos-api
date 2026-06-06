@@ -1,17 +1,6 @@
 package domain
 
-import (
-	"errors"
-	"strings"
-)
-
-type RiskLevel string
-
-const (
-	RiskLow    RiskLevel = "low"
-	RiskMedium RiskLevel = "medium"
-	RiskHigh   RiskLevel = "high"
-)
+import "strings"
 
 type Capability struct {
 	Key                 string
@@ -59,38 +48,6 @@ func NewCapability(input Capability) (Capability, error) {
 	return capability, nil
 }
 
-func (c Capability) Validate() error {
-	if c.Key == "" {
-		return errors.New("capability key is required")
-	}
-	if c.Domain == "" {
-		return errors.New("capability domain is required")
-	}
-	if c.Operation == "" {
-		return errors.New("capability operation is required")
-	}
-	if c.Method == "" {
-		return errors.New("capability method is required")
-	}
-	if c.Path == "" {
-		return errors.New("capability path is required")
-	}
-	if c.RequiredPermission == "" {
-		return errors.New("capability required permission is required")
-	}
-	if c.OwnerPackage == "" {
-		return errors.New("capability owner package is required")
-	}
-	if c.TestProof == "" {
-		return errors.New("capability test proof is required")
-	}
-	if !c.RiskLevel.Valid() {
-		return errors.New("capability risk level is invalid")
-	}
-
-	return nil
-}
-
 func (c Capability) Disable(reason string) Capability {
 	c.Enabled = false
 	c.DisabledReason = normalize(reason)
@@ -103,12 +60,4 @@ func (c Capability) Enable() Capability {
 	c.DisabledReason = ""
 
 	return c
-}
-
-func (r RiskLevel) Valid() bool {
-	return r == RiskLow || r == RiskMedium || r == RiskHigh
-}
-
-func normalize(value string) string {
-	return strings.TrimSpace(value)
 }
