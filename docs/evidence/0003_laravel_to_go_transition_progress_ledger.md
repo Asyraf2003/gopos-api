@@ -32,6 +32,7 @@ Related handoffs:
 ```text
 docs/handoffs/2026-06-06-manual-auth-login.md
 docs/handoffs/2026-06-06-auth-runtime-local-dev.md
+docs/handoffs/2026-06-07-capability-contracts.md
 ```
 
 ## Current Decision
@@ -56,10 +57,10 @@ Protected POS endpoints must wait for capability-control proof.
 | Stage 0 | Laravel source inventory and parity matrix | Partial | 40% | `0001_laravel_stage0_schema_and_route_inventory.md`, `0002_laravel_productcatalog_servicecatalog_inventory.md` |
 | Stage 1 | Go quality foundation | Partial | 70% | `2026-06-06-manual-auth-login.md` handoff reports passing format, vet, hex, docs, file-size, and auth tests; gosec remains unproven |
 | Stage 2 | PostgreSQL target baseline for POS domains | Not started | 0% | No accepted POS PostgreSQL migration baseline proof yet |
-| Stage 3 | API foundation and capability control | Partial | 20% | Auth/session foundation exists; capability blueprint exists; capability implementation proof missing |
+| Stage 3 | API foundation and capability control | Partial | 30% | Auth/session foundation exists; capability blueprint exists; capability domain and usecase contracts pass tests; migration, middleware, HTTP surface, and route audit remain missing |
 | Stage 4 | Cross-cutting modules | Not started | 0% | No audit/language/notification/idempotency transition implementation proof yet |
 | Business Phase 1 | Service catalog and product catalog | Not started | 0% | Catalog evidence and blueprint exist; Go business modules not implemented |
-| Overall Laravel-to-Go transition | POS API migration | Early foundation | 15% | Docs, auth debug lane, and quality gates exist; POS domains are not implemented |
+| Overall Laravel-to-Go transition | POS API migration | Early foundation | 16% | Docs, auth debug lane, quality gates, and capability contracts exist; POS domains are not implemented |
 
 ## Completed Work With Proof
 
@@ -71,13 +72,15 @@ Protected POS endpoints must wait for capability-control proof.
   - `admin@example.com` with password `12345678`;
   - `kasir@example.com` with password `12345678`.
 - Quality and architecture audit scripts are documented as wired.
+- Capability domain, port, and usecase contracts exist under `internal/modules/capability/`.
+- Capability contracts have unit test proof in domain and usecase packages.
 
 ## Open Gaps
 
 - Full Laravel source inventory is incomplete for many business domains.
 - Laravel alter, foreign key, index, timestamp, and seed migrations are not fully inventoried.
 - Product duplicate policy still needs an owner decision before final PostgreSQL indexes.
-- Capability-control foundation is not implemented yet.
+- Capability-control foundation is partially implemented; PostgreSQL storage, runtime middleware, admin HTTP surface, route audit, and disabled-endpoint API proof are still missing.
 - Runtime DB proof for manual auth login is still incomplete.
 - Security audit script is wired, but gosec passing proof is missing because the local toolchain/gosec run was blocked in the prior session.
 - No POS domain PostgreSQL baseline has been accepted.
@@ -85,13 +88,13 @@ Protected POS endpoints must wait for capability-control proof.
 
 ## Next Valid Active Step
 
-Implement or complete `docs/blueprints/0010_capability_control_foundation.md` before exposing protected POS endpoints.
+Continue `docs/blueprints/0010_capability_control_foundation.md` before exposing protected POS endpoints.
 
 Minimum next-step proof:
 
-- capability domain/usecase tests;
-- disabled capability returns `403` before validation/usecase;
-- route-to-capability audit script or placeholder proof;
+- PostgreSQL migration up/down proof or migration file inspection;
+- PostgreSQL capability adapter tests when `DATABASE_URL` is available or unit contract tests when DB is unavailable;
+- capability domain/usecase tests remain passing;
 - updated handoff and progress ledger.
 
 ## Handoff Requirement
@@ -102,4 +105,4 @@ The same session must create or update a handoff when durable work was done.
 
 ## Context Window Status
 
-Current ledger update context status: enough context for one focused next implementation step after this docs step.
+Current ledger update context status: enough context for one focused next implementation step after capability contracts.

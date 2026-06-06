@@ -159,7 +159,7 @@ disabled_reason
 
 ## STEP ORDER
 1. Add this active blueprint.
-2. Add capability domain and usecase contracts without HTTP wiring.
+2. Add capability domain and usecase contracts without HTTP wiring. Done with proof in `docs/handoffs/2026-06-07-capability-contracts.md`.
 3. Add PostgreSQL migration and adapter for capability state.
 4. Add runtime capability check middleware/policy.
 5. Seed existing protected routes as capability records.
@@ -176,4 +176,4 @@ disabled_reason
 - Proof includes file inspection and diff inspection.
 
 ## NEXT ACTIVE STEP
-Add capability domain and usecase contracts without HTTP wiring.
+Add PostgreSQL migration and adapter for capability state.
