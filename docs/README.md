@@ -128,6 +128,7 @@ After work:
 - report progress only from proof;
 - write handoff only when needed;
 - do not move to the next step without feedback.
+- for non-trivial work, report estimated active-scope progress and context-window status.
 
 ## Cross-AI Work Pattern
 
@@ -157,6 +158,21 @@ When GPT web has a GitHub connector, the connector is the source of truth for re
 Use local Codex evidence for connector gaps only, such as `.env`, secrets, generated local output, `fd`/`rg` search results, local tests, local database state, and runtime logs.
 
 If GitHub connector facts and local evidence disagree, mark `GAP` and ask for the smallest proof.
+
+## Documentation Cascade Rule
+
+When a docs change affects how future sessions start, continue, verify, or hand off, update the impacted chain in the same step when feasible:
+
+- `docs/README.md`;
+- `docs/AGENTS.md`;
+- `docs/0001_index.md`;
+- local folder `README.md`;
+- related workflow/template docs;
+- `scripts/audit_ai_rules.sh` when the rule or file becomes mandatory.
+
+Do not leave a new mandatory workflow rule only in chat.
+
+For long-running work or when context is running low, create or update a handoff in `docs/handoffs/` with files changed, proof, gaps, next step, estimated progress percentage, and context-window status.
 
 ## Architecture Rule In One Line
 

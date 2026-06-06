@@ -50,4 +50,7 @@ If the user names a blueprint, ADR, handoff, error log, branch, commit, command 
 - Tests and scripts are required gates, not optional polish.
 - Cross-AI work must use a scope packet and handoff.
 - Web AI with a GitHub connector must use the connector as repository source of truth and must not manage git unless the active task explicitly asks for GitHub, git, CI, branch, commit, or PR work.
+- Docs workflow changes must cascade to impacted README/index/AGENTS/template/audit files when feasible.
+- Non-trivial final reports must include proof, estimated active-scope progress, context-window status, and next valid step.
+- Create or update a handoff before context runs low or when durable work needs continuation.
 - Makefile/script contracts must stay stable so terminal Codex and GPT web workflows use the same proof language.

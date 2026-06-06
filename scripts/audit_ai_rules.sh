@@ -96,6 +96,9 @@ check_contains "docs/scripts/0090_makefile_and_scripts.md" "Required Make Target
 check_contains "docs/style/0100_go_style.md" "Forbidden Patterns"
 check_contains "docs/templates/0120_prompt_authoring_rules.md" "Web AI Source Rules"
 check_contains "docs/templates/0122_web_ai_session_prompts.md" "Use the GitHub connector as the source of truth"
+check_contains "docs/workflow/0071_handoff_protocol.md" "Automatic Handoff Triggers"
+check_contains "docs/README.md" "Documentation Cascade Rule"
+check_contains "docs/AGENTS.md" "context-window status"
 check_contains "docs/adr/0001-foundation-raw-go-echo-postgres-hexagonal.md" "## Decision"
 
 echo

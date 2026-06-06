@@ -29,6 +29,8 @@ RULES
 - Show proof before claiming progress.
 - Mark GAP instead of guessing missing repo state.
 - Do not touch files outside the active scope.
+- If docs workflow rules change, update the impacted README/index/AGENTS/template/audit chain in the same step when feasible.
+- Create or update a handoff before context runs low or when a long-running scope ends with durable changes.
 
 EXPECTED OUTPUT
 - Fact summary.
@@ -36,6 +38,8 @@ EXPECTED OUTPUT
 - One active step.
 - Files changed.
 - Proof command output.
+- Estimated progress percentage for the active scope.
+- Estimated context-window status.
 - Next valid step.
 ```
 
@@ -102,7 +106,9 @@ INCLUDE
 - decisions made;
 - gaps;
 - next valid active step;
-- commands the next session should run first.
+- commands the next session should run first;
+- estimated scope progress percentage;
+- estimated context-window status.
 
 Do not claim unrun tests.
 ```

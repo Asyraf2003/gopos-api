@@ -88,3 +88,5 @@ It prevents:
 - Do not claim tests passed without visible output.
 - Do not hand work to another AI without a scope packet and handoff target.
 - For web AI with a GitHub connector, treat the connector as repository source of truth and avoid git operations unless the active task explicitly asks for GitHub, git, CI, branch, commit, or PR work.
+- Do not leave mandatory workflow updates only in chat; cascade impacted docs and audit rules.
+- For non-trivial work, final status must include proof, estimated active-scope progress, context-window status, and next valid step.

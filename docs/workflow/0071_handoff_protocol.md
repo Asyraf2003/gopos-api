@@ -23,6 +23,32 @@ Every handoff must include:
 - tests or commands run;
 - gaps still open;
 - next valid active step.
+- estimated scope progress percentage;
+- estimated context-window status.
+
+## Automatic Handoff Triggers
+
+Create or update a handoff without waiting for the owner to repeat the request when:
+
+- the session is near context limit;
+- a long-running scope has changed files, evidence, blueprint, or decisions;
+- work moves from Codex to web AI or from web AI to Codex;
+- a model switch is likely;
+- the owner asks to pause;
+- the active step ends with open GAP items that the next session must know.
+
+If the session is small and no durable decision, file change, or evidence was created, a handoff is optional.
+
+## Cascading Documentation Rule
+
+When a docs update changes how future work should start, continue, verify, or hand off, update the impacted chain in the same active step when feasible:
+
+- human entry point: `docs/README.md`;
+- AI bootstrap: `docs/AGENTS.md`;
+- canonical index: `docs/0001_index.md`;
+- local folder README;
+- related workflow/template docs;
+- audit script when the new file or rule is mandatory.
 
 ## Scope Packet Rule
 
@@ -55,4 +81,16 @@ The receiving AI must:
 - Do not let archive docs override active blueprint.
 - Do not ask another AI to edit files outside the packet.
 - Do not claim tests passed from intention.
+- Do not leave a new mandatory workflow rule only in chat.
 
+## Final Report Rule
+
+For non-trivial work, the final response must include a compact status report:
+
+- files or docs changed;
+- proof run;
+- estimated progress for the active scope;
+- estimated context-window status;
+- next valid active step.
+
+Progress estimates are directional. They must not replace proof.

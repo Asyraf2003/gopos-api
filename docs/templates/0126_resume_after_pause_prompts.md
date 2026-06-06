@@ -27,6 +27,7 @@ THEN
 - List recent handoffs.
 - Identify the likely active scope.
 - Identify open GAP items.
+- Identify last reported progress percentage and context-window status if available.
 - Recommend exactly one next active step.
 
 RULES
@@ -88,7 +89,9 @@ OUTPUT
 - corrected facts;
 - gaps;
 - next active step;
-- proof required.
+- proof required;
+- estimated progress percentage;
+- estimated context-window status.
 ```
 
 ## No Handoff Exists Prompt
