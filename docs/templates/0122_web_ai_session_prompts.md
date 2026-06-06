@@ -17,6 +17,13 @@ Repository: /home/asyraf/Code/go/pos-go
 Active scope: REPLACE_WITH_SCOPE
 Current blueprint: docs/blueprints/REPLACE_WITH_BLUEPRINT.md
 
+SOURCE OF TRUTH
+Use the GitHub connector as the source of truth for repository files, branches, pull requests, issues, and committed code.
+Assume GitHub and local are identical unless the owner provides local-only proof.
+Do not manage git, branches, commits, pushes, pulls, merges, or PR actions unless the task explicitly asks for GitHub or git work.
+Use local/Codex evidence only for connector gaps such as env files, secrets, generated local output, fd/rg search results, local tests, local database state, and runtime logs.
+If GitHub connector data and local evidence disagree, mark GAP and ask for the smallest proof.
+
 DOCS PROVIDED
 REPLACE_WITH_DOCS_OR_SUMMARIES
 
@@ -29,6 +36,8 @@ REPLACE_WITH_TASK
 RULES
 - Answer in English unless the requested user-facing app text must be Indonesian.
 - Do not invent files, tests, schema, or repo state.
+- Prefer GitHub connector reads for repository file facts.
+- Do not do git work unless this session is explicitly about git, GitHub, a branch, a commit, a PR, or CI.
 - Keep domain logic out of HTTP handlers.
 - Keep SQL inside persistence adapters.
 - Do not propose an endpoint without a capability key.
@@ -61,6 +70,8 @@ REPLACE_WITH_TASK
 RULES
 - Preserve existing decisions unless new evidence contradicts them.
 - If new evidence changes the plan, say exactly what changed and why.
+- Use GitHub connector data for repository facts unless local-only proof is provided.
+- Do not manage git unless the task explicitly asks for GitHub or git work.
 - Keep output structured so it can be pasted into docs/handoffs or docs/evidence.
 ```
 

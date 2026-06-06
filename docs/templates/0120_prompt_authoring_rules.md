@@ -39,6 +39,18 @@ OPEN GAPS
 
 For a tiny question, a shorter prompt is fine.
 
+## Web AI Source Rules
+
+When a web AI has a GitHub connector available:
+
+- Treat the GitHub connector as the source of truth for repository files, branches, pull requests, issues, and committed code.
+- Do not ask the web AI to manage local git state unless the task is explicitly about git, GitHub, a branch, a commit, a PR, or CI.
+- Do not ask the web AI to run destructive git actions.
+- If local and GitHub are expected to be identical because the owner pushes frequently, say that assumption explicitly.
+- Use local terminal/Codex context only for things the connector cannot see or cannot do.
+- Examples of local-only context: `.env`, secrets, uncommitted sensitive files, generated local output, installed tools, `fd`, `rg`, local test output, local database state, and runtime logs.
+- If GitHub connector data and local evidence disagree, mark it as GAP and ask for the smallest proof instead of choosing silently.
+
 ## Backtick Guidance For Web AI
 
 Some web AI copy buttons can behave poorly when prompts contain nested Markdown fences.
