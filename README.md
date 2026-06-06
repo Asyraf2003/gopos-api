@@ -100,3 +100,46 @@ Then run:
 ```bash
 make run
 ```
+
+## Developer commands
+
+Run the full local development flow:
+
+```bash
+make dev
+```
+
+This runs:
+
+```bash
+make db-dev-setup
+make db-migrate
+make run
+```
+
+Smoke-test a running local API:
+
+```bash
+make smoke
+```
+
+Manual auth login helpers:
+
+```bash
+make auth-login-admin
+make auth-login-cashier
+```
+
+These commands call `POST /api/auth/manual/login`, print the HTTP response, extract the bearer token, then call `GET /api/me` with that token.
+
+Manual auth requires:
+
+```env
+AUTH_DEBUG_ENABLED=true
+```
+
+Health check path:
+
+```text
+/api/health
+```

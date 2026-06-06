@@ -3,7 +3,7 @@ SHELL := /usr/bin/env bash
 APP_BIN := .bin/pos-go-api
 HTTP_PORT ?= 8081
 
-.PHONY: help fmt test vet audit-format audit-ai-rules audit-file-size audit-hex security-gosec audit-all screening check verify ci build run auth-start db-dev-setup db-migrate db-status db-adopt-existing git-status push
+.PHONY: help fmt test vet audit-format audit-ai-rules audit-file-size audit-hex security-gosec audit-all screening check verify ci build run dev smoke auth-login-admin auth-login-cashier auth-start db-dev-setup db-migrate db-status db-adopt-existing git-status push
 
 help:
 	@printf '%s\n' \
@@ -23,6 +23,10 @@ help:
 	'  make ci                - alias to verify' \
 	'  make build             - build app binary' \
 	'  make run               - run app on HTTP_PORT (default 8081)' \
+	'  make dev               - setup local DB, migrate, then run API' \
+	'  make smoke             - call /api/health and unauthenticated /api/me' \
+	'  make auth-login-admin  - manual login as admin and print bearer token' \
+	'  make auth-login-cashier - manual login as cashier and print bearer token' \
 	'  make auth-start        - start app, request Google auth URL, print it, and open browser' \
 	'  make db-dev-setup      - create/update local PostgreSQL role and database from DATABASE_URL' \
 	'  make db-migrate        - apply pending *.up.sql migrations with tracking' \
@@ -72,6 +76,17 @@ build:
 
 run: build
 	HTTP_PORT=$(HTTP_PORT) $(APP_BIN)
+
+dev: db-dev-setup db-migrate run
+
+smoke:
+	HTTP_PORT=$(HTTP_PORT) bash scripts/dev_smoke.sh
+
+auth-login-admin:
+	HTTP_PORT=$(HTTP_PORT) bash scripts/dev_manual_login.sh admin
+
+auth-login-cashier:
+	HTTP_PORT=$(HTTP_PORT) bash scripts/dev_manual_login.sh cashier
 
 auth-start: build
 	PORT_PIDS="$$(ss -ltnp | sed -n 's/.*:$(HTTP_PORT) .*pid=\([0-9]\+\).*/\1/p' | sort -u)"; \
