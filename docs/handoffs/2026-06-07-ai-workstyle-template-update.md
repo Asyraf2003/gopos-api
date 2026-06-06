@@ -65,15 +65,29 @@ docs/workflow/0072_transition_progress_ledger_protocol.md
 
 ## Proof Collected
 
-Pending final proof:
+AI rules audit passed:
 
 ```text
 bash scripts/audit_ai_rules.sh
 ```
 
+Visible result:
+
+```text
+[PASS] AI rules audit passed
+```
+
 ## Tests Or Commands Run
 
-Pending final proof.
+```text
+bash scripts/audit_ai_rules.sh
+```
+
+Result:
+
+```text
+[PASS] AI rules audit passed
+```
 
 ## Gaps Still Open
 
@@ -85,7 +99,7 @@ Continue `docs/blueprints/0010_capability_control_foundation.md` with runtime ca
 
 ## Estimated Scope Progress Percentage
 
-AI workstyle template update: 90% before final audit proof.
+AI workstyle template update: 100%.
 
 Overall Laravel-to-Go transition: unchanged at 18%.
 
