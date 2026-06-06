@@ -181,6 +181,8 @@ For long-running work or when context is running low, create or update a handoff
 
 For long-running transition scopes, update the active progress ledger when progress, proof, gaps, or next valid step changes. The active Laravel-to-Go ledger is `docs/evidence/0003_laravel_to_go_transition_progress_ledger.md`.
 
+Before continuing Laravel-to-Go, capability-control, quality-gate, or POS domain work, read the active ledger and the latest related handoff. The ledger owns current progress, current gaps, and the next valid active step.
+
 ## Architecture Rule In One Line
 
 ```text
