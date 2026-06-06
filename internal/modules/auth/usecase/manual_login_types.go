@@ -3,7 +3,8 @@ package usecase
 import "time"
 
 type ManualLoginInput struct {
-	Email string
+	Email    string
+	Password string
 }
 
 type ManualLoginOutput struct {

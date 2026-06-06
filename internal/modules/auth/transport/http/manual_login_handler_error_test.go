@@ -42,7 +42,7 @@ func TestManualLoginHandler_RejectsUnsupportedEmail(t *testing.T) {
 	c := e.NewContext(req, rec)
 
 	handler := NewManualLoginHandler(&fakeManualLoginUsecase{
-		err: authusecase.ErrManualLoginUnsupportedEmail,
+		err: authusecase.ErrManualLoginInvalidCredentials,
 	})
 
 	err := handler.Login(c)

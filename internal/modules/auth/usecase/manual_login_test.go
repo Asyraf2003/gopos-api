@@ -19,7 +19,8 @@ func TestManualLogin_AdminSuccess(t *testing.T) {
 	usecase := NewManualLogin(accounts, roles, sessions, tokens, tx, 30*24*time.Hour)
 
 	out, err := usecase.Execute(context.Background(), ManualLoginInput{
-		Email: " ADMIN@example.com ",
+		Email:    " ADMIN@example.com ",
+		Password: "12345678",
 	})
 	if err != nil {
 		t.Fatalf("Execute() error = %v", err)

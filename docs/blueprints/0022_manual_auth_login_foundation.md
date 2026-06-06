@@ -19,7 +19,7 @@
 - Allowed emails:
   - `admin@example.com` -> role `admin`
   - `kasir@example.com` -> role `cashier`
-- No password is accepted in this debug lane.
+- Both allowed emails require debug password `12345678`.
 - The endpoint must reuse normal account, role, session, token, refresh, authn, and principal mechanisms.
 - Manual login creates or reuses an account by email, ensures the configured role, creates an `auth_sessions` row, and issues a normal access token plus refresh token.
 - Manual login must not bypass middleware behavior for later protected requests.
@@ -52,7 +52,8 @@ Request:
 
 ```json
 {
-  "email": "admin@example.com"
+  "email": "admin@example.com",
+  "password": "12345678"
 }
 ```
 
@@ -72,11 +73,12 @@ Success:
 Errors:
 
 - `400` for malformed request.
-- `401` for unsupported email.
+- `401` for unsupported email or wrong password.
 - `404`-like role setup is treated as server setup error through adapter result if seed roles are missing.
 
 ## TEST PLAN
 - Use case rejects unsupported email.
+- Use case rejects wrong password.
 - Use case creates session and issues token for admin.
 - Use case assigns `admin` role for `admin@example.com`.
 - Use case assigns `cashier` role for `kasir@example.com`.

@@ -10,7 +10,7 @@ import (
 	"pos-go/internal/modules/auth/ports"
 )
 
-var ErrManualLoginUnsupportedEmail = errors.New("unsupported manual login email")
+var ErrManualLoginInvalidCredentials = errors.New("invalid manual login credentials")
 
 type ManualLogin struct {
 	accounts     ports.ManualAccountRepository
@@ -25,8 +25,8 @@ type ManualLogin struct {
 func (u *ManualLogin) Execute(ctx context.Context, in ManualLoginInput) (ManualLoginOutput, error) {
 	email := strings.ToLower(strings.TrimSpace(in.Email))
 	roleKey, ok := u.allowedRoles[email]
-	if !ok {
-		return ManualLoginOutput{}, ErrManualLoginUnsupportedEmail
+	if !ok || in.Password != "12345678" {
+		return ManualLoginOutput{}, ErrManualLoginInvalidCredentials
 	}
 
 	seed, err := newManualLoginSeed(u.sessionTTL)

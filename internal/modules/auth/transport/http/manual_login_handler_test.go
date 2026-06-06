@@ -15,7 +15,11 @@ import (
 
 func TestManualLoginHandler_Success(t *testing.T) {
 	e := echo.New()
-	req := httptest.NewRequest(http.MethodPost, "/api/auth/manual/login", strings.NewReader(`{"email":"admin@example.com"}`))
+	req := httptest.NewRequest(
+		http.MethodPost,
+		"/api/auth/manual/login",
+		strings.NewReader(`{"email":"admin@example.com","password":"12345678"}`),
+	)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -41,6 +45,9 @@ func TestManualLoginHandler_Success(t *testing.T) {
 	}
 	if usecase.lastInput.Email != "admin@example.com" {
 		t.Fatalf("email input = %q", usecase.lastInput.Email)
+	}
+	if usecase.lastInput.Password != "12345678" {
+		t.Fatalf("password input = %q", usecase.lastInput.Password)
 	}
 
 	var body authusecase.ManualLoginOutput

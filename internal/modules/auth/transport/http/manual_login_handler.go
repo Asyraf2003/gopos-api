@@ -26,7 +26,8 @@ func (h *ManualLoginHandler) Register(group *echo.Group) {
 }
 
 type manualLoginRequest struct {
-	Email string `json:"email"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 func (h *ManualLoginHandler) Login(c echo.Context) error {
@@ -36,11 +37,12 @@ func (h *ManualLoginHandler) Login(c echo.Context) error {
 	}
 
 	out, err := h.usecase.Execute(c.Request().Context(), authusecase.ManualLoginInput{
-		Email: req.Email,
+		Email:    req.Email,
+		Password: req.Password,
 	})
 	if err != nil {
-		if err == authusecase.ErrManualLoginUnsupportedEmail {
-			return echo.NewHTTPError(http.StatusUnauthorized, "unsupported manual login email")
+		if err == authusecase.ErrManualLoginInvalidCredentials {
+			return echo.NewHTTPError(http.StatusUnauthorized, "invalid manual login credentials")
 		}
 		return err
 	}

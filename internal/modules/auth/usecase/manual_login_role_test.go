@@ -18,7 +18,8 @@ func TestManualLogin_KasirAssignsCashierRole(t *testing.T) {
 	)
 
 	_, err := usecase.Execute(context.Background(), ManualLoginInput{
-		Email: "kasir@example.com",
+		Email:    "kasir@example.com",
+		Password: "12345678",
 	})
 	if err != nil {
 		t.Fatalf("Execute() error = %v", err)
@@ -40,9 +41,29 @@ func TestManualLogin_RejectsUnsupportedEmail(t *testing.T) {
 	)
 
 	_, err := usecase.Execute(context.Background(), ManualLoginInput{
-		Email: "owner@example.com",
+		Email:    "owner@example.com",
+		Password: "12345678",
 	})
-	if err != ErrManualLoginUnsupportedEmail {
-		t.Fatalf("error = %v, want ErrManualLoginUnsupportedEmail", err)
+	if err != ErrManualLoginInvalidCredentials {
+		t.Fatalf("error = %v, want ErrManualLoginInvalidCredentials", err)
+	}
+}
+
+func TestManualLogin_RejectsInvalidPassword(t *testing.T) {
+	usecase := NewManualLogin(
+		&fakeManualAccountRepository{accountID: "acc"},
+		&fakeManualRoleAssigner{},
+		&fakeSessionStore{},
+		&fakeTokenIssuer{},
+		&fakeTransactor{},
+		30*24*time.Hour,
+	)
+
+	_, err := usecase.Execute(context.Background(), ManualLoginInput{
+		Email:    "admin@example.com",
+		Password: "wrong-password",
+	})
+	if err != ErrManualLoginInvalidCredentials {
+		t.Fatalf("error = %v, want ErrManualLoginInvalidCredentials", err)
 	}
 }
