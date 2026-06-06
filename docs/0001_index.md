@@ -87,6 +87,8 @@ It prevents:
 - Do not expose an API without capability metadata.
 - Do not claim tests passed without visible output.
 - Do not hand work to another AI without a scope packet and handoff target.
-- For web AI with a GitHub connector, treat the connector as repository source of truth and avoid git operations unless the active task explicitly asks for GitHub, git, CI, branch, commit, or PR work.
+- For web AI with a GitHub connector, treat the connector as read-only repository source of truth. Allow only fetch, search, list, and get connector actions by default.
+- Web AI must not mutate files, branches, commits, refs, pull requests, issues, labels, reviewers, merges, or remote CI unless the prompt gives exact mutation permission naming the action, target repository, branch, path or issue/PR, and intended content.
+- Web AI prompts that say "write docs/...", "update docs/...", "create evidence", "prepare handoff", or "close scope" mean draft paste-ready response content, not repository mutation.
 - Do not leave mandatory workflow updates only in chat; cascade impacted docs and audit rules.
 - For non-trivial work, final status must include proof, estimated active-scope progress, context-window status, and next valid step.
