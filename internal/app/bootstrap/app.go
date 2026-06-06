@@ -41,18 +41,7 @@ func New(ctx context.Context, cfg config.Config) (*App, error) {
 	healthHandler := systemhttp.NewHealthHandler(pool)
 	healthHandler.Register(api)
 
-	if cfg.Auth.Google.IsConfigured() {
-		oidcProvider, err := googleoidc.NewOIDC(ctx, googleoidc.OIDCConfig{
-			Issuer:       cfg.Auth.Google.Issuer,
-			ClientID:     cfg.Auth.Google.ClientID,
-			ClientSecret: cfg.Auth.Google.ClientSecret,
-			RedirectURL:  cfg.Auth.Google.RedirectURL,
-		})
-		if err != nil {
-			pool.Close()
-			return nil, err
-		}
-
+	if cfg.Auth.Google.IsConfigured() || cfg.Auth.Debug.Enabled {
 		tokenIssuer, err := jwtissuer.NewHMACIssuer(
 			cfg.Auth.JWT.Issuer,
 			cfg.Auth.JWT.Aud,
@@ -86,24 +75,50 @@ func New(ctx context.Context, cfg config.Config) (*App, error) {
 		roleRemover := postgres.NewAccountRoleRemover(pool)
 		principalResolver := postgres.NewPrincipalResolver(pool)
 
-		googleFlow := authusecase.NewGoogleFlow(
-			oidcProvider,
-			stateStore,
-			accountRepo,
-			sessionStore,
-			tokenIssuer,
-			transactor,
-			cfg.Auth.StateTTL,
-			cfg.Auth.SessionTTL,
-		).WithRoleAssigner(roleAssigner)
-
 		authGroup := api.Group("/auth")
 
-		googleHandler := authhttp.NewGoogleHandler(
-			authhttp.NewGoogleFlowAdapter(googleFlow),
-			cfg.Auth.Google.RedirectURL,
-		)
-		googleHandler.Register(authGroup)
+		if cfg.Auth.Google.IsConfigured() {
+			oidcProvider, err := googleoidc.NewOIDC(ctx, googleoidc.OIDCConfig{
+				Issuer:       cfg.Auth.Google.Issuer,
+				ClientID:     cfg.Auth.Google.ClientID,
+				ClientSecret: cfg.Auth.Google.ClientSecret,
+				RedirectURL:  cfg.Auth.Google.RedirectURL,
+			})
+			if err != nil {
+				pool.Close()
+				return nil, err
+			}
+
+			googleFlow := authusecase.NewGoogleFlow(
+				oidcProvider,
+				stateStore,
+				accountRepo,
+				sessionStore,
+				tokenIssuer,
+				transactor,
+				cfg.Auth.StateTTL,
+				cfg.Auth.SessionTTL,
+			).WithRoleAssigner(roleAssigner)
+
+			googleHandler := authhttp.NewGoogleHandler(
+				authhttp.NewGoogleFlowAdapter(googleFlow),
+				cfg.Auth.Google.RedirectURL,
+			)
+			googleHandler.Register(authGroup)
+		}
+
+		if cfg.Auth.Debug.Enabled {
+			manualLoginUsecase := authusecase.NewManualLogin(
+				accountRepo,
+				roleAssigner,
+				sessionStore,
+				tokenIssuer,
+				transactor,
+				cfg.Auth.SessionTTL,
+			)
+			manualLoginHandler := authhttp.NewManualLoginHandler(manualLoginUsecase)
+			manualLoginHandler.Register(authGroup)
+		}
 
 		refreshUsecase := authusecase.NewRefreshToken(
 			refreshRepo,
