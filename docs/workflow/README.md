@@ -16,3 +16,5 @@ This folder defines documentation hygiene, handoff, and work sequencing rules.
 - deciding whether a document is active, historical, or proof-bearing.
 
 Workflow rules keep standards, plans, proof, and history from overwriting each other.
+
+For Laravel-to-Go continuation work, read `docs/evidence/0003_laravel_to_go_transition_progress_ledger.md` before the latest handoff. The ledger states the valid next step; the handoff gives the latest proof and local context.
