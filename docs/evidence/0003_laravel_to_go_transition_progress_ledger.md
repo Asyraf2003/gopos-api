@@ -19,6 +19,7 @@ docs/blueprints/0022_manual_auth_login_foundation.md
 docs/blueprints/0023_quality_security_hex_audit_gates.md
 docs/blueprints/0024_servicecatalog_domain_contract.md
 docs/blueprints/0025_servicecatalog_implementation_slice_1.md
+docs/blueprints/0026_servicecatalog_postgres_persistence_slice.md
 ```
 
 Related evidence:
@@ -51,6 +52,7 @@ docs/handoffs/2026-06-08-servicecatalog-domain-contract-accepted.md
 docs/handoffs/2026-06-08-servicecatalog-implementation-slice-1-plan.md
 docs/handoffs/2026-06-08-servicecatalog-implementation-slice-1-accepted.md
 docs/handoffs/2026-06-08-servicecatalog-implementation-slice-1.md
+docs/handoffs/2026-06-08-servicecatalog-postgres-persistence-blueprint.md
 docs/handoffs/2026-06-08-docs-quality-feedback-crosscheck.md
 ```
 
@@ -132,6 +134,7 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 - Focused proof passed: `go test ./internal/modules/servicecatalog/...`.
 - Full proof passed: `make verify`, including `go test ./...`, go vet, format, AI rules, file-size, hexagonal import, route capability, and gosec audits.
 - Final `make verify` gosec summary reported 112 files, 4659 lines, 0 nosec, and 0 issues.
+- ServiceCatalog PostgreSQL persistence slice blueprint exists at `docs/blueprints/0026_servicecatalog_postgres_persistence_slice.md`; it is proposed only and does not increase implementation progress.
 
 ## Open Gaps
 
@@ -145,15 +148,16 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 - ServiceCatalog domain contract is accepted.
 - ServiceCatalog implementation slice 1 plan is accepted and implemented with proof.
 - ServiceCatalog HTTP transport, PostgreSQL adapter, migrations, route registration, and capability seeds are not implemented.
+- ServiceCatalog PostgreSQL persistence slice blueprint `0026` is proposed but not accepted or implemented yet.
 - ProductCatalog domain contract has not been accepted yet.
 - No `productcatalog` Go business module has implementation proof.
 
 ## Next Valid Active Step
 
-Plan the next ServiceCatalog implementation slice after `docs/blueprints/0025_servicecatalog_implementation_slice_1.md`.
+Accept or revise `docs/blueprints/0026_servicecatalog_postgres_persistence_slice.md`.
 
-- Candidate next scope: ServiceCatalog HTTP transport, PostgreSQL adapter, migrations, route registration, and capability seeds.
-- Do not implement the next scope until a new accepted blueprint defines exact files, route/capability mapping, persistence schema, audit behavior, and proof commands.
+- Candidate accepted scope: ServiceCatalog PostgreSQL migration, PostgreSQL repository adapter, and repository/integration tests only.
+- Do not implement HTTP transport, route registration, capability seed migrations, ProductCatalog, or UI in this slice.
 - ProductCatalog remains blocked until its own accepted domain contract and duplicate policy decision exist.
 ## Handoff Requirement
 
@@ -163,4 +167,4 @@ The same session must create or update a handoff when durable work was done.
 
 ## Context Window Status
 
-Current ledger update context status: updated after ServiceCatalog slice 1 implementation proof; enough context to plan the next ServiceCatalog implementation slice.
+Current ledger update context status: updated after ServiceCatalog PostgreSQL persistence blueprint proposal; enough context to accept or revise blueprint `0026` before implementation.
