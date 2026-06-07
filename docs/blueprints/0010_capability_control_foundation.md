@@ -10,19 +10,18 @@
 - `docs/architecture/0022_api_capability_control.md` requires protected API operations to have capability metadata and a runtime capability check before request validation and use case execution.
 
 ## GAP
-- There is no first-class capability registry, storage, middleware, or admin control surface yet.
+- No capability-control foundation blocker remains after 2026-06-08 closeout proof.
 - There is no active business-domain blueprint for products, sale orders, payments, or inventory.
 - There is no domain contract yet for POS business CRUD or transaction lifecycle.
-- Route-to-capability audit script has owner-provided local proof.
-- Runtime middleware tests prove disabled capabilities stop before the next handler.
-- Route-level disabled protected endpoint proof now covers current protected route capability keys.
+- Future POS business capability seeds must wait for accepted domain contracts.
 
 ## DECISION
-- Capability-control foundation is the next active product blueprint before POS business APIs.
+- Capability-control foundation is closed with proof before POS business APIs.
 - Existing permissions remain the authorization source of truth.
 - Capability keys are separate API exposure controls and must reference required permission keys.
 - Capability checks must not replace authn or authz.
 - No product, order, payment, inventory, or transaction CRUD implementation is active in this blueprint.
+- The first POS business-domain blueprint/domain contract may start after this closeout.
 - Capability-control implementation must follow the current repo layout and hexagonal boundaries.
 
 ## SCOPE-IN
@@ -76,6 +75,8 @@ disabled_reason
 - Admin account-role routes are protected by auth and `account.role.assign`.
 - Current protected route wiring is centralized in `internal/app/bootstrap/app.go`.
 - Health endpoint is public infrastructure and may stay outside capability control.
+- Capability-control foundation closeout proof passed on 2026-06-08.
+- Current protected routes have route-to-capability audit coverage and route-level disabled proof.
 
 ## PACKAGE/ARCHITECTURE PLAN
 - Add a dedicated capability module under `internal/modules/capability/`.
@@ -163,11 +164,12 @@ disabled_reason
 2. Add capability domain and usecase contracts without HTTP wiring. Done with proof in `docs/handoffs/2026-06-07-capability-contracts.md`.
 3. Add PostgreSQL migration and adapter for capability state. Done with proof in `docs/handoffs/2026-06-07-capability-postgres-state.md`.
 4. Add runtime capability check middleware/policy. Done with proof in `docs/handoffs/2026-06-07-capability-runtime-middleware.md`.
-5. Seed existing protected routes as capability records.
-6. Add admin capability HTTP surface.
+5. Seed existing protected routes as capability records. Done with proof in `docs/handoffs/2026-06-07-capability-route-seeds.md`.
+6. Add admin capability HTTP surface. Done with proof in `docs/handoffs/2026-06-07-capability-admin-http-surface.md`.
 7. Add route-to-capability audit script. Done with proof in `docs/handoffs/2026-06-08-capability-route-audit-script.md`.
 8. Add route-level disabled protected endpoint proof. Done with proof in `docs/handoffs/2026-06-08-capability-route-disabled-proof.md`.
-9. Only after capability-control proof closeout, create the first POS business-domain blueprint.
+9. Close capability-control foundation proof. Done with proof in `docs/handoffs/2026-06-08-capability-control-closeout.md`.
+10. Only after capability-control proof closeout, create the first POS business-domain blueprint/domain contract.
 
 ## DOD
 - Blueprint exists in `docs/blueprints/`.
@@ -179,4 +181,61 @@ disabled_reason
 
 ## NEXT ACTIVE STEP
 
-Close capability-control foundation proof and decide whether the first POS business-domain blueprint can start.
+Capability-control foundation is closed.
+
+Start the first POS business-domain blueprint/domain contract.
+
+Do not start POS CRUD implementation.
+
+Do not add future POS business capability seeds before accepted domain contracts.
+
+## CLOSEOUT
+
+Capability-control foundation closed on 2026-06-08.
+
+Owner/local terminal proof:
+
+```text
+go test ./internal/transport/http/middleware/... ./internal/modules/auth/transport/http/... ./internal/app/bootstrap/...
+ok  pos-go/internal/transport/http/middleware  (cached)
+ok  pos-go/internal/modules/auth/transport/http  (cached)
+ok  pos-go/internal/app/bootstrap  (cached)
+
+bash scripts/audit_route_capabilities.sh
+checked route capability rows: 6
+[PASS] route capability audit passed
+
+make db-status
+[APPLIED] 0006_capability_control.up.sql
+[APPLIED] 0007_seed_existing_protected_capabilities.up.sql
+[APPLIED] 0008_seed_capability_manage_permission.up.sql
+
+make verify
+[PASS] go test ./...
+[PASS] go vet audit
+[PASS] format audit
+[PASS] AI rules audit
+[PASS] file size audit
+[PASS] hexagonal import audit
+[PASS] route capability audit
+[PASS] security gosec audit
+[PASS] aggregate audit passed
+
+Gosec:
+Files: 97
+Lines: 3978
+Nosec: 0
+Issues: 0
+
+Closeout decision:
+
+Capability-control foundation: 100%
+Stage 1 Go quality foundation: 90%
+Overall Laravel-to-Go transition: 20%
+
+Next valid active step:
+
+Start the first POS business-domain blueprint/domain contract.
+Do not start POS CRUD implementation.
+Do not add future POS business capability seeds before accepted domain contracts.
+```
