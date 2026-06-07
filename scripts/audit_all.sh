@@ -34,6 +34,10 @@ echo "-- audit hexagonal boundaries --"
 bash scripts/audit_hexagonal.sh
 echo
 
+echo "-- audit route capabilities --"
+bash scripts/audit_route_capabilities.sh
+echo
+
 echo "-- audit security gosec --"
 bash scripts/audit_security_gosec.sh
 echo

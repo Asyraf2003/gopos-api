@@ -3,7 +3,7 @@ SHELL := /usr/bin/env bash
 APP_BIN := .bin/pos-go-api
 HTTP_PORT ?= 8081
 
-.PHONY: help fmt test vet audit-format audit-ai-rules audit-file-size audit-hex security-gosec audit-all screening check verify ci build run dev smoke auth-login-admin auth-login-cashier auth-start db-dev-setup db-migrate db-status db-adopt-existing git-status push
+.PHONY: help fmt test vet audit-format audit-ai-rules audit-file-size audit-hex audit-route-capabilities security-gosec audit-all screening check verify ci build run dev smoke auth-login-admin auth-login-cashier auth-start db-dev-setup db-migrate db-status db-adopt-existing git-status push
 
 help:
 	@printf '%s\n' \
@@ -15,6 +15,7 @@ help:
 	'  make audit-ai-rules    - run AI rules audit' \
 	'  make audit-file-size   - run file size audit' \
 	'  make audit-hex         - run strict hexagonal import-boundary audit' \
+		'  make audit-route-capabilities - run protected route capability coverage audit' \
 	'  make security-gosec    - run gosec security audit' \
 	'  make audit-all         - run test + all audit scripts' \
 	'  make screening         - alias to audit-all' \
@@ -55,6 +56,9 @@ audit-file-size:
 
 audit-hex:
 	bash scripts/audit_hexagonal.sh
+
+audit-route-capabilities:
+	bash scripts/audit_route_capabilities.sh
 
 security-gosec:
 	bash scripts/audit_security_gosec.sh
