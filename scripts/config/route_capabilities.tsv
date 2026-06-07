@@ -1,0 +1,7 @@
+# method	path	capability_key	required_permission	match	source_pattern
+GET	/api/me	profile.self.show	profile.self.read	exact	group.GET("/me"
+GET	/api/authz/me	authz.profile.self.show	profile.self.read	exact	group.GET("/me"
+POST	/api/auth/logout	auth.session.logout	auth.session.logout	exact	group.POST("/logout"
+POST	/api/admin/accounts/:account_id/roles	account.role.assign	account.role.assign	exact	group.POST("/accounts/:account_id/roles"
+DELETE	/api/admin/accounts/:account_id/roles/:role_key	account.role.remove	account.role.assign	exact	group.DELETE("/accounts/:account_id/roles/:role_key"
+*	/api/admin/capabilities	capability.manage	capability.manage	prefix	group.GET("/capabilities"
