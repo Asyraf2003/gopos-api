@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted implementation slice plan.
+Closed / implemented with proof.
 
 ## Date
 
@@ -10,7 +10,7 @@ Accepted implementation slice plan.
 
 ## Active Scope
 
-Plan ServiceCatalog implementation slice 1 after accepted domain contract.
+ServiceCatalog implementation slice 1 after accepted domain contract.
 
 ## Accepted Contract
 
@@ -22,66 +22,59 @@ docs/blueprints/0024_servicecatalog_domain_contract.md
 
 - ServiceCatalog domain contract is accepted.
 - Capability-control foundation is closed.
-- ServiceCatalog implementation has not started.
-- Business Phase 1 implementation remains 0%.
-- Protected endpoints still require authn, authz, capability check, validation, then usecase execution.
-- This slice is planning only.
+- ServiceCatalog slice 1 is implemented.
+- Implementation exists only in the allowed slice 1 packages:
+  - `internal/modules/servicecatalog/domain`
+  - `internal/modules/servicecatalog/ports`
+  - `internal/modules/servicecatalog/usecase`
+- No HTTP transport was added in this slice.
+- No PostgreSQL adapter was added in this slice.
+- No PostgreSQL migration was added in this slice.
+- No route registration was added in this slice.
+- No capability seed migration was added in this slice.
+- Business Phase 1 is partial because ServiceCatalog slice 1 exists, but ServiceCatalog HTTP/PostgreSQL integration and ProductCatalog are not implemented.
 
 ## DECISION
 
-Slice 1 should implement only ServiceCatalog domain and usecase contracts with tests.
+Slice 1 implemented only ServiceCatalog domain and usecase contracts with tests.
 
-Do not implement HTTP transport yet.
+HTTP transport, PostgreSQL adapter, migrations, route registration, and capability seeds remain deferred to the next accepted blueprint.
 
-Do not implement PostgreSQL adapter yet.
-
-Do not add migrations yet.
-
-Do not add capability seeds yet.
-
-## SCOPE-IN
+## IMPLEMENTED SCOPE
 
 - `internal/modules/servicecatalog/domain`
 - `internal/modules/servicecatalog/ports`
 - `internal/modules/servicecatalog/usecase`
-- Domain normalization behavior
-- Domain validation
-- Usecase command/result contracts
-- In-memory fake repositories for tests
-- Unit tests for create, update, activate, deactivate, show, list, lookup behavior
+- Unit tests for domain and usecase behavior
 
-## SCOPE-OUT
-
-- Echo handlers
-- Route registration
-- PostgreSQL migrations
-- PostgreSQL repositories
-- Capability seed migrations
-- Route-to-capability audit manifest changes
-- UI
-- ProductCatalog
-- Inventory
-- Audit sink implementation
-
-## TARGET PACKAGE PLAN
+## IMPLEMENTED FILES
 
 ```text
-internal/modules/servicecatalog/
-  domain/
-    service_catalog_item.go
-    normalizer.go
-    errors.go
-    validation.go
-  ports/
-    service_catalog_repository.go
-  usecase/
-    create_item.go
-    update_item.go
-    activate_item.go
-    deactivate_item.go
-    show_item.go
-    list_items.go
-    lookup_items.go
+internal/modules/servicecatalog/domain/errors.go
+internal/modules/servicecatalog/domain/normalizer.go
+internal/modules/servicecatalog/domain/service_catalog_item_behavior.go
+internal/modules/servicecatalog/domain/service_catalog_item.go
+internal/modules/servicecatalog/domain/service_catalog_item_test.go
+internal/modules/servicecatalog/domain/validation.go
+internal/modules/servicecatalog/ports/service_catalog_repository.go
+internal/modules/servicecatalog/usecase/activate_item.go
+internal/modules/servicecatalog/usecase/create_item.go
+internal/modules/servicecatalog/usecase/create_item_test.go
+internal/modules/servicecatalog/usecase/deactivate_item.go
+internal/modules/servicecatalog/usecase/errors.go
+internal/modules/servicecatalog/usecase/fake_repository_helpers_test.go
+internal/modules/servicecatalog/usecase/fake_repository_query_test.go
+internal/modules/servicecatalog/usecase/fake_repository_state_test.go
+internal/modules/servicecatalog/usecase/fake_repository_test.go
+internal/modules/servicecatalog/usecase/lifecycle_item_test.go
+internal/modules/servicecatalog/usecase/list_items.go
+internal/modules/servicecatalog/usecase/list_item_test.go
+internal/modules/servicecatalog/usecase/lookup_items.go
+internal/modules/servicecatalog/usecase/lookup_item_test.go
+internal/modules/servicecatalog/usecase/show_item.go
+internal/modules/servicecatalog/usecase/types.go
+internal/modules/servicecatalog/usecase/update_item.go
+internal/modules/servicecatalog/usecase/update_item_test.go
 ```
 
 ## DOMAIN TYPES
@@ -102,9 +95,9 @@ Minimum fields:
 - `created_at`
 - `updated_at`
 
-## DOMAIN RULES
+## DOMAIN RULES PROVEN
 
-- `name` is required after trim.
+- Name is required after trim.
 - Repeated internal whitespace is compacted.
 - Normalized name is lowercase.
 - Default price must be greater than zero.
@@ -113,9 +106,9 @@ Minimum fields:
 - Activate restores active status.
 - Physical delete is forbidden.
 
-## PORTS
+## PORTS IMPLEMENTED
 
-Repository port should support:
+Repository port supports:
 
 - `Create`
 - `Update`
@@ -125,9 +118,9 @@ Repository port should support:
 - `Lookup`
 - `SetActive`
 
-Transactor port is deferred unless usecase tests need explicit transaction boundary in this slice.
+Transactor port remains deferred.
 
-## USECASES
+## USECASES IMPLEMENTED
 
 - `CreateServiceCatalogItem`
 - `UpdateServiceCatalogItem`
@@ -137,7 +130,7 @@ Transactor port is deferred unless usecase tests need explicit transaction bound
 - `ListServiceCatalogItems`
 - `LookupServiceCatalogItems`
 
-## TEST MATRIX
+## TEST MATRIX PROVEN
 
 Domain tests:
 
@@ -162,51 +155,78 @@ Usecase tests:
 - Lookup excludes inactive by default.
 - Lookup enforces max limit.
 
-## PROOF REQUIRED
-
-- `go test ./internal/modules/servicecatalog/...`
-- `make verify`
-
-## NEXT ACTIVE STEP
-
-ServiceCatalog implementation slice 1 is accepted.
-
-Next valid active step:
-
-```text
-Implement ServiceCatalog slice 1: domain, ports, usecase contracts, and unit tests only.
-```
-
-Do not implement HTTP transport, PostgreSQL adapter, migrations, route registration, or capability seeds in this slice.
-
-## ACCEPTANCE
-
-ServiceCatalog implementation slice 1 accepted on 2026-06-08.
-
-Accepted implementation scope:
-
-```text
-internal/modules/servicecatalog/domain
-internal/modules/servicecatalog/ports
-internal/modules/servicecatalog/usecase
-unit tests for domain and usecase behavior
-```
-
-Forbidden in this slice:
-
-```text
-HTTP transport
-PostgreSQL adapter
-PostgreSQL migrations
-route registration
-capability seed migrations
-ProductCatalog
-Inventory
-```
-
-Proof required after implementation:
+## PROOF COLLECTED
 
 ```text
 go test ./internal/modules/servicecatalog/...
+```
+
+Result:
+
+```text
+ok  	pos-go/internal/modules/servicecatalog/domain
+?   	pos-go/internal/modules/servicecatalog/ports	[no test files]
+ok  	pos-go/internal/modules/servicecatalog/usecase
+```
+
+```text
 make verify
 ```
+
+Result:
+
+```text
+[PASS] go test ./...
+[PASS] go vet audit
+[PASS] format audit
+[PASS] AI rules audit
+[PASS] file size audit
+[PASS] hexagonal import audit
+[PASS] route capability audit
+[PASS] security gosec audit
+[PASS] aggregate audit passed
+```
+
+Security proof:
+
+```text
+Gosec  : dev
+Files  : 112
+Lines  : 4659
+Nosec  : 0
+Issues : 0
+```
+
+## SCOPE-OUT CONFIRMED
+
+Still not implemented in this slice:
+
+- HTTP transport
+- PostgreSQL adapter
+- PostgreSQL migrations
+- Route registration
+- Capability seed migrations
+- ProductCatalog
+- Inventory
+
+## ACCEPTANCE
+
+ServiceCatalog implementation slice 1 is accepted and closed with proof on 2026-06-08.
+
+## NEXT ACTIVE STEP
+
+Plan the next ServiceCatalog implementation slice.
+
+Candidate scope:
+
+ServiceCatalog HTTP transport, PostgreSQL adapter, migrations, route registration, and capability seeds.
+
+Do not implement the next scope until a new accepted blueprint defines:
+
+- Exact files
+- Route and capability mapping
+- Persistence schema
+- Transaction behavior
+- Audit behavior
+- Authorization behavior
+- Proof commands
