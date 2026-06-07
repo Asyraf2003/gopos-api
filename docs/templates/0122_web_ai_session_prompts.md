@@ -8,11 +8,25 @@ Web AI sessions are read-only by default.
 
 The GitHub connector may be used only for read-only repository facts unless the owner gives exact mutation permission in the prompt. A task that says "write docs/...", "update docs/...", "create evidence", "prepare handoff", or "close scope" means draft paste-ready content in the chat response. It does not mean creating, updating, deleting, committing, branching, commenting, labeling, merging, rerunning CI, or otherwise mutating GitHub.
 
+Web AI prompts must not include Codex local implementation instructions unless they are drafting clearly separated `HANDOFF TEXT FOR CODEX`.
+
+Before sending any Web AI prompt, check:
+
+- prompt target is Web AI only;
+- template source is `docs/templates/0122_web_ai_session_prompts.md`;
+- GitHub connector remains read-only by default;
+- local runtime, test, database, migration, and server proof is not claimed unless exact output is provided;
+- commands that still need local execution are under `PROOF THE TERMINAL AGENT MUST RUN`;
+- no Codex implementation task is mixed into the Web AI task section unless the owner explicitly requested collaboration.
+
 ## Open A Web AI Session
 
 Copy this as plain text. Do not wrap it in Markdown fences.
 
 ```text
+TARGET AGENT: Web AI
+TEMPLATE SOURCE: docs/templates/0122_web_ai_session_prompts.md
+
 You are helping with a Go Echo API + PostgreSQL migration project.
 
 IMPORTANT
@@ -54,6 +68,8 @@ REPLACE_WITH_TASK
 
 RULES
 - Answer in English unless the requested user-facing app text must be Indonesian.
+- Do not include Codex local implementation instructions unless drafting HANDOFF TEXT FOR CODEX.
+- HANDOFF TEXT FOR CODEX must be clearly separated from Web AI analysis.
 - Do not invent files, tests, schema, or repo state.
 - Work in one focused active step.
 - Analyze enough context first, then provide a concise plan or patch plan.
@@ -84,6 +100,14 @@ EXPECTED OUTPUT
 - PROOF THE TERMINAL AGENT MUST RUN
 - HANDOFF TEXT FOR CODEX
 
+SELF-CHECK
+- Prompt target is Web AI only.
+- Template source is docs/templates/0122_web_ai_session_prompts.md.
+- GitHub connector remains read-only by default.
+- Local runtime/test/database proof is not claimed unless exact output is provided.
+- Commands needing local execution are under PROOF THE TERMINAL AGENT MUST RUN.
+- No Codex implementation task is mixed into TASK unless owner explicitly requested collaboration.
+
 STYLE
 - Be direct and concise.
 - Put blockers first only when they block the step.
@@ -93,6 +117,9 @@ STYLE
 ## Continue An Existing Web AI Problem
 
 ```text
+TARGET AGENT: Web AI
+TEMPLATE SOURCE: docs/templates/0122_web_ai_session_prompts.md
+
 Continue the same active scope.
 
 IMPORTANT
@@ -123,6 +150,8 @@ General phrases such as "write docs/...", "update docs/...", "create evidence", 
 
 RULES
 - Preserve existing decisions unless new evidence contradicts them.
+- Do not include Codex local implementation instructions unless drafting HANDOFF TEXT FOR CODEX.
+- HANDOFF TEXT FOR CODEX must be clearly separated from Web AI analysis.
 - If new evidence changes the plan, say exactly what changed and why.
 - Continue with one focused active step.
 - If source data is missing, ask for the smallest specific source batch.
@@ -148,16 +177,28 @@ EXPECTED OUTPUT
 - RISKS
 - PROOF THE TERMINAL AGENT MUST RUN
 - NEXT
+
+SELF-CHECK
+- Prompt target is Web AI only.
+- Template source is docs/templates/0122_web_ai_session_prompts.md.
+- GitHub connector remains read-only by default.
+- Local runtime/test/database proof is not claimed unless exact output is provided.
+- Commands needing local execution are under PROOF THE TERMINAL AGENT MUST RUN.
+- No Codex implementation task is mixed into TASK NOW unless owner explicitly requested collaboration.
 ```
 
 ## Close A Web AI Session
 
 ```text
+TARGET AGENT: Web AI
+TEMPLATE SOURCE: docs/templates/0122_web_ai_session_prompts.md
+
 Prepare a handoff for terminal Codex.
 
 IMPORTANT
 You are Web AI / browser AI. You are read-only by default.
 Closing a Web AI session means drafting a Terminal Codex handoff in this response. It does not mean writing a file, creating evidence, committing, opening a PR, commenting, labeling, merging, rerunning CI, or changing GitHub state.
+Do not include Codex local implementation instructions outside the clearly separated handoff text.
 
 OUTPUT FORMAT
 Use plain text headings.
@@ -181,15 +222,27 @@ Do not include claims about commands being run unless command output was provide
 Do not claim files were created, tests passed, runtime worked, or scope is closed unless proof was provided.
 Put all local runtime, test, database, migration, server-start, and git-status checks under Proof commands Codex should run when output was not provided.
 Use one next active step only.
+
+SELF-CHECK
+Prompt target is Web AI only.
+Template source is docs/templates/0122_web_ai_session_prompts.md.
+GitHub connector remains read-only by default.
+Local runtime/test/database proof is not claimed unless exact output is provided.
+Commands needing local execution are under Proof commands Codex should run.
+No Codex implementation task is mixed into the Web AI task section unless owner explicitly requested collaboration.
 ```
 
 ## Web AI Output Cleanup Prompt
 
 ```text
+TARGET AGENT: Web AI
+TEMPLATE SOURCE: docs/templates/0122_web_ai_session_prompts.md
+
 Rewrite your previous answer so it is safe to paste into a repository Markdown file.
 
 RULES
 - English only.
+- Do not include Codex local implementation instructions unless drafting HANDOFF TEXT FOR CODEX.
 - ASCII only.
 - No nested Markdown code fences.
 - Use file paths exactly.

@@ -2,9 +2,22 @@
 
 Use these prompts for terminal Codex work in this repository.
 
+Terminal Codex prompts must not include Web AI read-only connector instructions unless the owner explicitly requests a collaboration packet.
+
+Before sending any Codex prompt, check:
+
+- prompt target is Terminal Codex only;
+- template source is `docs/templates/0121_codex_session_prompts.md`;
+- no Web AI mutation or read-only connector language is included;
+- proof commands are grouped in one final proof section;
+- no git commands are included unless the owner explicitly asks.
+
 ## Start A Codex Session
 
 ```text
+TARGET AGENT: Terminal Codex
+TEMPLATE SOURCE: docs/templates/0121_codex_session_prompts.md
+
 Read the repository instructions before doing any work.
 
 CONTEXT
@@ -23,6 +36,7 @@ TASK
 REPLACE_WITH_TASK
 
 RULES
+- Do not include Web AI read-only connector instructions unless the owner explicitly requests a collaboration packet.
 - Do not implement before reading the active blueprint.
 - Use fd for file discovery and rg for text search.
 - Use one active step.
@@ -36,6 +50,13 @@ RULES
 - Do not touch files outside the active scope.
 - If docs workflow rules change, update the impacted README/index/AGENTS/template/audit chain in the same step when feasible.
 - Create or update a handoff before context runs low or when a long-running scope ends with durable changes.
+
+SELF-CHECK
+- Prompt target is Terminal Codex only.
+- Template source is docs/templates/0121_codex_session_prompts.md.
+- No Web AI mutation/read-only connector language is included.
+- Proof commands are grouped in one final proof section.
+- No git commands are included unless owner explicitly asks.
 
 EXPECTED OUTPUT
 - Fact summary.
@@ -57,9 +78,24 @@ STYLE
 ## Ask Codex To Implement One Blueprint Step
 
 ```text
-Implement only the next active step from this blueprint:
+TARGET AGENT: Terminal Codex
+TEMPLATE SOURCE: docs/templates/0121_codex_session_prompts.md
 
+CONTEXT
+Repository: /home/asyraf/Code/go/pos-go
+Active scope: REPLACE_WITH_SCOPE
+Blueprint: docs/blueprints/REPLACE_WITH_BLUEPRINT.md
+
+FILES TO READ FIRST
+docs/README.md
+docs/AGENTS.md
+docs/0001_index.md
+docs/0002_decision_policy.md
+docs/0003_session_start_protocol.md
 docs/blueprints/REPLACE_WITH_BLUEPRINT.md
+
+TASK
+Implement only the next active step from the blueprint.
 
 ACTIVE STEP
 REPLACE_WITH_ONE_STEP
@@ -70,19 +106,46 @@ REPLACE_WITH_ALLOWED_FILES
 FORBIDDEN FILES
 REPLACE_WITH_FORBIDDEN_FILES
 
+RULES
+- Do not include Web AI read-only connector instructions unless the owner explicitly requests a collaboration packet.
+- Use one active step.
+- Mark GAP instead of guessing missing repo state.
+- Stop if the blueprint does not contain enough information.
+- If blocked by missing data, ask for the smallest specific source batch.
+- If blocked by owner decision, ask with 2-3 options and tradeoffs.
+- Do not use git commands unless the owner explicitly asks.
+- Update handoff before finishing durable work.
+- Report estimated progress percentage.
+- Report estimated context-window status.
+
 PROOF REQUIRED
 REPLACE_WITH_FOCUSED_COMMAND
 make verify
 
-Stop if the blueprint does not contain enough information. Mark the missing item as GAP.
+EXPECTED OUTPUT
+- FACT
+- CHANGED FILES
+- DECISIONS
+- PROOF RESULT
+- GAP
+- NEXT VALID STEP
+- PROGRESS
+- CONTEXT STATUS
 
-If blocked by missing data, ask for the smallest specific source batch.
-If blocked by owner decision, ask with 2-3 options and tradeoffs.
+SELF-CHECK
+- Prompt target is Terminal Codex only.
+- Template source is docs/templates/0121_codex_session_prompts.md.
+- No Web AI mutation/read-only connector language is included.
+- Proof commands are grouped in one final proof section.
+- No git commands are included unless owner explicitly asks.
 ```
 
 ## Ask Codex To Review Local Changes
 
 ```text
+TARGET AGENT: Terminal Codex
+TEMPLATE SOURCE: docs/templates/0121_codex_session_prompts.md
+
 Review the current local changes as a code reviewer.
 
 SCOPE
@@ -97,6 +160,7 @@ FOCUS
 - capability/authz bypass risk.
 
 RULES
+- Do not include Web AI read-only connector instructions unless the owner explicitly requests a collaboration packet.
 - Findings first, ordered by severity.
 - Use file and line references.
 - If there are no findings, say that clearly.
@@ -106,6 +170,9 @@ RULES
 ## Close A Codex Session
 
 ```text
+TARGET AGENT: Terminal Codex
+TEMPLATE SOURCE: docs/templates/0121_codex_session_prompts.md
+
 Create or update a handoff for this session.
 
 HANDOFF TARGET
@@ -114,6 +181,8 @@ docs/handoffs/REPLACE_WITH_DATE_SCOPE.md
 INCLUDE
 - date;
 - active scope;
+- target agent for any recommended next session;
+- template source for any recommended next-session prompt;
 - files changed;
 - proof collected;
 - tests or commands run;

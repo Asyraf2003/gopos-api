@@ -26,6 +26,18 @@ Every handoff must include:
 - estimated scope progress percentage;
 - estimated context-window status.
 
+If the handoff recommends a next AI session, it must also include:
+
+- target agent for the next session;
+- template source for the next prompt;
+- one next active step;
+- files the next agent should read;
+- files the next agent may edit, when the target is Terminal Codex;
+- files the next agent must not edit;
+- proof commands;
+- progress percentage;
+- context-window status.
+
 ## Automatic Handoff Triggers
 
 Create or update a handoff without waiting for the owner to repeat the request when:
@@ -56,6 +68,8 @@ Before sending work to another AI, create a scope packet.
 
 The packet must say:
 
+- target agent;
+- template source;
 - what domain/API is active;
 - which files are provided as context;
 - which files may be edited;
@@ -77,6 +91,9 @@ The receiving AI must:
 ## Forbidden Handoff Behavior
 
 - Do not say "continue from previous chat" without a written handoff.
+- Do not omit the target agent from a next-session prompt.
+- Do not write "Web AI or Codex next session" as a single prompt.
+- Do not mix Web AI and Codex instructions unless the owner explicitly requested a collaboration packet.
 - Do not send only code files without rules and proof requirements.
 - Do not let archive docs override active blueprint.
 - Do not ask another AI to edit files outside the packet.

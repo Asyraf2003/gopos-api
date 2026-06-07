@@ -88,6 +88,8 @@ It prevents:
 - Do not expose an API without capability metadata.
 - Do not claim tests passed without visible output.
 - Do not hand work to another AI without a scope packet and handoff target.
+- Do not draft a next-session prompt without selecting exactly one target agent and one matching template source.
+- Do not write hybrid Web AI/Codex prompts unless the owner explicitly requests a collaboration packet.
 - For web AI with a GitHub connector, treat the connector as read-only repository source of truth. Allow only fetch, search, list, and get connector actions by default.
 - Web AI must not mutate files, branches, commits, refs, pull requests, issues, labels, reviewers, merges, or remote CI unless the prompt gives exact mutation permission naming the action, target repository, branch, path or issue/PR, and intended content.
 - Web AI prompts that say "write docs/...", "update docs/...", "create evidence", "prepare handoff", or "close scope" mean draft paste-ready response content, not repository mutation.

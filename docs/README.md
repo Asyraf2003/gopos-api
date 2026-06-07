@@ -154,6 +154,8 @@ Use `templates/0121_codex_session_prompts.md` for terminal Codex sessions.
 
 Use `templates/0122_web_ai_session_prompts.md` for GPT web or another browser-based AI.
 
+Before drafting any next-session prompt, select exactly one target agent and exactly one matching template source. Do not combine Terminal Codex and Web AI instructions in one prompt unless the owner explicitly requests a collaboration packet. If the target agent is missing, ask one concise clarification question.
+
 When GPT web has a GitHub connector, the connector is the read-only source of truth for repository files, branches, pull requests, issues, and committed code. Web AI connector access is read-only by default: only fetch, search, list, and get actions are allowed unless exact mutation permission is given.
 
 Do not ask web AI to create, update, or delete files; create branches or commits; update refs; open or merge PRs; create or update issues; comment; label; request reviewers; rerun remote CI; or otherwise mutate GitHub unless the prompt explicitly names the mutation action, target repository, branch, path or issue/PR, and intended content. Phrases such as "write docs/...", "update docs/...", "create evidence", "prepare handoff", and "close scope" mean draft paste-ready content in the response, not repository mutation.

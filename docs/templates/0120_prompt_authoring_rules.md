@@ -20,6 +20,45 @@ Prompts must be easy to copy, paste, audit, and continue later.
 - Do not paste secrets, tokens, passwords, or private keys.
 - Do not say tests passed unless command output is included.
 
+## Prompt Target Selection Rule
+
+Before drafting any next-session prompt, identify exactly one target agent:
+
+- Terminal Codex;
+- Web AI.
+
+Then select exactly one matching template:
+
+- Terminal Codex uses `docs/templates/0121_codex_session_prompts.md`;
+- Web AI uses `docs/templates/0122_web_ai_session_prompts.md`.
+
+Do not combine Terminal Codex and Web AI instructions in one prompt.
+
+If the owner does not specify the target agent, ask one concise clarification question instead of drafting a prompt.
+
+Create a collaboration packet only when the owner explicitly requests Web AI/Codex collaboration.
+
+Every generated next-session prompt must include:
+
+- target agent;
+- template source;
+- active scope;
+- one active step;
+- files to read first;
+- allowed files for Terminal Codex implementation prompts;
+- forbidden files;
+- proof requirements;
+- expected output;
+- handoff, progress, and context-window requirement.
+
+Final self-check before sharing a generated prompt:
+
+- exactly one target agent is named;
+- exactly one template source is named;
+- no hybrid Terminal Codex/Web AI instructions are present;
+- proof commands are grouped in the correct proof section for that target agent;
+- no git commands are included unless the owner explicitly asked for them.
+
 ## Required Prompt Sections
 
 Use these sections for serious work:
