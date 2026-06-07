@@ -6,66 +6,58 @@
 
 ## Active Scope
 
-Add admin capability HTTP surface.
+Add admin capability HTTP surface for `docs/blueprints/0010_capability_control_foundation.md` step 6.
 
-## Scope In
-
-- Add `capability.manage` permission.
-- Assign `capability.manage` to `admin` role.
-- Add admin capability list/show/enable/disable HTTP handlers.
-- Wire admin routes behind authn, `capability.manage` authz, and capability runtime check.
-- Keep POS business CRUD out of scope.
-
-## Scope Out
-
-- Products CRUD.
-- Sale order workflow.
-- Inventory.
-- Payments.
-- Route-to-capability audit script.
-
-## Planned Routes
+## Files Changed
 
 ```text
-GET  /api/admin/capabilities
-GET  /api/admin/capabilities/:key
-POST /api/admin/capabilities/:key/enable
-POST /api/admin/capabilities/:key/disable
+migrations/0008_seed_capability_manage_permission.up.sql
+migrations/0008_seed_capability_manage_permission.down.sql
+internal/presentation/http/id/capability/capability.go
+internal/modules/capability/transport/http/capability_handler.go
+internal/modules/capability/transport/http/capability_handler_test.go
+internal/app/bootstrap/app.go
+docs/handoffs/2026-06-07-capability-admin-http-surface.md
+docs/evidence/0003_laravel_to_go_transition_progress_ledger.md
 ```
 
-## Proof To Collect
+## Implementation Facts
 
-- `make dev`
-- Permission SQL proof
-- Role permission SQL proof
-- `capability.manage` SQL proof
-- `go test ./internal/modules/capability/...`
-- `go test ./internal/modules/capability/transport/http/...`
-- `go test ./internal/app/bootstrap/...`
-- `make verify`
+- Migration `0008` seeds permission `capability.manage`.
+- Migration `0008` assigns `capability.manage` only to role `admin`.
+- Migration `0008` seeds `api_capabilities.key = 'capability.manage'` for `/api/admin/capabilities` with method `*`, required permission `capability.manage`, high risk, audit required, and owner package `internal/modules/capability/transport/http`.
+- Migration `0008` extends `api_capabilities_method_check` to allow `*` because the admin capability control surface uses one aggregate capability key for list/show/enable/disable routes.
+- Capability DTO mapping exists in `internal/presentation/http/id/capability/capability.go`.
+- Admin capability handler exists in `internal/modules/capability/transport/http/capability_handler.go`.
+- Registered handler routes are `GET /capabilities`, `GET /capabilities/:key`, `POST /capabilities/:key/enable`, and `POST /capabilities/:key/disable` on the provided Echo group.
+- Handler tests use fake use cases and do not require PostgreSQL.
+- Bootstrap wires the capability PostgreSQL repository, list/show/enable/disable use cases, check use case, and admin capability handler.
+- Bootstrap protects `/api/admin/capabilities...` with `RequireAuth`, `RequirePermission("capability.manage")`, and `RequireCapability("capability.manage", checkCapabilityUsecase)`.
+- Existing account-role route behavior remains on its separate `/api/admin` group with permission `account.role.assign`.
 
-## Open Gaps After This Step
+## Proof Placeholders
 
-- Route-to-capability audit script.
-- Route-level disabled protected endpoint proof.
-- POS domain CRUD remains blocked until capability-control foundation proof is complete.
+No proof command output was recorded in this handoff.
 
-## NEXT sekarang
+The user still needs to run and paste proof for:
 
-Jalankan validasi docs lokal vs remote dulu:
-
-```bash
-cd /home/asyraf/Code/go/pos-go
-
-git status --short
-git log --oneline -5
-git pull --ff-only
-
-grep -n "SQL seed proof\|aggregate audit passed\|existing protected route capability records\|Admin capability HTTP surface" \
-  docs/handoffs/2026-06-07-capability-route-seeds.md \
-  docs/evidence/0003_laravel_to_go_transition_progress_ledger.md
+```text
+make dev
+permission capability.manage SQL proof
+admin role permission SQL proof
+api_capabilities capability.manage SQL proof
+go test ./internal/modules/capability/...
+go test ./internal/modules/capability/transport/http/...
+go test ./internal/app/bootstrap/...
+make verify
 ```
 
-Setelah output itu jelas, baru masuk implement migration `0008`.
+## Remaining Gaps
 
-Jangan loncat bikin CRUD, nanti capability foundation cuma jadi hiasan arsitektur yang mahal dan tidak berguna.
+- Route-to-capability audit script remains out of scope and not implemented.
+- Route-level disabled protected endpoint proof remains open unless covered by later proof.
+- POS CRUD remains blocked until capability-control foundation proof is complete.
+
+## Next Valid Step
+
+Collect proof for this admin capability HTTP surface step before moving to route-to-capability audit script work.

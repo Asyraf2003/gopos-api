@@ -7,6 +7,8 @@ import (
 	"pos-go/internal/config"
 	authhttp "pos-go/internal/modules/auth/transport/http"
 	authusecase "pos-go/internal/modules/auth/usecase"
+	capabilityhttp "pos-go/internal/modules/capability/transport/http"
+	capabilityusecase "pos-go/internal/modules/capability/usecase"
 	systemhttp "pos-go/internal/modules/system/transport/http"
 	googleoidc "pos-go/internal/platform/google"
 	"pos-go/internal/platform/postgres"
@@ -75,6 +77,8 @@ func New(ctx context.Context, cfg config.Config) (*App, error) {
 		roleAssigner := postgres.NewAccountRoleAssigner(pool)
 		roleRemover := postgres.NewAccountRoleRemover(pool)
 		principalResolver := postgres.NewPrincipalResolver(pool)
+		capabilityRepository := postgres.NewCapabilityRepository(pool)
+		checkCapabilityUsecase := capabilityusecase.NewCheckCapability(capabilityRepository)
 
 		authGroup := api.Group("/auth")
 
@@ -160,6 +164,23 @@ func New(ctx context.Context, cfg config.Config) (*App, error) {
 			removeAccountRoleUsecase,
 		)
 		accountRoleHandler.Register(adminGroup)
+
+		adminCapabilityGroup := api.Group("/admin")
+		adminCapabilityGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
+		adminCapabilityGroup.Use(httpmw.RequirePermission("capability.manage"))
+		adminCapabilityGroup.Use(httpmw.RequireCapability("capability.manage", checkCapabilityUsecase))
+
+		listCapabilitiesUsecase := capabilityusecase.NewListCapabilities(capabilityRepository)
+		showCapabilityUsecase := capabilityusecase.NewShowCapability(capabilityRepository)
+		enableCapabilityUsecase := capabilityusecase.NewEnableCapability(capabilityRepository)
+		disableCapabilityUsecase := capabilityusecase.NewDisableCapability(capabilityRepository)
+		capabilityHandler := capabilityhttp.NewCapabilityHandler(
+			listCapabilitiesUsecase,
+			showCapabilityUsecase,
+			enableCapabilityUsecase,
+			disableCapabilityUsecase,
+		)
+		capabilityHandler.Register(adminCapabilityGroup)
 	}
 
 	return &App{
