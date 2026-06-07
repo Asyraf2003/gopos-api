@@ -38,6 +38,7 @@ docs/handoffs/2026-06-07-capability-runtime-middleware.md
 docs/handoffs/2026-06-07-capability-route-seeds.md
 docs/handoffs/2026-06-07-capability-admin-http-surface.md
 docs/handoffs/2026-06-07-prompt-template-selection-rule.md
+docs/handoffs/2026-06-07-ai-execution-channel-boundaries.md
 ```
 
 ## Current Decision
@@ -74,6 +75,7 @@ Protected POS endpoints must wait for capability-control proof.
 - Web AI GitHub connector rules are documented as read-only by default.
 - Prompt template selection rule exists so next-session prompts must select exactly one target agent and one matching template source.
 - Hybrid Web AI/Codex next-session prompts are forbidden unless explicitly requested as a collaboration packet.
+- AI execution channel boundaries are clarified: Web AI no longer defaults to Codex as executor, owner/local terminal command-plan loop is documented, and collaboration packet remains special-case only.
 - Prompt template hardening is a workflow/docs quality improvement and does not increase POS implementation progress.
 - Prompt template hardening proof is recorded in `docs/handoffs/2026-06-07-prompt-template-selection-rule.md`; `make verify` passed after the docs change.
 - Manual debug login foundation is documented in `docs/handoffs/2026-06-06-manual-auth-login.md`.
