@@ -138,24 +138,23 @@ func New(ctx context.Context, cfg config.Config) (*App, error) {
 		meGroup := api.Group("")
 		meGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
 		meGroup.Use(httpmw.RequirePermission("profile.self.read"))
+		meGroup.Use(httpmw.RequireCapability("profile.self.show", checkCapabilityUsecase))
 		meHandler.Register(meGroup)
 
 		authzGroup := api.Group("/authz")
 		authzGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
 		authzGroup.Use(httpmw.RequirePermission("profile.self.read"))
+		authzGroup.Use(httpmw.RequireCapability("authz.profile.self.show", checkCapabilityUsecase))
 		meHandler.Register(authzGroup)
 
 		logoutGroup := api.Group("/auth")
 		logoutGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
 		logoutGroup.Use(httpmw.RequirePermission("auth.session.logout"))
+		logoutGroup.Use(httpmw.RequireCapability("auth.session.logout", checkCapabilityUsecase))
 
 		logoutUsecase := authusecase.NewLogoutCurrentSession(sessionRevoker)
 		logoutHandler := authhttp.NewLogoutHandler(logoutUsecase)
 		logoutHandler.Register(logoutGroup)
-
-		adminGroup := api.Group("/admin")
-		adminGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
-		adminGroup.Use(httpmw.RequirePermission("account.role.assign"))
 
 		assignAccountRoleUsecase := authusecase.NewAssignAccountRole(roleAssigner)
 		removeAccountRoleUsecase := authusecase.NewRemoveAccountRole(roleRemover)
@@ -163,7 +162,18 @@ func New(ctx context.Context, cfg config.Config) (*App, error) {
 			assignAccountRoleUsecase,
 			removeAccountRoleUsecase,
 		)
-		accountRoleHandler.Register(adminGroup)
+
+		adminAssignGroup := api.Group("/admin")
+		adminAssignGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
+		adminAssignGroup.Use(httpmw.RequirePermission("account.role.assign"))
+		adminAssignGroup.Use(httpmw.RequireCapability("account.role.assign", checkCapabilityUsecase))
+		accountRoleHandler.RegisterAssign(adminAssignGroup)
+
+		adminRemoveGroup := api.Group("/admin")
+		adminRemoveGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
+		adminRemoveGroup.Use(httpmw.RequirePermission("account.role.assign"))
+		adminRemoveGroup.Use(httpmw.RequireCapability("account.role.remove", checkCapabilityUsecase))
+		accountRoleHandler.RegisterRemove(adminRemoveGroup)
 
 		adminCapabilityGroup := api.Group("/admin")
 		adminCapabilityGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))

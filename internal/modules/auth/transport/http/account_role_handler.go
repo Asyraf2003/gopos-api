@@ -34,7 +34,15 @@ func NewAccountRoleHandler(
 }
 
 func (h *AccountRoleHandler) Register(group *echo.Group) {
+	h.RegisterAssign(group)
+	h.RegisterRemove(group)
+}
+
+func (h *AccountRoleHandler) RegisterAssign(group *echo.Group) {
 	group.POST("/accounts/:account_id/roles", h.Assign)
+}
+
+func (h *AccountRoleHandler) RegisterRemove(group *echo.Group) {
 	group.DELETE("/accounts/:account_id/roles/:role_key", h.Remove)
 }
 
