@@ -55,6 +55,10 @@ Use Web AI only when the owner asks for read-only analysis, planning, review, or
 
 Use explicit collaboration packet only when the owner explicitly requests Web AI, Terminal Codex, owner/local terminal, and repository state to collaborate for a specific problem.
 
+Every next section or handoff must identify exactly one next execution channel.
+
+For normal Web AI analysis, the next execution channel should usually be owner/local terminal unless the owner named another channel.
+
 ## Automatic Handoff Triggers
 
 Create or update a handoff without waiting for the owner to repeat the request when:
@@ -113,6 +117,10 @@ The receiving AI must:
 - Do not mix Web AI and Codex instructions unless the owner explicitly requested a collaboration packet.
 - Do not write "send to Codex" when owner/local terminal can run the command plan and Web AI can validate after push.
 - Do not make `HANDOFF TEXT FOR CODEX` mandatory Web AI output.
+- Do not include Codex handoff sections in Web AI output by default.
+- Do not treat `OPTIONAL HANDOFF TEXT FOR CODEX` as a harmless extra section.
+- Do not include extra Codex handoff text unless the owner requested Codex.
+- Do not leave a handoff or NEXT section without exactly one next execution channel: owner/local terminal, Web AI, Terminal Codex, or explicit collaboration packet.
 - Do not use collaboration mode unless it says the owner explicitly requested it.
 - Do not send only code files without rules and proof requirements.
 - Do not let archive docs override active blueprint.

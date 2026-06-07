@@ -91,6 +91,8 @@ It prevents:
 - Do not draft a next-session prompt without selecting exactly one target agent and one matching template source.
 - Do not write hybrid Web AI/Codex prompts unless the owner explicitly requests a collaboration packet.
 - Do not make Web AI assume Terminal Codex is the executor; Web AI normally returns command plans for owner/local terminal execution.
+- Do not include Codex handoff text in normal Web AI analysis unless the owner explicitly requests Codex.
+- Every NEXT or handoff section must name exactly one next execution channel.
 - Do not make Terminal Codex assume Web AI collaboration unless the owner explicitly provided a collaboration packet.
 - For web AI with a GitHub connector, treat the connector as read-only repository source of truth. Allow only fetch, search, list, and get connector actions by default.
 - Web AI must not mutate files, branches, commits, refs, pull requests, issues, labels, reviewers, merges, or remote CI unless the prompt gives exact mutation permission naming the action, target repository, branch, path or issue/PR, and intended content.

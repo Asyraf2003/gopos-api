@@ -158,6 +158,8 @@ Before drafting any next-session prompt, select exactly one target agent and exa
 
 Web AI is read-only analysis/planning by default and should normally produce command plans for owner/local terminal execution. Terminal Codex is the local CLI implementation agent. Do not assume either agent is the executor for the other unless the owner explicitly requests that execution channel or a collaboration packet.
 
+Normal Web AI analysis must omit Codex handoff text unless the owner explicitly requests Codex. The default terminal execution channel for Web AI command plans is owner/local terminal. Every `NEXT` or handoff section must name exactly one next execution channel.
+
 When GPT web has a GitHub connector, the connector is the read-only source of truth for repository files, branches, pull requests, issues, and committed code. Web AI connector access is read-only by default: only fetch, search, list, and get actions are allowed unless exact mutation permission is given.
 
 Do not ask web AI to create, update, or delete files; create branches or commits; update refs; open or merge PRs; create or update issues; comment; label; request reviewers; rerun remote CI; or otherwise mutate GitHub unless the prompt explicitly names the mutation action, target repository, branch, path or issue/PR, and intended content. Phrases such as "write docs/...", "update docs/...", "create evidence", "prepare handoff", and "close scope" mean draft paste-ready content in the response, not repository mutation.

@@ -54,6 +54,9 @@ If the user names a blueprint, ADR, handoff, error log, branch, commit, command 
 - Do not write hybrid Web AI/Codex prompts unless the owner explicitly requests a collaboration packet.
 - If the target agent is missing, ask one concise clarification question instead of drafting a mixed prompt.
 - Web AI is read-only analysis/planning by default and should normally produce command plans for owner/local terminal execution.
+- Normal Web AI analysis must omit Codex handoff text unless the owner explicitly requests Codex.
+- The default terminal execution channel for Web AI command plans is owner/local terminal.
+- Every NEXT or handoff section must name exactly one next execution channel.
 - Terminal Codex is the local CLI implementation agent and must not assume Web AI collaboration unless the owner explicitly provided a collaboration packet.
 - Web AI with a GitHub connector must use the connector as read-only repository source of truth. Only fetch, search, list, and get actions are allowed by default.
 - Web AI must not create, update, or delete files; create branches or commits; update refs; open or merge PRs; create or update issues; comment; label; request reviewers; rerun remote CI; or otherwise mutate GitHub unless the prompt gives exact mutation permission naming the action, target repository, branch, path or issue/PR, and intended content.

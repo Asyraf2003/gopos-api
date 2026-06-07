@@ -86,6 +86,14 @@ If the next executor is unclear, ask one concise clarification question.
 
 Do not convert a Web AI analysis task into a Terminal Codex handoff unless the owner asked for Codex.
 
+Web AI analysis output must not include Codex handoff text unless the owner explicitly requested Codex.
+
+If a Web AI output includes a Codex handoff without explicit owner request, treat it as a template-compliance failure.
+
+Default terminal execution channel for Web AI command plans is owner/local terminal, not Terminal Codex.
+
+The next execution channel must be named explicitly.
+
 Normal Web AI loop:
 
 ```text

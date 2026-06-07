@@ -8,11 +8,23 @@ Web AI sessions are read-only by default.
 
 The GitHub connector may be used only for read-only repository facts unless the owner gives exact mutation permission in the prompt. A task that says "write docs/...", "update docs/...", "create evidence", "prepare handoff", or "close scope" means draft paste-ready content in the chat response. It does not mean creating, updating, deleting, committing, branching, commenting, labeling, merging, rerunning CI, or otherwise mutating GitHub.
 
-Web AI prompts must not include Codex local implementation instructions unless they are drafting clearly separated `OPTIONAL HANDOFF TEXT FOR CODEX`.
+Web AI prompts must not include Codex local implementation instructions during normal analysis.
 
 Web AI should not assume Terminal Codex is the executor. For normal Web AI analysis, prefer `COMMAND PLAN FOR OWNER / LOCAL TERMINAL`.
 
-Use `OPTIONAL HANDOFF TEXT FOR CODEX` only when the owner explicitly asks for Codex or when the task is to prepare a Codex handoff.
+`OPTIONAL HANDOFF TEXT FOR CODEX` is forbidden in normal Web AI analysis output.
+
+Use `OPTIONAL HANDOFF TEXT FOR CODEX` only when one condition is true:
+
+- the owner explicitly says the next target is Codex;
+- the owner asks to prepare a Codex handoff;
+- the task is a closeout specifically for Codex.
+
+If `OPTIONAL HANDOFF TEXT FOR CODEX` appears, Web AI must quote or name the exact owner instruction that requested Codex.
+
+If there is no exact owner Codex request, remove the Codex handoff and provide only the owner/local terminal command plan.
+
+Codex handoff is omitted unless exact owner Codex request is identified.
 
 Compatibility note: the older audit anchor `PROOF THE TERMINAL AGENT MUST RUN` means `PROOF THE OWNER OR TERMINAL AGENT MUST RUN` in current Web AI prompts.
 
@@ -25,7 +37,10 @@ Before sending any Web AI prompt, check:
 - commands that still need local execution are under `PROOF THE OWNER OR TERMINAL AGENT MUST RUN`;
 - no Codex implementation task is mixed into the Web AI task section unless the owner explicitly requested collaboration.
 - Web AI did not assume Codex executor.
-- Optional Codex handoff is omitted unless owner requested it.
+- if `OPTIONAL HANDOFF TEXT FOR CODEX` is present, the exact owner Codex request is identified;
+- if exact owner Codex request is absent, `OPTIONAL HANDOFF TEXT FOR CODEX` is omitted;
+- `COMMAND PLAN FOR OWNER / LOCAL TERMINAL` is present for normal analysis;
+- `NEXT` names exactly one next execution channel.
 
 ## Open A Web AI Session
 
@@ -80,7 +95,9 @@ RULES
 - OPTIONAL HANDOFF TEXT FOR CODEX must be clearly separated from Web AI analysis.
 - Do not assume Terminal Codex is the executor.
 - Prefer COMMAND PLAN FOR OWNER / LOCAL TERMINAL for normal Web AI analysis.
-- Include OPTIONAL HANDOFF TEXT FOR CODEX only when owner explicitly asks for Codex or the task is to prepare a Codex handoff.
+- Omit OPTIONAL HANDOFF TEXT FOR CODEX unless owner explicitly asks for Codex or the task is to prepare a Codex handoff.
+- If OPTIONAL HANDOFF TEXT FOR CODEX appears, quote or name the exact owner instruction that requested Codex.
+- If no exact owner Codex request exists, remove OPTIONAL HANDOFF TEXT FOR CODEX and use only owner/local terminal sections.
 - Do not invent files, tests, schema, or repo state.
 - Work in one focused active step.
 - Analyze enough context first, then provide a concise plan or patch plan.
@@ -110,7 +127,7 @@ EXPECTED OUTPUT
 - RISKS
 - COMMAND PLAN FOR OWNER / LOCAL TERMINAL
 - PROOF THE OWNER OR TERMINAL AGENT MUST RUN
-- OPTIONAL HANDOFF TEXT FOR CODEX, only when owner explicitly requests Codex
+- NEXT
 
 SELF-CHECK
 - Prompt target is Web AI only.
@@ -120,7 +137,10 @@ SELF-CHECK
 - Local runtime/test/database proof is not claimed unless exact output is provided.
 - Commands for owner/local terminal are separated from proof already run.
 - Commands needing local execution are under PROOF THE OWNER OR TERMINAL AGENT MUST RUN.
-- Optional Codex handoff is omitted unless owner requested it.
+- If OPTIONAL HANDOFF TEXT FOR CODEX is present, exact owner Codex request is identified.
+- If exact owner Codex request is absent, OPTIONAL HANDOFF TEXT FOR CODEX is omitted.
+- COMMAND PLAN FOR OWNER / LOCAL TERMINAL is present for normal analysis.
+- NEXT names exactly one next execution channel.
 - No Codex implementation task is mixed into TASK unless owner explicitly requested collaboration.
 - No repo mutation is claimed.
 
@@ -170,7 +190,9 @@ RULES
 - OPTIONAL HANDOFF TEXT FOR CODEX must be clearly separated from Web AI analysis.
 - Do not assume Terminal Codex is the executor.
 - Prefer COMMAND PLAN FOR OWNER / LOCAL TERMINAL for normal Web AI analysis.
-- Include OPTIONAL HANDOFF TEXT FOR CODEX only when owner explicitly asks for Codex or the task is to prepare a Codex handoff.
+- Omit OPTIONAL HANDOFF TEXT FOR CODEX unless owner explicitly asks for Codex or the task is to prepare a Codex handoff.
+- If OPTIONAL HANDOFF TEXT FOR CODEX appears, quote or name the exact owner instruction that requested Codex.
+- If no exact owner Codex request exists, remove OPTIONAL HANDOFF TEXT FOR CODEX and use only owner/local terminal sections.
 - If new evidence changes the plan, say exactly what changed and why.
 - Continue with one focused active step.
 - If source data is missing, ask for the smallest specific source batch.
@@ -196,7 +218,6 @@ EXPECTED OUTPUT
 - RISKS
 - COMMAND PLAN FOR OWNER / LOCAL TERMINAL
 - PROOF THE OWNER OR TERMINAL AGENT MUST RUN
-- OPTIONAL HANDOFF TEXT FOR CODEX, only when owner explicitly requests Codex
 - NEXT
 
 SELF-CHECK
@@ -207,12 +228,15 @@ SELF-CHECK
 - Local runtime/test/database proof is not claimed unless exact output is provided.
 - Commands for owner/local terminal are separated from proof already run.
 - Commands needing local execution are under PROOF THE OWNER OR TERMINAL AGENT MUST RUN.
-- Optional Codex handoff is omitted unless owner requested it.
+- If OPTIONAL HANDOFF TEXT FOR CODEX is present, exact owner Codex request is identified.
+- If exact owner Codex request is absent, OPTIONAL HANDOFF TEXT FOR CODEX is omitted.
+- COMMAND PLAN FOR OWNER / LOCAL TERMINAL is present for normal analysis.
+- NEXT names exactly one next execution channel.
 - No Codex implementation task is mixed into TASK NOW unless owner explicitly requested collaboration.
 - No repo mutation is claimed.
 ```
 
-## Close A Web AI Session
+## Prepare Optional Codex Handoff From Web AI
 
 ```text
 TARGET AGENT: Web AI
@@ -220,10 +244,14 @@ TEMPLATE SOURCE: docs/templates/0122_web_ai_session_prompts.md
 
 Prepare a handoff for terminal Codex.
 
+OWNER CODEX REQUEST
+REPLACE_WITH_EXACT_OWNER_CODEX_REQUEST
+
 IMPORTANT
 You are Web AI / browser AI. You are read-only by default.
 Closing a Web AI session means drafting a Terminal Codex handoff in this response. It does not mean writing a file, creating evidence, committing, opening a PR, commenting, labeling, merging, rerunning CI, or changing GitHub state.
 Use this prompt only when the owner explicitly asks for Codex or asks to prepare a Codex handoff.
+If OWNER CODEX REQUEST cannot be filled with an exact owner instruction, stop and provide a normal Web AI answer with COMMAND PLAN FOR OWNER / LOCAL TERMINAL instead.
 Do not include Codex local implementation instructions outside the clearly separated OPTIONAL HANDOFF TEXT FOR CODEX.
 
 OUTPUT FORMAT
@@ -254,6 +282,7 @@ Prompt target is Web AI only.
 Template source is docs/templates/0122_web_ai_session_prompts.md.
 GitHub connector remains read-only by default.
 Web AI did not assume Codex executor; owner requested Codex handoff for this prompt.
+Exact owner Codex request is identified.
 Local runtime/test/database proof is not claimed unless exact output is provided.
 Commands needing local execution are under Proof commands Codex should run.
 No Codex implementation task is mixed into the Web AI task section unless owner explicitly requested collaboration.
@@ -270,7 +299,7 @@ Rewrite your previous answer so it is safe to paste into a repository Markdown f
 
 RULES
 - English only.
-- Do not include Codex local implementation instructions unless drafting OPTIONAL HANDOFF TEXT FOR CODEX.
+- Do not include Codex local implementation instructions in normal Web AI cleanup.
 - Do not assume Terminal Codex is the executor.
 - ASCII only.
 - No nested Markdown code fences.
@@ -283,6 +312,10 @@ RULES
 - Treat "write docs/...", "update docs/...", "create evidence", "prepare handoff", and "close scope" as draft response content only unless exact mutation permission was provided.
 - Do not convert proposed commands into passed commands.
 - Put local runtime, test, database, migration, server-start, and git-status checks that still need execution under PROOF THE OWNER OR TERMINAL AGENT MUST RUN.
+- Remove OPTIONAL HANDOFF TEXT FOR CODEX unless the previous answer names an exact owner Codex request.
+- If OPTIONAL HANDOFF TEXT FOR CODEX remains, quote or name the exact owner instruction that requested Codex.
+- If no exact owner Codex request exists, Codex handoff is omitted.
+- NEXT names exactly one next execution channel.
 
 OUTPUT FORMAT
 - FACT
@@ -291,6 +324,11 @@ OUTPUT FORMAT
 - CLEANED TEXT
 - COMMAND PLAN FOR OWNER / LOCAL TERMINAL
 - PROOF THE OWNER OR TERMINAL AGENT MUST RUN
-- OPTIONAL HANDOFF TEXT FOR CODEX, only when owner explicitly requests Codex
 - NEXT
+
+SELF-CHECK
+- If OPTIONAL HANDOFF TEXT FOR CODEX is present, exact owner Codex request is identified.
+- If exact owner Codex request is absent, OPTIONAL HANDOFF TEXT FOR CODEX is omitted.
+- COMMAND PLAN FOR OWNER / LOCAL TERMINAL is present for normal analysis.
+- NEXT names exactly one next execution channel.
 ```
