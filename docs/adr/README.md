@@ -25,3 +25,15 @@ Buat ADR jika perubahan menyentuh salah satu hal berikut:
 - satu ADR untuk satu keputusan utama
 - alasan, alternatif, dan konsekuensi wajib ditulis
 - jika accepted, ADR menjadi referensi aktif
+
+## Proof Tracking
+
+ADRs own decisions. Evidence owns proof.
+
+Current ADR implementation proof status is tracked in:
+
+```text
+docs/evidence/0004_adr_implementation_proof_index.md
+```
+
+When an ADR is accepted, implemented, partially implemented, superseded, or proven by a new gate, update that proof index or state why it is unchanged.
