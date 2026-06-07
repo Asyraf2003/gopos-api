@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed implementation slice.
+Accepted implementation slice plan.
 
 ## Date
 
@@ -193,7 +193,7 @@ Expected migration status must include:
 
 ## ACCEPTANCE GATE
 
-This blueprint is accepted only when owner confirms:
+This blueprint is accepted with owner confirmation:
 
 - Implement ServiceCatalog PostgreSQL persistence slice only.
 - No HTTP transport.
@@ -202,8 +202,6 @@ This blueprint is accepted only when owner confirms:
 - No ProductCatalog.
 
 ## NEXT ACTIVE STEP
-
-After this blueprint is accepted:
 
 Implement ServiceCatalog PostgreSQL persistence slice.
 
