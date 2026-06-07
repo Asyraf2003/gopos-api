@@ -95,11 +95,42 @@ That output is now treated as non-compliant for normal Web AI analysis unless th
 
 ## Proof Collected
 
-Pending until commands run in this session.
+```text
+rg -n "COMMAND PLAN FOR OWNER / LOCAL TERMINAL|OPTIONAL HANDOFF TEXT FOR CODEX|exact owner.*Codex|Codex handoff.*omitted|next execution channel|Web AI Codex-default|owner/local terminal" docs/templates docs/workflow docs/handoffs docs/evidence docs/README.md docs/AGENTS.md docs/0001_index.md
+```
+
+Result:
+
+```text
+docs/templates/0122_web_ai_session_prompts.md includes owner/local terminal command-plan output, exact owner Codex request checks, Codex handoff omission rules, and next execution channel checks.
+docs/templates/0120_prompt_authoring_rules.md includes the Web AI analysis output rule, owner/local terminal default channel, and next execution channel rule.
+docs/workflow/0071_handoff_protocol.md forbids default Web AI Codex handoff sections and requires one next execution channel.
+docs/README.md, docs/AGENTS.md, and docs/0001_index.md include cascade rules for normal Web AI analysis and owner/local terminal command plans.
+docs/evidence/0003_laravel_to_go_transition_progress_ledger.md records this workflow/docs quality improvement.
+```
+
+```text
+make verify
+```
+
+Result:
+
+```text
+[PASS] go vet audit passed
+[PASS] format audit passed
+[PASS] AI rules audit passed
+[PASS] file size audit passed
+[PASS] hexagonal import audit passed
+[PASS] gosec audit passed
+[PASS] aggregate audit passed
+```
 
 ## Tests Or Commands Run
 
-Pending until commands run in this session.
+```text
+rg -n "COMMAND PLAN FOR OWNER / LOCAL TERMINAL|OPTIONAL HANDOFF TEXT FOR CODEX|exact owner.*Codex|Codex handoff.*omitted|next execution channel|Web AI Codex-default|owner/local terminal" docs/templates docs/workflow docs/handoffs docs/evidence docs/README.md docs/AGENTS.md docs/0001_index.md
+make verify
+```
 
 ## Gaps Still Open
 
@@ -118,7 +149,7 @@ Recommended next execution channel:
 
 ## Estimated Scope Progress Percentage
 
-Web AI owner/local terminal output hardening scope: pending proof.
+Web AI owner/local terminal output hardening scope: 100%.
 
 Laravel-to-Go transition: unchanged at 20%.
 
@@ -130,12 +161,12 @@ Enough context remains for this docs-only hardening proof.
 
 Scores use 0 as best and 5 as worst.
 
-- Web AI Codex-default output risk: pending proof
-- Optional Codex handoff leakage risk: pending proof
-- owner/local terminal command-plan omission risk: pending proof
-- next execution channel ambiguity: pending proof
-- template compliance risk: pending proof
-- docs cascade risk: pending proof
+- Web AI Codex-default output risk: 1
+- Optional Codex handoff leakage risk: 1
+- owner/local terminal command-plan omission risk: 1
+- next execution channel ambiguity: 1
+- template compliance risk: 1
+- docs cascade risk: 1
 
 Web AI should re-check these files and sections after owner pushes:
 

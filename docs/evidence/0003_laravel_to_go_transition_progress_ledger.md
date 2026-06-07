@@ -82,6 +82,7 @@ Protected POS endpoints must wait for capability-control proof.
 - Prompt template hardening is a workflow/docs quality improvement and does not increase POS implementation progress.
 - Prompt template hardening proof is recorded in `docs/handoffs/2026-06-07-prompt-template-selection-rule.md`; `make verify` passed after the docs change.
 - AI execution-channel boundary proof is recorded in `docs/handoffs/2026-06-07-ai-execution-channel-boundaries.md`; `make verify` passed after the docs change.
+- Web AI owner/local terminal output proof is recorded in `docs/handoffs/2026-06-07-web-ai-owner-terminal-output-test.md`; `make verify` passed after the docs change.
 - Manual debug login foundation is documented in `docs/handoffs/2026-06-06-manual-auth-login.md`.
 - Manual debug accounts are documented as:
   - `admin@example.com` with password `12345678`;
