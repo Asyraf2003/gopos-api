@@ -3,12 +3,16 @@ package bootstrap
 
 import (
 	"context"
+	"time"
 
 	"pos-go/internal/config"
 	authhttp "pos-go/internal/modules/auth/transport/http"
 	authusecase "pos-go/internal/modules/auth/usecase"
 	capabilityhttp "pos-go/internal/modules/capability/transport/http"
 	capabilityusecase "pos-go/internal/modules/capability/usecase"
+	servicecatalogdomain "pos-go/internal/modules/servicecatalog/domain"
+	servicecataloghttp "pos-go/internal/modules/servicecatalog/transport/http"
+	servicecatalogusecase "pos-go/internal/modules/servicecatalog/usecase"
 	systemhttp "pos-go/internal/modules/system/transport/http"
 	googleoidc "pos-go/internal/platform/google"
 	"pos-go/internal/platform/postgres"
@@ -16,6 +20,7 @@ import (
 	jwtissuer "pos-go/internal/platform/token/jwt"
 	httpmw "pos-go/internal/transport/http/middleware"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/labstack/echo/v4"
 )
@@ -23,6 +28,10 @@ import (
 type App struct {
 	Echo *echo.Echo
 	DB   *pgxpool.Pool
+}
+
+func newServiceCatalogItemID() (servicecatalogdomain.ServiceCatalogItemID, error) {
+	return servicecatalogdomain.ServiceCatalogItemID(uuid.NewString()), nil
 }
 
 func New(ctx context.Context, cfg config.Config) (*App, error) {
@@ -79,6 +88,31 @@ func New(ctx context.Context, cfg config.Config) (*App, error) {
 		principalResolver := postgres.NewPrincipalResolver(pool)
 		capabilityRepository := postgres.NewCapabilityRepository(pool)
 		checkCapabilityUsecase := capabilityusecase.NewCheckCapability(capabilityRepository)
+
+		serviceCatalogRepository := postgres.NewServiceCatalogRepository(pool)
+		listServiceCatalogItemsUsecase := servicecatalogusecase.NewListServiceCatalogItems(serviceCatalogRepository)
+		lookupServiceCatalogItemsUsecase := servicecatalogusecase.NewLookupServiceCatalogItems(serviceCatalogRepository)
+		showServiceCatalogItemUsecase := servicecatalogusecase.NewShowServiceCatalogItem(serviceCatalogRepository)
+		createServiceCatalogItemUsecase := servicecatalogusecase.NewCreateServiceCatalogItem(
+			serviceCatalogRepository,
+			newServiceCatalogItemID,
+			time.Now,
+		)
+		updateServiceCatalogItemUsecase := servicecatalogusecase.NewUpdateServiceCatalogItem(
+			serviceCatalogRepository,
+			time.Now,
+		)
+		activateServiceCatalogItemUsecase := servicecatalogusecase.NewActivateServiceCatalogItem(serviceCatalogRepository)
+		deactivateServiceCatalogItemUsecase := servicecatalogusecase.NewDeactivateServiceCatalogItem(serviceCatalogRepository)
+		serviceCatalogHandler := servicecataloghttp.NewServiceCatalogHandler(
+			listServiceCatalogItemsUsecase,
+			lookupServiceCatalogItemsUsecase,
+			showServiceCatalogItemUsecase,
+			createServiceCatalogItemUsecase,
+			updateServiceCatalogItemUsecase,
+			activateServiceCatalogItemUsecase,
+			deactivateServiceCatalogItemUsecase,
+		)
 
 		authGroup := api.Group("/auth")
 
@@ -191,6 +225,48 @@ func New(ctx context.Context, cfg config.Config) (*App, error) {
 			disableCapabilityUsecase,
 		)
 		capabilityHandler.Register(adminCapabilityGroup)
+
+		serviceCatalogListGroup := api.Group("/service-catalog")
+		serviceCatalogListGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
+		serviceCatalogListGroup.Use(httpmw.RequirePermission("service_catalog.read"))
+		serviceCatalogListGroup.Use(httpmw.RequireCapability("service_catalog.list", checkCapabilityUsecase))
+		serviceCatalogHandler.RegisterList(serviceCatalogListGroup)
+
+		serviceCatalogCreateGroup := api.Group("/service-catalog")
+		serviceCatalogCreateGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
+		serviceCatalogCreateGroup.Use(httpmw.RequirePermission("service_catalog.manage"))
+		serviceCatalogCreateGroup.Use(httpmw.RequireCapability("service_catalog.create", checkCapabilityUsecase))
+		serviceCatalogHandler.RegisterCreate(serviceCatalogCreateGroup)
+
+		serviceCatalogLookupGroup := api.Group("/service-catalog")
+		serviceCatalogLookupGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
+		serviceCatalogLookupGroup.Use(httpmw.RequirePermission("service_catalog.read"))
+		serviceCatalogLookupGroup.Use(httpmw.RequireCapability("service_catalog.lookup", checkCapabilityUsecase))
+		serviceCatalogHandler.RegisterLookup(serviceCatalogLookupGroup)
+
+		serviceCatalogShowGroup := api.Group("/service-catalog")
+		serviceCatalogShowGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
+		serviceCatalogShowGroup.Use(httpmw.RequirePermission("service_catalog.read"))
+		serviceCatalogShowGroup.Use(httpmw.RequireCapability("service_catalog.show", checkCapabilityUsecase))
+		serviceCatalogHandler.RegisterShow(serviceCatalogShowGroup)
+
+		serviceCatalogUpdateGroup := api.Group("/service-catalog")
+		serviceCatalogUpdateGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
+		serviceCatalogUpdateGroup.Use(httpmw.RequirePermission("service_catalog.manage"))
+		serviceCatalogUpdateGroup.Use(httpmw.RequireCapability("service_catalog.update", checkCapabilityUsecase))
+		serviceCatalogHandler.RegisterUpdate(serviceCatalogUpdateGroup)
+
+		serviceCatalogActivateGroup := api.Group("/service-catalog")
+		serviceCatalogActivateGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
+		serviceCatalogActivateGroup.Use(httpmw.RequirePermission("service_catalog.manage"))
+		serviceCatalogActivateGroup.Use(httpmw.RequireCapability("service_catalog.activate", checkCapabilityUsecase))
+		serviceCatalogHandler.RegisterActivate(serviceCatalogActivateGroup)
+
+		serviceCatalogDeactivateGroup := api.Group("/service-catalog")
+		serviceCatalogDeactivateGroup.Use(httpmw.RequireAuth(tokenVerifier, principalResolver, sessionStatusChecker))
+		serviceCatalogDeactivateGroup.Use(httpmw.RequirePermission("service_catalog.manage"))
+		serviceCatalogDeactivateGroup.Use(httpmw.RequireCapability("service_catalog.deactivate", checkCapabilityUsecase))
+		serviceCatalogHandler.RegisterDeactivate(serviceCatalogDeactivateGroup)
 	}
 
 	return &App{
