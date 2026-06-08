@@ -55,6 +55,7 @@ docs/handoffs/2026-06-08-servicecatalog-implementation-slice-1-accepted.md
 docs/handoffs/2026-06-08-servicecatalog-implementation-slice-1.md
 docs/handoffs/2026-06-08-servicecatalog-postgres-persistence-blueprint.md
 docs/handoffs/2026-06-08-docs-quality-feedback-crosscheck.md
+docs/handoffs/2026-06-08-docs-scalability-blueprint-cleanup.md
 ```
 
 ## Current Decision
