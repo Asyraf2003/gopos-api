@@ -34,6 +34,54 @@ Expected result:
 [PASS] aggregate audit passed
 ```
 
+## LOCAL PROOF UPDATE
+
+Owner-provided local proof on 2026-06-08 confirms the Progress Write Gate entrypoint hardening passes local audit gates.
+
+Commands/output provided:
+
+```text
+bash scripts/audit_ai_rules.sh
+
+Result:
+
+[PASS] AI rules audit passed
+
+Aggregate audit output provided:
+
+bash scripts/audit_all.sh
+
+Result summary:
+
+[PASS] go test ./...
+[PASS] go vet audit
+[PASS] format audit
+[PASS] AI rules audit
+[PASS] file size audit
+[PASS] hexagonal import audit
+[PASS] route capability audit
+[PASS] security gosec audit
+[PASS] aggregate audit passed
+
+Relevant grep output confirms Progress Write Gate anchors are present in:
+
+scripts/audit_ai_rules.sh
+docs/core/0013_proof_and_progress.md
+docs/workflow/0072_transition_progress_ledger_protocol.md
+docs/workflow/0071_handoff_protocol.md
+docs/templates/0122_web_ai_session_prompts.md
+docs/handoffs/2026-06-08-progress-write-gate-entrypoint-hardening.md
+docs/handoffs/2026-06-08-progress-write-gate-hardening.md
+docs/0003_session_start_protocol.md
+docs/AGENTS.md
+docs/README.md
+
+Local proof and remote connector proof are now both available for Progress Write Gate entrypoint visibility.
+
+Status:
+
+remote-visible through GitHub connector; local audit proof passed
+
 ## GAP
 
 - The audit checks stable text anchors, not full semantic correctness of every future AI response.
@@ -41,13 +89,17 @@ Expected result:
 
 ## PROGRESS
 
-Workflow hardening is improved by making the Progress Write Gate visible from the entrypoint docs and audit-checked anchors.
+Workflow hardening is validated locally and remotely for visibility.
+
+Progress Write Gate entrypoint hardening is visible in GitHub connector facts and passes local audit proof.
+
+This does not change Laravel-to-Go implementation progress.
 
 ## NEXT
 
-Execution channel: Web AI connector validation.
+Execution channel: owner/local terminal.
 
-Validate the pushed hardening through GitHub connector before relying on it as remote-proven workflow state.
+Save this handoff update locally, run the proof commands again, then continue only through the normal repository publication and connector-validation flow.
 
 ## CONTEXT WINDOW STATUS
 
