@@ -31,15 +31,15 @@ docs/blueprints/0025_servicecatalog_implementation_slice_1.md
 - ServiceCatalog domain, ports, usecase contracts, and unit tests exist.
 - ServiceCatalog repository port already defines create, update, find by ID, find by normalized name, list, lookup, and set active behavior.
 - ServiceCatalog HTTP transport is not implemented.
-- ServiceCatalog PostgreSQL adapter is not implemented.
-- ServiceCatalog PostgreSQL migration is not implemented.
+- ServiceCatalog PostgreSQL adapter is implemented and closed with proof.
+- ServiceCatalog PostgreSQL migration is implemented and closed with proof.
 - ServiceCatalog route registration is not implemented.
 - ServiceCatalog capability seed migration is not implemented.
 - Superseded broader runtime draft `docs/blueprints/0026_servicecatalog_runtime_slice_2_plan.md` is archived as historical-only context.
 
 ## DECISION
 
-Slice 2 should implement only ServiceCatalog PostgreSQL persistence.
+Slice 2 implemented only ServiceCatalog PostgreSQL persistence.
 
 Do not implement HTTP transport in this slice.
 
