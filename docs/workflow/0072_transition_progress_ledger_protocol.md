@@ -65,6 +65,38 @@ Plans alone do not increase progress.
 
 When a stage has partial implementation but missing runtime or test proof, mark it partial and list the missing proof.
 
+## Progress Update Gate
+
+Any session that receives new proof for durable implementation work must update or draft an update for the active progress ledger before naming the next implementation step.
+
+Durable proof includes:
+
+- passing aggregate audit;
+- passing focused tests;
+- applied database migrations;
+- accepted blueprint changes;
+- route/capability audit proof;
+- runtime proof;
+- security audit proof.
+
+If the session cannot mutate files, it must provide paste-ready ledger and handoff text or an owner/local terminal command plan.
+
+A session must not advance to a new domain, new implementation slice, or closeout until the current proof is reflected in:
+
+- the active progress ledger;
+- the relevant handoff;
+- the `NEXT` field.
+
+Local proof must be marked as local proof until connector or remote repository validation exists.
+
+Remote validation must not be claimed from local terminal output.
+
+When local proof exists but connector validation is missing, use this status wording:
+
+```text
+locally implemented with proof; connector validation pending
+```
+
 ## Cascade Rules
 
 When the ledger is created or materially updated, update the impacted chain when feasible:
