@@ -12,4 +12,16 @@ docs/archive/blueprints-superseded/
 docs/archive/evidence-history/
 ```
 
+Closed handoffs index:
+
+```text
+docs/archive/handoffs-closed/README.md
+```
+
+Current handoffs remain in:
+
+```text
+docs/handoffs/
+```
+
 Archived material is read-only context unless the owner explicitly revives it.
