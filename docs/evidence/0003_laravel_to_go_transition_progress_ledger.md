@@ -95,7 +95,7 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 - `make verify` passes, including Go tests, go vet, format, AI rules, file-size, hexagonal import, route capability audit, and gosec.
 - ADR implementation proof index exists at `docs/evidence/0004_adr_implementation_proof_index.md`.
 - Detailed completed-work history is archived in `docs/evidence/0005_laravel_to_go_transition_history_2026_06_08.md`.
-- ServiceCatalog PostgreSQL persistence slice blueprint exists at `docs/blueprints/0026_servicecatalog_postgres_persistence_slice.md`; it is proposed only and does not increase implementation progress.
+- ServiceCatalog PostgreSQL persistence slice is implemented and closed with proof.
 
 ## Open Gaps
 
@@ -111,19 +111,18 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 - No POS domain PostgreSQL baseline has been accepted.
 - ServiceCatalog domain contract is accepted.
 - ServiceCatalog implementation slice 1 plan is accepted and implemented with proof.
-- ServiceCatalog HTTP transport, PostgreSQL adapter, migrations, route registration, and capability seeds are not implemented.
-- ServiceCatalog PostgreSQL persistence slice blueprint `0026` is proposed but not accepted or implemented yet.
+- ServiceCatalog HTTP transport, route registration, request/response presenters, authorization/capability wiring, and capability seeds are not implemented.
 - ServiceCatalog capability seed migration is deferred, but must be owned by a later accepted runtime/capability blueprint before any ServiceCatalog protected HTTP route registration.
 - ProductCatalog domain contract has not been accepted yet.
 - No `productcatalog` Go business module has implementation proof.
 
 ## Next Valid Active Step
 
-Accept or revise `docs/blueprints/0026_servicecatalog_postgres_persistence_slice.md`.
+Create and accept the next ServiceCatalog runtime/capability blueprint.
 
-- Candidate accepted scope: ServiceCatalog PostgreSQL migration, PostgreSQL repository adapter, and repository/integration tests only.
-- Do not implement HTTP transport, route registration, capability seed migrations, ProductCatalog, or UI in this slice.
-- After persistence proof, create a separate accepted runtime/capability blueprint before ServiceCatalog HTTP route registration.
+- Candidate accepted scope: ServiceCatalog HTTP transport, route registration, request/response presenters, permission seed rows, capability seed rows, route capability manifest updates, and disabled-capability proof.
+- Do not implement ProductCatalog or UI in this slice.
+- Do not register protected ServiceCatalog HTTP routes before permission seeds, capability seeds, and route capability manifest coverage are included in the accepted blueprint.
 - ProductCatalog remains blocked until its own accepted domain contract and duplicate policy decision exist.
 ## Handoff Requirement
 
@@ -133,4 +132,4 @@ The same session must create or update a handoff when durable work was done.
 
 ## Context Window Status
 
-Current ledger update context status: updated after ServiceCatalog PostgreSQL persistence blueprint proposal; enough context to accept or revise blueprint `0026` before implementation.
+Current ledger update context status: updated after ServiceCatalog PostgreSQL persistence closeout and docs scalability cleanup; enough context to plan the next runtime/capability blueprint.
