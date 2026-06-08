@@ -97,7 +97,7 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 - ADR implementation proof index exists at `docs/evidence/0004_adr_implementation_proof_index.md`.
 - Detailed completed-work history is archived in `docs/evidence/0005_laravel_to_go_transition_history_2026_06_08.md`.
 - ServiceCatalog PostgreSQL persistence slice is implemented and closed with proof.
-- ServiceCatalog runtime/capability blueprint 0027 is accepted as a plan; implementation remains 0%.
+- ServiceCatalog runtime/capability blueprint 0027 is accepted and locally proven through focused handler tests, ServiceCatalog-specific disabled-capability proof, and aggregate audit.
 - ServiceCatalog runtime/capability slice 0027 is locally implemented with proof.
 - ServiceCatalog HTTP transport, route registration, request/response presenters, authorization/capability wiring, route capability manifest coverage, audit coverage, and capability/permission seed migration 0010 have local proof.
 - Migration `0010_seed_service_catalog_permissions_capabilities.up.sql` is applied in local database proof.
@@ -117,11 +117,11 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 - ServiceCatalog implementation slice 1 plan is accepted and implemented with proof.
 - ProductCatalog domain contract has not been accepted yet.
 - No `productcatalog` Go business module has implementation proof.
-- ServiceCatalog runtime/capability implementation is remote-visible through GitHub connector with local proof; blueprint closeout remains blocked by dedicated handler/capability proof gaps.
+- ServiceCatalog runtime/capability implementation is remote-visible through GitHub connector with local proof; focused handler and disabled-capability proof are locally implemented with proof; connector validation pending for the latest closeout proof files.
 
 ## Next Valid Active Step
 
-Add focused ServiceCatalog HTTP handler and disabled-capability proof before closing blueprint 0027.
+Validate the latest ServiceCatalog focused handler and disabled-capability proof files through GitHub connector after owner publishes local changes.
 
 - Do not start ProductCatalog until connector validation confirms the ServiceCatalog runtime/capability implementation and closeout docs.
 - Do not start a new runtime slice while local proof is not reflected in repository facts.

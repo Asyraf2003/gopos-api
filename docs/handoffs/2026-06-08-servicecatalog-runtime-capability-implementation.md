@@ -63,13 +63,13 @@ Local aggregate proof:
 
 ## GAP
 
-- Connector validation passed for implementation visibility through GitHub; dedicated handler/capability proof remains open before closeout.
-- Handler package currently has no dedicated handler unit tests beyond aggregate compile/audit proof.
+- Connector validation passed for implementation visibility through GitHub; focused handler and ServiceCatalog-specific disabled-capability proof now pass locally.
+- Handler package now has focused local unit tests for query parsing, body validation, command mapping, envelope shape, and not-found mapping.
 - ProductCatalog remains unstarted and blocked by its own accepted domain contract and owner decisions.
 
 ## PROGRESS
 
-ServiceCatalog runtime/capability implementation: remote-visible through GitHub connector with local proof; closeout blocked by focused handler/capability proof gap.
+ServiceCatalog runtime/capability implementation: remote-visible through GitHub connector with local proof; focused handler and disabled-capability proof locally implemented with proof; connector validation pending for latest closeout proof files.
 
 Business Phase 1: 35%.
 
@@ -79,4 +79,4 @@ Overall Laravel-to-Go transition: 30%.
 
 Execution channel: owner/local terminal.
 
-Add focused ServiceCatalog HTTP handler tests and disabled-capability proof before closing blueprint 0027 or starting ProductCatalog.
+Validate the latest focused handler and disabled-capability proof files through GitHub connector before closing blueprint 0027 or starting ProductCatalog.
