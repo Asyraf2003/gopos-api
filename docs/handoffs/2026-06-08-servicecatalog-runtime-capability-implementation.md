@@ -69,7 +69,7 @@ Local aggregate proof:
 
 ## PROGRESS
 
-ServiceCatalog runtime/capability implementation: remote-visible through GitHub connector with local proof; focused handler and disabled-capability proof locally implemented with proof; connector validation pending for latest closeout proof files.
+ServiceCatalog runtime/capability implementation: remote-visible through GitHub connector with local proof; focused handler and disabled-capability proof remote-visible through GitHub connector with local proof; connector validation passed for latest closeout proof files.
 
 Business Phase 1: 35%.
 
@@ -79,4 +79,4 @@ Overall Laravel-to-Go transition: 30%.
 
 Execution channel: owner/local terminal.
 
-Validate the latest focused handler and disabled-capability proof files through GitHub connector before closing blueprint 0027 or starting ProductCatalog.
+Prepare the next scoped session prompt after ServiceCatalog runtime/capability closeout proof is recorded.

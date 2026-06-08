@@ -117,11 +117,11 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 - ServiceCatalog implementation slice 1 plan is accepted and implemented with proof.
 - ProductCatalog domain contract has not been accepted yet.
 - No `productcatalog` Go business module has implementation proof.
-- ServiceCatalog runtime/capability implementation is remote-visible through GitHub connector with local proof; focused handler and disabled-capability proof are locally implemented with proof; connector validation pending for the latest closeout proof files.
+- ServiceCatalog runtime/capability implementation is remote-visible through GitHub connector with local proof; focused handler and disabled-capability proof are remote-visible through GitHub connector with local proof; connector validation passed for the latest closeout proof files.
 
 ## Next Valid Active Step
 
-Validate the latest ServiceCatalog focused handler and disabled-capability proof files through GitHub connector after owner publishes local changes.
+Prepare the next scoped session prompt after ServiceCatalog runtime/capability closeout proof is recorded.
 
 - Do not start ProductCatalog until connector validation confirms the ServiceCatalog runtime/capability implementation and closeout docs.
 - Do not start a new runtime slice while local proof is not reflected in repository facts.
