@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted implementation slice plan.
+Closed / implemented with proof.
 
 ## Date
 
@@ -35,6 +35,7 @@ docs/blueprints/0025_servicecatalog_implementation_slice_1.md
 - ServiceCatalog PostgreSQL migration is not implemented.
 - ServiceCatalog route registration is not implemented.
 - ServiceCatalog capability seed migration is not implemented.
+- Superseded broader runtime draft `docs/blueprints/0026_servicecatalog_runtime_slice_2_plan.md` is archived as historical-only context.
 
 ## DECISION
 
@@ -49,6 +50,13 @@ Do not add ServiceCatalog capability seed rows in this slice.
 Do not add ProductCatalog.
 
 Do not add UI behavior.
+
+## IMPLEMENTED SCOPE
+
+- PostgreSQL migration for `service_catalog_items`.
+- PostgreSQL repository adapter for the existing ServiceCatalog repository port.
+- Repository integration tests for create, find, update, lifecycle, list, and lookup behavior.
+- Transaction context support through the existing PostgreSQL transaction context pattern.
 
 ## SCOPE-IN
 
@@ -69,6 +77,27 @@ Do not add UI behavior.
 - ProductCatalog.
 - Inventory.
 - UI.
+
+## IMPLEMENTED FILES
+
+```text
+migrations/0009_create_service_catalog_items.up.sql
+migrations/0009_create_service_catalog_items.down.sql
+internal/modules/servicecatalog/domain/restore_service_catalog_item.go
+internal/platform/postgres/service_catalog_repository.go
+internal/platform/postgres/service_catalog_repository_query.go
+internal/platform/postgres/service_catalog_repository_row.go
+internal/platform/postgres/service_catalog_repository_string.go
+internal/platform/postgres/service_catalog_repository_read.go
+internal/platform/postgres/service_catalog_repository_write.go
+internal/platform/postgres/service_catalog_repository_list.go
+internal/platform/postgres/service_catalog_repository_lookup.go
+internal/platform/postgres/time.go
+internal/platform/postgres/service_catalog_repository_create_integration_test.go
+internal/platform/postgres/service_catalog_repository_integration_helpers_test.go
+internal/platform/postgres/service_catalog_repository_query_integration_test.go
+internal/platform/postgres/service_catalog_repository_update_integration_test.go
+```
 
 ## TARGET FILES
 
@@ -191,6 +220,44 @@ Expected migration status must include:
 0009_create_service_catalog_items.up.sql applied
 ```
 
+## PROOF COLLECTED
+
+```text
+Focused compile/repository package proof:
+
+go test ./internal/modules/servicecatalog/... ./internal/platform/postgres/...
+ok  	pos-go/internal/modules/servicecatalog/domain
+?   	pos-go/internal/modules/servicecatalog/ports	[no test files]
+ok  	pos-go/internal/modules/servicecatalog/usecase
+?   	pos-go/internal/platform/postgres	[no test files]
+
+Focused integration proof:
+
+go test -tags=integration ./internal/platform/postgres/... -run ServiceCatalog -count=1
+ok  	pos-go/internal/platform/postgres	0.006s
+
+Full proof:
+
+make verify
+[PASS] go test ./...
+[PASS] go vet audit
+[PASS] format audit
+[PASS] AI rules audit
+[PASS] file size audit
+[PASS] hexagonal import audit
+[PASS] route capability audit
+[PASS] security gosec audit
+[PASS] aggregate audit passed
+
+Security proof:
+
+Gosec  : dev
+Files  : 122
+Lines  : 5081
+Nosec  : 0
+Issues : 0
+```
+
 ## ACCEPTANCE GATE
 
 This blueprint is accepted with owner confirmation:
@@ -203,6 +270,12 @@ This blueprint is accepted with owner confirmation:
 
 ## NEXT ACTIVE STEP
 
-Implement ServiceCatalog PostgreSQL persistence slice.
+ServiceCatalog PostgreSQL persistence slice is closed.
 
-Do not implement HTTP transport, route registration, or capability seeds until a later accepted blueprint.
+Next valid active step:
+
+Plan ServiceCatalog HTTP transport, route registration, and capability seed slice.
+
+Do not implement HTTP transport, route registration, or capability seeds until a later accepted blueprint defines exact files, route/capability mapping, authorization behavior, response envelope behavior, and proof commands.
+
+The later runtime/capability blueprint must explicitly own ServiceCatalog permission seed rows, capability seed rows, route capability manifest updates, and disabled-capability proof before any protected ServiceCatalog HTTP route is registered.

@@ -1,4 +1,22 @@
-# ServiceCatalog Runtime Slice 2 Blueprint
+# Archived Blueprint: ServiceCatalog Runtime Slice 2 Blueprint
+
+## Archive Status
+
+Historical only.
+
+This draft was archived on 2026-06-08 because it overlapped with the active `0026` blueprint:
+
+```text
+docs/blueprints/0026_servicecatalog_postgres_persistence_slice.md
+```
+
+Do not use this file as an active implementation plan.
+
+The active next step is the narrower PostgreSQL persistence slice.
+
+The later ServiceCatalog runtime/capability slice must get a new blueprint number and explicitly own HTTP transport, route registration, permission seeds, capability seeds, route manifest updates, and disabled-capability proof before protected routes are registered.
+
+## Original Draft
 
 ## Status
 

@@ -28,3 +28,7 @@ Missing proof in this file:
 Use this file only for the DB connectivity facts above.
 
 Use the active progress ledger and related handoff for current auth runtime gaps.
+
+## REVIEW TRIGGER
+
+Review and close or supersede this evidence by 2026-06-15 or before the next auth runtime change, whichever comes first.
