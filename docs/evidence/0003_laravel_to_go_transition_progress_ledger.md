@@ -36,28 +36,10 @@ docs/evidence/0005_laravel_to_go_transition_history_2026_06_08.md
 Related handoffs:
 
 ```text
-docs/handoffs/2026-06-06-manual-auth-login.md
 docs/handoffs/2026-06-06-auth-runtime-local-dev.md
-docs/handoffs/2026-06-07-capability-contracts.md
-docs/handoffs/2026-06-07-capability-postgres-state.md
-docs/handoffs/2026-06-07-capability-runtime-middleware.md
-docs/handoffs/2026-06-07-capability-route-seeds.md
-docs/handoffs/2026-06-07-capability-admin-http-surface.md
-docs/handoffs/2026-06-07-prompt-template-selection-rule.md
-docs/handoffs/2026-06-07-ai-execution-channel-boundaries.md
-docs/handoffs/2026-06-07-web-ai-owner-terminal-output-test.md
-docs/handoffs/2026-06-08-capability-route-audit-script.md
-docs/handoffs/2026-06-08-capability-route-disabled-proof.md
-docs/handoffs/2026-06-08-capability-control-closeout.md
-docs/handoffs/2026-06-08-servicecatalog-domain-contract-blueprint.md
-docs/handoffs/2026-06-08-servicecatalog-domain-contract-accepted.md
-docs/handoffs/2026-06-08-servicecatalog-implementation-slice-1-plan.md
-docs/handoffs/2026-06-08-servicecatalog-implementation-slice-1-accepted.md
-docs/handoffs/2026-06-08-servicecatalog-implementation-slice-1.md
-docs/handoffs/2026-06-08-servicecatalog-postgres-persistence-blueprint.md
-docs/handoffs/2026-06-08-docs-quality-feedback-crosscheck.md
-docs/handoffs/2026-06-08-docs-scalability-blueprint-cleanup.md
 docs/handoffs/2026-06-08-servicecatalog-runtime-capability-blueprint-accepted.md
+docs/handoffs/2026-06-08-servicecatalog-runtime-capability-implementation.md
+docs/archive/handoffs-closed/README.md
 ```
 
 ## Current Decision
