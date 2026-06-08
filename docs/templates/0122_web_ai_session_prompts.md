@@ -8,6 +8,10 @@ Web AI sessions are read-only by default.
 
 The GitHub connector may be used only for read-only repository facts unless the owner gives exact mutation permission in the prompt. A task that says "write docs/...", "update docs/...", "create evidence", "prepare handoff", or "close scope" means draft paste-ready content in the chat response. It does not mean creating, updating, deleting, committing, branching, commenting, labeling, merging, rerunning CI, or otherwise mutating GitHub.
 
+When the owner asks Web AI to update, edit, or create a repository file and exact mutation permission is absent, Web AI file update requests require COMMAND PLAN FOR OWNER / LOCAL TERMINAL.
+
+Paste-ready text may be included as helper content, but paste-ready text must not replace the command plan unless the owner explicitly asks for draft-only text.
+
 Web AI prompts must not include Codex local implementation instructions during normal analysis.
 
 Web AI should not assume Terminal Codex is the executor. For normal Web AI analysis, prefer `COMMAND PLAN FOR OWNER / LOCAL TERMINAL`.
@@ -40,6 +44,7 @@ Before sending any Web AI prompt, check:
 - if `OPTIONAL HANDOFF TEXT FOR CODEX` is present, the exact owner Codex request is identified;
 - if exact owner Codex request is absent, `OPTIONAL HANDOFF TEXT FOR CODEX` is omitted;
 - `COMMAND PLAN FOR OWNER / LOCAL TERMINAL` is present for normal analysis;
+- `PROGRESS` and `CONTEXT WINDOW STATUS` are present for non-trivial work;
 - `NEXT` names exactly one next execution channel.
 
 ## Progress Write Gate
@@ -78,6 +83,8 @@ The required self-check anchors are:
 - NEXT does not skip required progress ledger or handoff updates.
 - Git mutation instructions are absent unless the owner explicitly requested Git operations.
 - The response identifies whether the current status is local-only, remote-validated, or inferred.
+- Web AI file update requests require COMMAND PLAN FOR OWNER / LOCAL TERMINAL.
+- Paste-ready text must not replace the command plan.
 
 ## Open A Web AI Session
 
@@ -144,6 +151,8 @@ RULES
 - Prefer GitHub connector reads for repository file facts, using read-only actions only.
 - Do not call GitHub mutation tools unless exact mutation permission is provided.
 - Treat "write docs/...", "update docs/...", "create evidence", "prepare handoff", and "close scope" as requests to draft paste-ready response content, not repository mutation.
+- If the owner asks you to update, edit, or create a repository file and exact mutation permission is absent, provide COMMAND PLAN FOR OWNER / LOCAL TERMINAL for the local file change.
+- Paste-ready text may be included, but it must not replace the command plan unless the owner explicitly asks for draft-only text.
 - Do not claim local commands were run unless exact command output is provided.
 - Put runtime, test, database, git-status, migration, and server-start proof under PROOF THE OWNER OR TERMINAL AGENT MUST RUN when you cannot run them.
 - Mark missing repo facts, missing command output, missing source docs, and missing local proof as GAP.
@@ -168,6 +177,8 @@ EXPECTED OUTPUT
 - RISKS
 - COMMAND PLAN FOR OWNER / LOCAL TERMINAL
 - PROOF THE OWNER OR TERMINAL AGENT MUST RUN
+- PROGRESS
+- CONTEXT WINDOW STATUS
 - NEXT
 
 SELF-CHECK
@@ -182,6 +193,9 @@ SELF-CHECK
 - If exact owner Codex request is absent, OPTIONAL HANDOFF TEXT FOR CODEX is omitted.
 - COMMAND PLAN FOR OWNER / LOCAL TERMINAL is present for normal analysis.
 - NEXT names exactly one next execution channel.
+- PROGRESS and CONTEXT WINDOW STATUS are present for non-trivial work.
+- Web AI file update requests require COMMAND PLAN FOR OWNER / LOCAL TERMINAL.
+- Paste-ready text does not replace the command plan unless the owner explicitly asked for draft-only text.
 - If new local proof was provided, ledger and handoff update were cited, drafted, or put in owner/local command plan.
 - Local proof and remote connector proof are not conflated.
 - NEXT does not skip required progress ledger or handoff updates.
@@ -246,6 +260,8 @@ RULES
 - Use GitHub connector data for repository facts through read-only actions unless local-only proof is provided.
 - Do not call GitHub mutation tools unless exact mutation permission is provided.
 - Draft docs, evidence, handoffs, patch plans, and closeout text in the response only.
+- If the owner asks you to update, edit, or create a repository file and exact mutation permission is absent, provide COMMAND PLAN FOR OWNER / LOCAL TERMINAL for the local file change.
+- Paste-ready text may be included, but it must not replace the command plan unless the owner explicitly asks for draft-only text.
 - Do not run or claim local commands unless an actual runtime is available and exact output is shown.
 - Put runtime, test, database, git-status, migration, and server-start proof under PROOF THE OWNER OR TERMINAL AGENT MUST RUN when you cannot run them.
 - Mark missing repo facts, missing command output, missing source docs, and missing local proof as GAP.
@@ -268,6 +284,8 @@ EXPECTED OUTPUT
 - RISKS
 - COMMAND PLAN FOR OWNER / LOCAL TERMINAL
 - PROOF THE OWNER OR TERMINAL AGENT MUST RUN
+- PROGRESS
+- CONTEXT WINDOW STATUS
 - NEXT
 
 SELF-CHECK
@@ -282,6 +300,9 @@ SELF-CHECK
 - If exact owner Codex request is absent, OPTIONAL HANDOFF TEXT FOR CODEX is omitted.
 - COMMAND PLAN FOR OWNER / LOCAL TERMINAL is present for normal analysis.
 - NEXT names exactly one next execution channel.
+- PROGRESS and CONTEXT WINDOW STATUS are present for non-trivial work.
+- Web AI file update requests require COMMAND PLAN FOR OWNER / LOCAL TERMINAL.
+- Paste-ready text does not replace the command plan unless the owner explicitly asked for draft-only text.
 - If new local proof was provided, ledger and handoff update were cited, drafted, or put in owner/local command plan.
 - Local proof and remote connector proof are not conflated.
 - NEXT does not skip required progress ledger or handoff updates.
@@ -365,6 +386,8 @@ RULES
 - Add a GAP section for unknowns.
 - Remove or relabel any claim that files were created, tests passed, runtime worked, GitHub was updated, or scope was closed unless proof is included.
 - Treat "write docs/...", "update docs/...", "create evidence", "prepare handoff", and "close scope" as draft response content only unless exact mutation permission was provided.
+- If the previous answer responded to an update, edit, or create file request without exact mutation permission, add COMMAND PLAN FOR OWNER / LOCAL TERMINAL for the local file change.
+- Paste-ready text may remain as helper content, but it must not replace the command plan unless the owner explicitly asked for draft-only text.
 - Do not convert proposed commands into passed commands.
 - Put local runtime, test, database, migration, server-start, and git-status checks that still need execution under PROOF THE OWNER OR TERMINAL AGENT MUST RUN.
 - Before giving NEXT, apply the Progress Write Gate.
@@ -380,6 +403,8 @@ OUTPUT FORMAT
 - CLEANED TEXT
 - COMMAND PLAN FOR OWNER / LOCAL TERMINAL
 - PROOF THE OWNER OR TERMINAL AGENT MUST RUN
+- PROGRESS
+- CONTEXT WINDOW STATUS
 - NEXT
 
 SELF-CHECK
@@ -387,6 +412,9 @@ SELF-CHECK
 - If exact owner Codex request is absent, OPTIONAL HANDOFF TEXT FOR CODEX is omitted.
 - COMMAND PLAN FOR OWNER / LOCAL TERMINAL is present for normal analysis.
 - NEXT names exactly one next execution channel.
+- PROGRESS and CONTEXT WINDOW STATUS are present for non-trivial work.
+- Web AI file update requests require COMMAND PLAN FOR OWNER / LOCAL TERMINAL.
+- Paste-ready text does not replace the command plan unless the owner explicitly asked for draft-only text.
 - If new local proof was provided, ledger and handoff update were cited, drafted, or put in owner/local command plan.
 - Local proof and remote connector proof are not conflated.
 - NEXT does not skip required progress ledger or handoff updates.
