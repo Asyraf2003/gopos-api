@@ -42,6 +42,43 @@ Before sending any Web AI prompt, check:
 - `COMMAND PLAN FOR OWNER / LOCAL TERMINAL` is present for normal analysis;
 - `NEXT` names exactly one next execution channel.
 
+## Progress Write Gate
+
+Before giving `NEXT`, Web AI must check whether new proof changes project progress.
+
+If new durable proof exists, Web AI must do one of:
+
+1. cite the already-updated ledger and handoff;
+2. provide paste-ready ledger and handoff text;
+3. provide a `COMMAND PLAN FOR OWNER / LOCAL TERMINAL` that updates the ledger and handoff.
+
+Web AI must not leave progress updates as an implicit follow-up.
+
+Web AI must explicitly separate:
+
+- local proof;
+- remote connector proof;
+- inferred status;
+- missing proof.
+
+If local proof exists but remote connector proof is missing, status must be written as:
+
+```text
+locally implemented with proof; connector validation pending
+```
+
+Web AI must not write "closed", "complete", "done", or "ready" until all acceptance gates and repository facts are proven.
+
+Web AI must not provide Git commit, push, pull request, branch, merge, label, reviewer, comment, ref, or CI mutation instructions unless the owner explicitly asks for Git operations. For normal Web AI output, Git status may be requested as proof, but Git mutation commands must not be given as an active step.
+
+The required self-check anchors are:
+
+- If new local proof was provided, ledger and handoff update were cited, drafted, or put in owner/local command plan.
+- Local proof and remote connector proof are not conflated.
+- NEXT does not skip required progress ledger or handoff updates.
+- Git mutation instructions are absent unless the owner explicitly requested Git operations.
+- The response identifies whether the current status is local-only, remote-validated, or inferred.
+
 ## Open A Web AI Session
 
 Copy this as plain text. Do not wrap it in Markdown fences.
@@ -115,6 +152,10 @@ RULES
 - Do not propose an endpoint without a capability key.
 - Do not claim implementation completion, runtime success, tests passed, file creation, repository update, or scope closure without proof.
 - Do not use "ready", "done", "closed", or "complete" unless every stated acceptance gate has proof.
+- Before giving NEXT, apply the Progress Write Gate.
+- If new durable proof changes progress, cite updated ledger and handoff, draft paste-ready ledger and handoff text, or provide a COMMAND PLAN FOR OWNER / LOCAL TERMINAL to update both.
+- If local proof exists but remote connector proof is missing, write status as "locally implemented with proof; connector validation pending".
+- Do not provide Git mutation instructions unless the owner explicitly requested Git operations.
 - Keep one active step.
 - Since you usually cannot execute local CLI commands, provide exact commands for owner/local terminal under COMMAND PLAN FOR OWNER / LOCAL TERMINAL.
 - Separate proposed commands from command output that was actually provided.
@@ -141,6 +182,11 @@ SELF-CHECK
 - If exact owner Codex request is absent, OPTIONAL HANDOFF TEXT FOR CODEX is omitted.
 - COMMAND PLAN FOR OWNER / LOCAL TERMINAL is present for normal analysis.
 - NEXT names exactly one next execution channel.
+- If new local proof was provided, ledger and handoff update were cited, drafted, or put in owner/local command plan.
+- Local proof and remote connector proof are not conflated.
+- NEXT does not skip required progress ledger or handoff updates.
+- Git mutation instructions are absent unless the owner explicitly requested Git operations.
+- The response identifies whether the current status is local-only, remote-validated, or inferred.
 - No Codex implementation task is mixed into TASK unless owner explicitly requested collaboration.
 - No repo mutation is claimed.
 
@@ -207,6 +253,10 @@ RULES
 - Keep SQL inside persistence adapters.
 - Do not propose an endpoint without a capability key.
 - Do not claim implementation completion, runtime success, tests passed, file creation, repository update, or scope closure without proof.
+- Before giving NEXT, apply the Progress Write Gate.
+- If new durable proof changes progress, cite updated ledger and handoff, draft paste-ready ledger and handoff text, or provide a COMMAND PLAN FOR OWNER / LOCAL TERMINAL to update both.
+- If local proof exists but remote connector proof is missing, write status as "locally implemented with proof; connector validation pending".
+- Do not provide Git mutation instructions unless the owner explicitly requested Git operations.
 - Keep output structured so it can be pasted into docs/handoffs or docs/evidence.
 - Provide exact CLI commands for owner/local terminal when execution is required.
 
@@ -232,6 +282,11 @@ SELF-CHECK
 - If exact owner Codex request is absent, OPTIONAL HANDOFF TEXT FOR CODEX is omitted.
 - COMMAND PLAN FOR OWNER / LOCAL TERMINAL is present for normal analysis.
 - NEXT names exactly one next execution channel.
+- If new local proof was provided, ledger and handoff update were cited, drafted, or put in owner/local command plan.
+- Local proof and remote connector proof are not conflated.
+- NEXT does not skip required progress ledger or handoff updates.
+- Git mutation instructions are absent unless the owner explicitly requested Git operations.
+- The response identifies whether the current status is local-only, remote-validated, or inferred.
 - No Codex implementation task is mixed into TASK NOW unless owner explicitly requested collaboration.
 - No repo mutation is claimed.
 ```
@@ -312,6 +367,7 @@ RULES
 - Treat "write docs/...", "update docs/...", "create evidence", "prepare handoff", and "close scope" as draft response content only unless exact mutation permission was provided.
 - Do not convert proposed commands into passed commands.
 - Put local runtime, test, database, migration, server-start, and git-status checks that still need execution under PROOF THE OWNER OR TERMINAL AGENT MUST RUN.
+- Before giving NEXT, apply the Progress Write Gate.
 - Remove OPTIONAL HANDOFF TEXT FOR CODEX unless the previous answer names an exact owner Codex request.
 - If OPTIONAL HANDOFF TEXT FOR CODEX remains, quote or name the exact owner instruction that requested Codex.
 - If no exact owner Codex request exists, Codex handoff is omitted.
@@ -331,4 +387,9 @@ SELF-CHECK
 - If exact owner Codex request is absent, OPTIONAL HANDOFF TEXT FOR CODEX is omitted.
 - COMMAND PLAN FOR OWNER / LOCAL TERMINAL is present for normal analysis.
 - NEXT names exactly one next execution channel.
+- If new local proof was provided, ledger and handoff update were cited, drafted, or put in owner/local command plan.
+- Local proof and remote connector proof are not conflated.
+- NEXT does not skip required progress ledger or handoff updates.
+- Git mutation instructions are absent unless the owner explicitly requested Git operations.
+- The response identifies whether the current status is local-only, remote-validated, or inferred.
 ```
