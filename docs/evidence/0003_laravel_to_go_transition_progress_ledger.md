@@ -134,4 +134,4 @@ The same session must create or update a handoff when durable work was done.
 
 ## Context Window Status
 
-Current ledger update context status: updated after ServiceCatalog PostgreSQL persistence closeout and docs scalability cleanup; enough context to plan the next runtime/capability blueprint.
+Current ledger update context status: updated after ServiceCatalog runtime/capability connector validation and closeout classification; enough context to prepare the next planning-only scope prompt.
