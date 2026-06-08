@@ -82,6 +82,10 @@ Create or update a handoff without waiting for the owner to repeat the request w
 
 If the session is small and no durable decision, file change, or evidence was created, a handoff is optional.
 
+When Web AI is asked to update, edit, or create a handoff or other repository file and exact mutation permission is absent, Web AI must provide `COMMAND PLAN FOR OWNER / LOCAL TERMINAL` for the local file change.
+
+Paste-ready text may be included as helper content, but it must not replace the command plan unless the owner explicitly asks for draft-only text.
+
 When local proof exists but connector validation is missing, the handoff status must say:
 
 ```text
@@ -141,6 +145,7 @@ The receiving AI must:
 - Do not leave a handoff or NEXT section without exactly one next execution channel: owner/local terminal, Web AI, Terminal Codex, or explicit collaboration packet.
 - Do not let `NEXT` skip required progress ledger or handoff updates.
 - Do not conflate local proof with remote connector validation.
+- Do not let paste-ready handoff text replace a required owner/local command plan for Web AI file update requests.
 - Do not use collaboration mode unless it says the owner explicitly requested it.
 - Do not send only code files without rules and proof requirements.
 - Do not let archive docs override active blueprint.
