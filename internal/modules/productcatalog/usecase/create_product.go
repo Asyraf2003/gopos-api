@@ -8,34 +8,6 @@ import (
 	"pos-go/internal/modules/productcatalog/ports"
 )
 
-type CreateProductCommand struct {
-	Code                 string
-	Name                 string
-	Brand                string
-	Size                 *int
-	SalePriceRupiah      int64
-	ReorderPointQty      *int
-	CriticalThresholdQty *int
-	ActorID              string
-	Reason               string
-}
-
-type CreateProductResult struct {
-	ID                   string
-	Code                 *string
-	Name                 string
-	NormalizedName       string
-	Brand                string
-	NormalizedBrand      string
-	Size                 *int
-	SalePriceRupiah      int64
-	ReorderPointQty      *int
-	CriticalThresholdQty *int
-	Status               string
-	CreatedAt            time.Time
-	UpdatedAt            time.Time
-}
-
 type ProductIDGenerator interface {
 	NewProductID() (string, error)
 }
@@ -97,8 +69,10 @@ func (uc *CreateProduct) Execute(
 		return CreateProductResult{}, err
 	}
 
-	now := uc.now()
+	return createProductResultFromDomain(product, uc.now()), nil
+}
 
+func createProductResultFromDomain(product *domain.Product, now time.Time) CreateProductResult {
 	return CreateProductResult{
 		ID:                   product.ID(),
 		Code:                 product.Code(),
@@ -113,5 +87,5 @@ func (uc *CreateProduct) Execute(
 		Status:               string(product.Status()),
 		CreatedAt:            now,
 		UpdatedAt:            now,
-	}, nil
+	}
 }
