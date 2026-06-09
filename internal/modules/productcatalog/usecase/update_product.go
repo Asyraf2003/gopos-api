@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"pos-go/internal/modules/productcatalog/domain"
 	"pos-go/internal/modules/productcatalog/ports"
 )
 
@@ -40,7 +41,28 @@ func (uc *UpdateProduct) Execute(
 		return UpdateProductResult{}, err
 	}
 
-	_ = product
+	candidate, err := domain.NewProduct(domain.ProductInput{
+		ID:                   product.ID(),
+		Code:                 cmd.Code,
+		Name:                 cmd.Name,
+		Brand:                cmd.Brand,
+		Size:                 cmd.Size,
+		SalePriceRupiah:      cmd.SalePriceRupiah,
+		ReorderPointQty:      cmd.ReorderPointQty,
+		CriticalThresholdQty: cmd.CriticalThresholdQty,
+	})
+	if err != nil {
+		return UpdateProductResult{}, err
+	}
+
+	if err := uc.duplicateChecker.CheckUpdateDuplicate(ctx, product.ID(), ports.ProductDuplicateCandidate{
+		Code:            candidate.Code(),
+		NormalizedName:  candidate.NormalizedName(),
+		NormalizedBrand: candidate.NormalizedBrand(),
+		Size:            candidate.Size(),
+	}); err != nil {
+		return UpdateProductResult{}, err
+	}
 
 	return UpdateProductResult{}, nil
 }
