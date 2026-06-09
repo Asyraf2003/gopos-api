@@ -13,23 +13,29 @@ type ProductIDGenerator interface {
 }
 
 type CreateProduct struct {
-	repository       ports.ProductRepository
-	duplicateChecker ports.ProductDuplicateChecker
-	idGenerator      ProductIDGenerator
-	now              func() time.Time
+	repository        ports.ProductRepository
+	duplicateChecker  ports.ProductDuplicateChecker
+	versionRepository ports.ProductVersionRepository
+	auditRecorder     ports.ProductAuditRecorder
+	idGenerator       ProductIDGenerator
+	now               func() time.Time
 }
 
 func NewCreateProduct(
 	repository ports.ProductRepository,
 	duplicateChecker ports.ProductDuplicateChecker,
+	versionRepository ports.ProductVersionRepository,
+	auditRecorder ports.ProductAuditRecorder,
 	idGenerator ProductIDGenerator,
 	now func() time.Time,
 ) *CreateProduct {
 	return &CreateProduct{
-		repository:       repository,
-		duplicateChecker: duplicateChecker,
-		idGenerator:      idGenerator,
-		now:              now,
+		repository:        repository,
+		duplicateChecker:  duplicateChecker,
+		versionRepository: versionRepository,
+		auditRecorder:     auditRecorder,
+		idGenerator:       idGenerator,
+		now:               now,
 	}
 }
 
