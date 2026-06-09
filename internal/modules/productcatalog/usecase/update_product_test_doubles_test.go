@@ -30,6 +30,7 @@ type fakeUpdateProductDuplicateChecker struct {
 	updateCalled bool
 	productID    string
 	candidate    ports.ProductDuplicateCandidate
+	err          error
 }
 
 func (f *fakeUpdateProductDuplicateChecker) CheckCreateDuplicate(
@@ -48,5 +49,5 @@ func (f *fakeUpdateProductDuplicateChecker) CheckUpdateDuplicate(
 	f.productID = productID
 	f.candidate = candidate
 
-	return nil
+	return f.err
 }
