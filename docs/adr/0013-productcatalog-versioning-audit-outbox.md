@@ -48,7 +48,7 @@ These writes must be committed together.
 
 The request hot path must not wait for full audit materialization, full telemetry export, reporting projection, dashboard projection, notification dispatch, external logging, or slow audit enrichment.
 
-Full audit materialization may be handled later by a background worker that reads audit outbox/intent records.
+Full audit materialization may be handled later by a worker/cold path that reads audit outbox/intent records.
 
 ## Hot Path Contract
 
@@ -91,7 +91,7 @@ revision_no
 before_snapshot nullable
 after_snapshot nullable
 metadata_json
-status
+status = pending
 created_at
 ```
 
@@ -161,7 +161,7 @@ slow audit enrichment
 untracked goroutine audit writes
 ```
 
-These belong outside the request hot path.
+These belong outside the request hot path and must run through a worker/cold path when needed.
 
 ## Options Considered
 
