@@ -20,7 +20,7 @@ func (uc *ListProducts) Execute(
 	ctx context.Context,
 	query ListProductsQuery,
 ) (ListProductsResult, error) {
-	_, err := uc.reader.List(ctx, ports.ProductListQuery{
+	items, err := uc.reader.List(ctx, ports.ProductListQuery{
 		Search:  query.Search,
 		Status:  query.Status,
 		Page:    query.Page,
@@ -30,5 +30,20 @@ func (uc *ListProducts) Execute(
 		return ListProductsResult{}, err
 	}
 
-	return ListProductsResult{}, nil
+	result := ListProductsResult{
+		Items: make([]ListProductsItem, 0, len(items)),
+	}
+	for _, item := range items {
+		result.Items = append(result.Items, ListProductsItem{
+			ID:              item.ID,
+			Code:            item.Code,
+			Name:            item.Name,
+			Brand:           item.Brand,
+			Size:            item.Size,
+			SalePriceRupiah: item.SalePriceRupiah,
+			Status:          item.Status,
+		})
+	}
+
+	return result, nil
 }
