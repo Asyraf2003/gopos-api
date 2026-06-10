@@ -1,0 +1,151 @@
+# ProductCatalog SoftDeleteProduct Progress Handoff
+
+## Date
+
+2026-06-10
+
+## Active Scope
+
+ProductCatalog implementation slice 1.
+
+Blueprint:
+
+```text
+docs/blueprints/0029_productcatalog_implementation_slice_1.md
+```
+
+Scope remains limited to:
+
+```text
+internal/modules/productcatalog/domain
+internal/modules/productcatalog/ports
+internal/modules/productcatalog/usecase
+```
+
+## FACT
+
+SoftDeleteProduct is now locally implemented and proven.
+
+Implemented behavior includes:
+
+- constructor and dependency wiring
+- product not found propagation
+- already deleted product rejected
+- domain soft delete lifecycle mutation
+- repository update
+- repository update error propagation
+- product_deleted version record
+- version append error propagation
+- product_deleted audit record
+- audit recorder error propagation
+- result mapping with deleted status, deleted time, and revision number
+
+Latest focused proof passed:
+
+```text
+go test ./internal/modules/productcatalog/...
+ok  	pos-go/internal/modules/productcatalog/domain	(cached)
+?   	pos-go/internal/modules/productcatalog/ports	[no test files]
+ok  	pos-go/internal/modules/productcatalog/usecase	0.004s
+```
+
+Latest aggregate local proof passed:
+
+```text
+[PASS] go test ./...
+[PASS] go vet audit
+[PASS] format audit
+[PASS] AI rules audit
+[PASS] file size audit
+[PASS] hexagonal import audit
+[PASS] route capability audit
+[PASS] security gosec audit
+[PASS] aggregate audit passed
+```
+
+Gosec summary:
+
+```text
+Gosec  : dev
+Files  : 149
+Lines  : 6446
+Nosec  : 0
+Issues : 0
+```
+
+## GAP
+
+Remote connector validation is pending until owner pushes local changes.
+
+Remaining ProductCatalog slice 1 work:
+
+- Add RestoreProduct contract and behavior.
+- Add read query contracts:
+  - GetProductDetail
+  - ListProducts
+  - LookupProducts
+  - ListProductVersions
+
+## DECISION
+
+Stop SoftDeleteProduct work at a clean aggregate-proof checkpoint.
+
+Do not start PostgreSQL adapter, migrations, Echo HTTP transport, presenters, route registration, capability seed, inventory stock mutation, UI, or ProductCatalog runtime HTTP slice.
+
+## PROOF
+
+SoftDeleteProduct focused behavior proof passed.
+
+Aggregate proof passed after SoftDeleteProduct implementation.
+
+Progress ledger was updated after aggregate proof:
+
+```text
+Business Phase 1: 37%
+Overall Laravel-to-Go transition: 31%
+ProductCatalog domain, ports, CreateProduct, UpdateProduct, and SoftDeleteProduct are locally implemented with proof; connector validation pending.
+```
+
+## NEXT
+
+Execution channel: owner/local terminal.
+
+Next valid implementation step:
+
+Start RestoreProduct contract and constructor/skeleton only.
+
+## PROGRESS
+
+ProductCatalog domain: 100%.
+
+ProductCatalog ports: 95%.
+
+CreateProduct usecase behavior: 97%.
+
+UpdateProduct usecase behavior: 100% locally proven.
+
+SoftDeleteProduct usecase behavior: 100% locally proven.
+
+ProductCatalog slice 1 overall: 99% locally proven.
+
+Business Phase 1: 37% ledger-visible after owner pushes.
+
+Overall transition: 31% ledger-visible after owner pushes.
+
+## CONTEXT WINDOW STATUS
+
+Enough context remains to continue ProductCatalog slice 1 into RestoreProduct behavior.
+
+Forbidden scope remains out:
+
+```text
+PostgreSQL adapter
+migrations
+Echo HTTP transport
+presenters
+route registration
+capability seed
+inventory stock mutation
+UI
+ProductCatalog runtime HTTP slice
+```
