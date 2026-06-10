@@ -116,9 +116,9 @@ check_contains "docs/templates/0122_web_ai_session_prompts.md" "locally implemen
 check_contains "docs/templates/0122_web_ai_session_prompts.md" "Local proof and remote connector proof are not conflated"
 check_contains "docs/templates/0122_web_ai_session_prompts.md" "Git mutation instructions are absent unless the owner explicitly requested Git operations"
 check_contains "docs/templates/0123_cli_command_formatter_rules.md" "CLI Command Formatter Rules"
-check_contains "docs/templates/0123_cli_command_formatter_rules.md" "Do not use `set -euo pipefail`"
-check_contains "docs/templates/0123_cli_command_formatter_rules.md" "Convert `grep` commands to `rg`"
-check_contains "docs/templates/0123_cli_command_formatter_rules.md" "Convert `find` commands to `fd`"
+check_contains "docs/templates/0123_cli_command_formatter_rules.md" 'Do not use `set -euo pipefail`'
+check_contains "docs/templates/0123_cli_command_formatter_rules.md" 'Convert `grep` commands to `rg`'
+check_contains "docs/templates/0123_cli_command_formatter_rules.md" 'Convert `find` commands to `fd`'
 check_contains "docs/templates/0123_cli_command_formatter_rules.md" "Do not prepend this unless explicitly needed"
 check_contains "docs/AGENTS.md" "docs/templates/0123_cli_command_formatter_rules.md"
 check_contains "docs/0003_session_start_protocol.md" "docs/templates/0123_cli_command_formatter_rules.md"
