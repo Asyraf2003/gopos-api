@@ -41,7 +41,7 @@ Implemented skeleton only:
 - LookupProducts usecase type with ports.ProductReader dependency
 - NewLookupProducts
 
-No LookupProducts behavior has been implemented yet.
+LookupProducts reader error propagation is implemented and remote-visible through GitHub connector.
 
 Focused proof passed:
 
@@ -57,16 +57,16 @@ wc -l internal/modules/productcatalog/usecase/lookup_products*.go
 
 ## GAP
 
-LookupProducts behavior is not implemented or behavior-tested yet.
+LookupProducts query forwarding, success mapping, and empty-list behavior are not implemented or behavior-tested yet.
 
 Remaining ProductCatalog slice 1 read-query work:
 
-- Add LookupProducts behavior one failing test at a time.
+- Add remaining LookupProducts behavior one failing test at a time.
 - Add ListProductVersions contract and behavior later.
 
 ## DECISION
 
-Stop LookupProducts work at contract and constructor/skeleton only until the next behavior-test step.
+Stop LookupProducts work after reader error propagation until the next behavior-test step.
 
 Do not start PostgreSQL adapter, migrations, Echo HTTP transport, presenters, route registration, capability seed, inventory stock mutation, UI, or ProductCatalog runtime HTTP slice.
 
@@ -79,7 +79,7 @@ Progress ledger was updated after focused proof:
 ```text
 Business Phase 1: 40%
 Overall Laravel-to-Go transition: 31%
-LookupProducts contract and constructor/skeleton are remote-visible through GitHub connector with focused proof.
+LookupProducts contract, constructor/skeleton, and reader error propagation are remote-visible through GitHub connector with focused proof.
 ```
 
 ## NEXT
@@ -88,7 +88,7 @@ Execution channel: owner/local terminal.
 
 Next valid implementation step:
 
-Add the first failing LookupProducts behavior test only.
+Add the next failing LookupProducts behavior test only.
 
 Do not start ProductCatalog PostgreSQL, Echo/runtime, migrations, capability seed, inventory mutation, UI, ProductCatalog runtime HTTP slice, or ListProductVersions.
 
@@ -110,7 +110,7 @@ GetProductDetail usecase behavior: 100% locally proven and connector-validated.
 
 ListProducts usecase behavior: 100% locally proven and connector-visible.
 
-LookupProducts skeleton: 100% locally compile-proven and connector-validated.
+LookupProducts reader error propagation: 100% locally proven and connector-validated.
 
 ProductCatalog slice 1 overall: 99% locally proven.
 
@@ -120,7 +120,7 @@ Overall transition: 31%.
 
 ## CONTEXT WINDOW STATUS
 
-Enough context remains to continue ProductCatalog slice 1 into the first LookupProducts behavior test.
+Enough context remains to continue ProductCatalog slice 1 into LookupProducts query-forwarding behavior.
 
 Forbidden scope remains out:
 

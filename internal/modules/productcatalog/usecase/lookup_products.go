@@ -18,9 +18,13 @@ func NewLookupProducts(reader ports.ProductReader) *LookupProducts {
 
 func (uc *LookupProducts) Execute(
 	ctx context.Context,
-	_ LookupProductsQuery,
+	query LookupProductsQuery,
 ) (LookupProductsResult, error) {
-	_, err := uc.reader.Lookup(ctx, ports.ProductLookupQuery{})
+	_, err := uc.reader.Lookup(ctx, ports.ProductLookupQuery{
+		Query:          query.Query,
+		Limit:          query.Limit,
+		IncludeDeleted: query.IncludeDeleted,
+	})
 	if err != nil {
 		return LookupProductsResult{}, err
 	}

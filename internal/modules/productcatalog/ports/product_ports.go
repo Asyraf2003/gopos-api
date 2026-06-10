@@ -31,7 +31,11 @@ type ProductListItem struct {
 	Status          string
 }
 
-type ProductLookupQuery struct{}
+type ProductLookupQuery struct {
+	Query          string
+	Limit          int
+	IncludeDeleted bool
+}
 
 type ProductLookupItem struct{}
 

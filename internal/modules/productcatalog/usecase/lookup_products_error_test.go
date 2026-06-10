@@ -23,7 +23,8 @@ func TestLookupProductsPropagatesReaderLookupError(t *testing.T) {
 }
 
 type lookupProductsReaderDouble struct {
-	lookupErr error
+	capturedQuery ports.ProductLookupQuery
+	lookupErr     error
 }
 
 func (d *lookupProductsReaderDouble) GetByID(
@@ -42,7 +43,9 @@ func (d *lookupProductsReaderDouble) List(
 
 func (d *lookupProductsReaderDouble) Lookup(
 	_ context.Context,
-	_ ports.ProductLookupQuery,
+	query ports.ProductLookupQuery,
 ) ([]ports.ProductLookupItem, error) {
+	d.capturedQuery = query
+
 	return nil, d.lookupErr
 }
