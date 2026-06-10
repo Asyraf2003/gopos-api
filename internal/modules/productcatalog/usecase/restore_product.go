@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"time"
 
 	"pos-go/internal/modules/productcatalog/ports"
@@ -25,4 +26,16 @@ func NewRestoreProduct(
 		auditRecorder:     auditRecorder,
 		now:               now,
 	}
+}
+
+func (uc *RestoreProduct) Execute(
+	ctx context.Context,
+	cmd RestoreProductCommand,
+) (RestoreProductResult, error) {
+	_, err := uc.repository.FindByID(ctx, cmd.ID)
+	if err != nil {
+		return RestoreProductResult{}, err
+	}
+
+	return RestoreProductResult{}, nil
 }
