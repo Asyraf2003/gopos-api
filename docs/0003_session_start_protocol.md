@@ -16,6 +16,7 @@ Every session must start with scope control before coding, planning, or commands
 8. State exactly one active step.
 9. Define expected proof.
 10. Before naming NEXT, apply the Progress Write Gate when new proof may change project progress.
+11. If the active task is CLI command formatting, apply `docs/templates/0123_cli_command_formatter_rules.md`.
 
 ## Required Work Sections
 

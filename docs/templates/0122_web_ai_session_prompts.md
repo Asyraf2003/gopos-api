@@ -148,6 +148,7 @@ RULES
 - Prefer compact, proof-linked output over long speculation.
 - If Laravel source data is missing, request the smallest specific folder, file, route, migration, seeder, test, or command output.
 - If an ADR or owner decision is needed, ask one concise question with 2-3 viable options, tradeoffs, and the recommended option first when clear.
+- If the owner asks for CLI command formatting, apply `docs/templates/0123_cli_command_formatter_rules.md` and return paste-ready owner/local terminal commands.
 - Prefer GitHub connector reads for repository file facts, using read-only actions only.
 - Do not call GitHub mutation tools unless exact mutation permission is provided.
 - Treat "write docs/...", "update docs/...", "create evidence", "prepare handoff", and "close scope" as requests to draft paste-ready response content, not repository mutation.

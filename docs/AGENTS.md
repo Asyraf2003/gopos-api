@@ -32,6 +32,7 @@ Before giving technical guidance, planning implementation, editing files, or pro
 24. `docs/templates/0120_prompt_authoring_rules.md`
 25. `docs/templates/0121_codex_session_prompts.md`
 26. `docs/templates/0122_web_ai_session_prompts.md`
+27. `docs/templates/0123_cli_command_formatter_rules.md`
 
 If the user names a blueprint, ADR, handoff, error log, branch, commit, command output, API, domain, table, or module, that reference defines the active scope until the user changes it.
 
@@ -71,4 +72,5 @@ If the user names a blueprint, ADR, handoff, error log, branch, commit, command 
 - Local proof and remote connector proof must not be conflated; use locally implemented with proof; connector validation pending when remote validation is missing.
 - If durable proof changes progress, update, cite, draft, or command-plan the active ledger and relevant handoff before naming the next implementation step.
 - Before NEXT, apply the Progress Write Gate when new proof may change project progress.
+- When the owner asks for command formatting, follow `docs/templates/0123_cli_command_formatter_rules.md`.
 - Makefile/script contracts must stay stable so terminal Codex and GPT web workflows use the same proof language.
