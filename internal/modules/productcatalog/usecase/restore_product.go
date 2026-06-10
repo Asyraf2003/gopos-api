@@ -41,8 +41,14 @@ func (uc *RestoreProduct) Execute(
 		return RestoreProductResult{}, err
 	}
 
+	if err := uc.repository.Update(ctx, product); err != nil {
+		return RestoreProductResult{}, err
+	}
+
+	restoredAt := uc.now()
 	return RestoreProductResult{
-		ID:     product.ID(),
-		Status: string(product.Status()),
+		ID:         product.ID(),
+		Status:     string(product.Status()),
+		RestoredAt: restoredAt,
 	}, nil
 }
