@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"time"
 
 	"pos-go/internal/modules/productcatalog/ports"
@@ -25,4 +26,16 @@ func NewSoftDeleteProduct(
 		auditRecorder:     auditRecorder,
 		now:               now,
 	}
+}
+
+func (uc *SoftDeleteProduct) Execute(
+	ctx context.Context,
+	cmd SoftDeleteProductCommand,
+) (SoftDeleteProductResult, error) {
+	_, err := uc.repository.FindByID(ctx, cmd.ID)
+	if err != nil {
+		return SoftDeleteProductResult{}, err
+	}
+
+	return SoftDeleteProductResult{}, nil
 }
