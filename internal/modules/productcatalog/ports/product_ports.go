@@ -21,7 +21,15 @@ type ProductListQuery struct {
 	PerPage int
 }
 
-type ProductListItem struct{}
+type ProductListItem struct {
+	ID              string
+	Code            *string
+	Name            string
+	Brand           string
+	Size            *int
+	SalePriceRupiah int64
+	Status          string
+}
 
 type ProductLookupQuery struct{}
 
