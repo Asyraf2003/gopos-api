@@ -32,3 +32,21 @@ func (uc *RestoreProduct) recordRestoreProductVersion(
 
 	return revisionNo, uc.versionRepository.Append(ctx, version)
 }
+
+func (uc *RestoreProduct) recordRestoreProductAudit(
+	ctx context.Context,
+	productID string,
+	cmd RestoreProductCommand,
+	occurredAt time.Time,
+	revisionNo int,
+) error {
+	return uc.auditRecorder.RecordProductAudit(ctx, ports.ProductAuditRecord{
+		AggregateID: productID,
+		EventName:   productRestoredEventName,
+		Operation:   "restore",
+		ActorID:     cmd.ActorID,
+		Reason:      cmd.Reason,
+		OccurredAt:  occurredAt,
+		RevisionNo:  revisionNo,
+	})
+}
