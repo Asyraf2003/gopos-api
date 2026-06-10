@@ -24,7 +24,7 @@ internal/modules/productcatalog/usecase
 
 ## FACT
 
-LookupProducts contract and constructor/skeleton are now locally implemented.
+LookupProducts contract and constructor/skeleton are now locally implemented and remote-visible through GitHub connector.
 
 Implemented files:
 
@@ -79,7 +79,7 @@ Progress ledger was updated after focused proof:
 ```text
 Business Phase 1: 40%
 Overall Laravel-to-Go transition: 31%
-LookupProducts contract and constructor/skeleton are locally implemented with focused proof; LookupProducts connector validation pending.
+LookupProducts contract and constructor/skeleton are remote-visible through GitHub connector with focused proof.
 ```
 
 ## NEXT
@@ -110,7 +110,7 @@ GetProductDetail usecase behavior: 100% locally proven and connector-validated.
 
 ListProducts usecase behavior: 100% locally proven and connector-visible.
 
-LookupProducts skeleton: 100% locally compile-proven.
+LookupProducts skeleton: 100% locally compile-proven and connector-validated.
 
 ProductCatalog slice 1 overall: 99% locally proven.
 
@@ -120,7 +120,7 @@ Overall transition: 31%.
 
 ## CONTEXT WINDOW STATUS
 
-Enough context remains to continue ProductCatalog slice 1 into the first LookupProducts behavior test after connector validation.
+Enough context remains to continue ProductCatalog slice 1 into the first LookupProducts behavior test.
 
 Forbidden scope remains out:
 
