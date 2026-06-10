@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"pos-go/internal/modules/productcatalog/domain"
 	"pos-go/internal/modules/productcatalog/ports"
 )
 
@@ -32,10 +33,23 @@ func (uc *SoftDeleteProduct) Execute(
 	ctx context.Context,
 	cmd SoftDeleteProductCommand,
 ) (SoftDeleteProductResult, error) {
-	_, err := uc.repository.FindByID(ctx, cmd.ID)
+	product, err := uc.repository.FindByID(ctx, cmd.ID)
 	if err != nil {
 		return SoftDeleteProductResult{}, err
 	}
 
-	return SoftDeleteProductResult{}, nil
+	deletedAt := uc.now()
+	if err := product.SoftDelete(domain.DeleteInput{
+		DeletedAt:        deletedAt,
+		DeletedByActorID: cmd.ActorID,
+		Reason:           cmd.Reason,
+	}); err != nil {
+		return SoftDeleteProductResult{}, err
+	}
+
+	return SoftDeleteProductResult{
+		ID:        product.ID(),
+		Status:    string(product.Status()),
+		DeletedAt: deletedAt,
+	}, nil
 }
