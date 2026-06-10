@@ -78,5 +78,5 @@ func (uc *UpdateProduct) Execute(
 		return UpdateProductResult{}, err
 	}
 
-	return UpdateProductResult{}, nil
+	return updateProductResultFromDomain(candidate, now, revisionNo), nil
 }
