@@ -1,4 +1,4 @@
-# ProductCatalog GetProductDetail Progress Handoff
+# ProductCatalog ListProducts Skeleton Progress Handoff
 
 ## Date
 
@@ -24,27 +24,26 @@ internal/modules/productcatalog/usecase
 
 ## FACT
 
-GetProductDetail is now locally implemented and proven.
+ListProducts contract and constructor/skeleton are now locally implemented.
 
-Implemented behavior includes:
+Implemented files:
 
-- contract query/result type
-- constructor and reader dependency wiring
-- product not found propagation from ProductReader
-- success result mapping from domain.Product:
-  - ID
-  - Code
-  - Name
-  - NormalizedName
-  - Brand
-  - NormalizedBrand
-  - Size
-  - SalePriceRupiah
-  - ReorderPointQty
-  - CriticalThresholdQty
-  - Status
+```text
+internal/modules/productcatalog/usecase/list_products_contract.go
+internal/modules/productcatalog/usecase/list_products.go
+```
 
-Latest focused proof passed:
+Implemented skeleton only:
+
+- `ListProductsQuery`
+- `ListProductsResult`
+- `ListProductsItem`
+- `ListProducts` usecase type with `ports.ProductReader` dependency
+- `NewListProducts`
+
+No ListProducts behavior has been implemented yet.
+
+Focused proof passed:
 
 ```text
 go test ./internal/modules/productcatalog/...
@@ -52,6 +51,8 @@ ok  	pos-go/internal/modules/productcatalog/domain	(cached)
 ?   	pos-go/internal/modules/productcatalog/ports	[no test files]
 ok  	pos-go/internal/modules/productcatalog/usecase	0.004s
 ```
+
+The first non-escalated test attempt failed because the sandbox could not read the normal Go build cache under `/home/asyraf/.cache/go-build`; rerunning the same command with approved `go test` access passed.
 
 Latest aggregate local proof passed:
 
@@ -71,52 +72,49 @@ Gosec summary:
 
 ```text
 Gosec  : dev
-Files  : 154
-Lines  : 6638
+Files  : 156
+Lines  : 6673
 Nosec  : 0
 Issues : 0
 ```
 
 ## GAP
 
-GetProductDetail connector validation has passed for the expected ProductCatalog usecase and handoff files through Web AI GitHub connector observation.
+ListProducts behavior is not implemented or behavior-tested yet.
 
-Remaining ProductCatalog slice 1 work:
+Remaining ProductCatalog slice 1 read-query work:
 
-- Add read query contracts:
-  - ListProducts
-  - LookupProducts
-  - ListProductVersions
+- Add ListProducts behavior one failing test at a time.
+- Add LookupProducts contract/behavior later.
+- Add ListProductVersions contract/behavior later.
 
 ## DECISION
 
-Stop GetProductDetail work at a clean aggregate-proof checkpoint.
+Stop ListProducts work at contract and constructor/skeleton only until the next behavior-test step.
 
 Do not start PostgreSQL adapter, migrations, Echo HTTP transport, presenters, route registration, capability seed, inventory stock mutation, UI, or ProductCatalog runtime HTTP slice.
 
 ## PROOF
 
-GetProductDetail focused behavior proof passed.
+Focused ProductCatalog proof passed after ListProducts skeleton creation.
 
-Aggregate proof passed after GetProductDetail implementation.
+Aggregate proof passed after ledger and handoff update.
 
-Progress ledger was updated after aggregate proof:
+Progress ledger was updated after focused proof:
 
 ```text
 Business Phase 1: 39%
 Overall Laravel-to-Go transition: 31%
-GetProductDetail is locally implemented with proof and remote-visible through Web AI GitHub connector validation.
+ListProducts contract and constructor/skeleton have local focused proof only.
 ```
 
 ## NEXT
 
 Execution channel: owner/local terminal.
 
-Next valid implementation step moved to:
+Next valid implementation step:
 
-```text
-docs/handoffs/2026-06-10-productcatalog-listproducts-skeleton-progress.md
-```
+Add the first failing ListProducts behavior test only.
 
 ## PROGRESS
 
@@ -132,17 +130,19 @@ SoftDeleteProduct usecase behavior: 100% locally proven and connector-validated.
 
 RestoreProduct usecase behavior: 100% locally proven and connector-validated.
 
-GetProductDetail usecase behavior: 100% locally proven.
+GetProductDetail usecase behavior: 100% locally proven and connector-validated.
+
+ListProducts skeleton: 100% locally compile-proven.
 
 ProductCatalog slice 1 overall: 99% locally proven.
 
-Business Phase 1: 39% ledger-visible after owner pushes.
+Business Phase 1: 39%.
 
-Overall transition: 31% ledger-visible after owner pushes.
+Overall transition: 31%.
 
 ## CONTEXT WINDOW STATUS
 
-Enough context remains to continue ProductCatalog slice 1 into ListProducts contract work after connector validation.
+Enough context remains to continue ProductCatalog slice 1 into the first ListProducts behavior test.
 
 Forbidden scope remains out:
 

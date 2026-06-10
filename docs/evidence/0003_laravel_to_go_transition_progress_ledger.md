@@ -69,7 +69,7 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 | Stage 2 | PostgreSQL target baseline for POS domains | Not started | 0% | No accepted POS PostgreSQL migration baseline proof yet |
 | Stage 3 | API foundation and capability control | Closed | 100% | Auth/session foundation exists; capability contracts pass tests; PostgreSQL capability migration is applied; PostgreSQL adapter integration tests pass; runtime capability middleware tests pass; protected route seed migration exists; admin HTTP surface implementation and full `make verify` proof pass; route-to-capability audit script exists and is wired into `make verify`; route-level disabled protected endpoint proof passes for current protected route capability keys; final closeout proof passed on 2026-06-08 |
 | Stage 4 | Cross-cutting modules | Not started | 0% | No audit/language/notification/idempotency transition implementation proof yet |
-| Business Phase 1 | Service catalog and product catalog | Partial | 39% | ServiceCatalog domain/usecase, PostgreSQL persistence, and runtime/capability slice have local proof; ProductCatalog domain, ports, CreateProduct, UpdateProduct, SoftDeleteProduct, and RestoreProduct are remote-visible through GitHub connector with local proof; GetProductDetail is locally implemented with proof; GetProductDetail connector validation pending |
+| Business Phase 1 | Service catalog and product catalog | Partial | 39% | ServiceCatalog domain/usecase, PostgreSQL persistence, and runtime/capability slice have local proof; ProductCatalog domain, ports, CreateProduct, UpdateProduct, SoftDeleteProduct, RestoreProduct, and GetProductDetail are remote-visible through GitHub connector with local proof; ListProducts contract and constructor/skeleton have local focused proof |
 | Overall Laravel-to-Go transition | POS API migration | Early foundation | 31% | Docs, auth debug lane, full verify gate, capability foundation, ServiceCatalog domain/usecase, PostgreSQL persistence, runtime/capability proof, and ProductCatalog domain/usecase local proof exist; ProductCatalog connector validation and broader POS APIs remain incomplete |
 
 ## Current State Summary
@@ -84,6 +84,7 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 - ServiceCatalog runtime/capability slice 0027 is locally implemented with proof.
 - ServiceCatalog HTTP transport, route registration, request/response presenters, authorization/capability wiring, route capability manifest coverage, audit coverage, and capability/permission seed migration 0010 have local proof.
 - Migration `0010_seed_service_catalog_permissions_capabilities.up.sql` is applied in local database proof.
+- ProductCatalog ListProducts contract and constructor/skeleton are locally implemented with focused `go test ./internal/modules/productcatalog/...` proof only.
 
 ## Open Gaps
 - Full Laravel source inventory is incomplete for many business domains.
@@ -98,16 +99,16 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 - No POS domain PostgreSQL baseline has been accepted.
 - ServiceCatalog domain contract is accepted.
 - ServiceCatalog implementation slice 1 plan is accepted and implemented with proof.
-- ProductCatalog domain, ports, CreateProduct, UpdateProduct, SoftDeleteProduct, and RestoreProduct are remote-visible through GitHub connector with local proof; GetProductDetail is locally implemented with proof; GetProductDetail connector validation pending.
+- ProductCatalog domain, ports, CreateProduct, UpdateProduct, SoftDeleteProduct, RestoreProduct, and GetProductDetail are remote-visible through GitHub connector with local proof; ListProducts contract and constructor/skeleton are locally implemented with focused proof.
 - No ProductCatalog PostgreSQL adapter, runtime HTTP surface, migration, route registration, presenter, capability seed, inventory mutation, or UI implementation proof exists yet.
 - ServiceCatalog runtime/capability implementation is remote-visible through GitHub connector with local proof; focused handler and disabled-capability proof are remote-visible through GitHub connector with local proof; connector validation passed for the latest closeout proof files.
 - ProductCatalog domain contract blueprint `docs/blueprints/0028_productcatalog_domain_contract.md` is accepted locally with Option A duplicate policy and `make verify` proof; connector validation pending.
 - ProductCatalog implementation slice 1 blueprint `docs/blueprints/0029_productcatalog_implementation_slice_1.md` is accepted locally with `make verify` proof; connector validation pending.
-- ProductCatalog domain package, ports, CreateProduct, UpdateProduct, SoftDeleteProduct, and RestoreProduct are remote-visible through GitHub connector with focused `go test ./internal/modules/productcatalog/...` proof and aggregate `make verify` proof; GetProductDetail is locally implemented with focused `go test ./internal/modules/productcatalog/...` proof and aggregate `make verify` proof; GetProductDetail connector validation pending.
+- ProductCatalog domain package, ports, CreateProduct, UpdateProduct, SoftDeleteProduct, RestoreProduct, and GetProductDetail are remote-visible through GitHub connector with focused `go test ./internal/modules/productcatalog/...` proof and aggregate `make verify` proof; ListProducts contract and constructor/skeleton are locally implemented with focused `go test ./internal/modules/productcatalog/...` proof only.
 
 ## Next Valid Active Step
 
-Continue ProductCatalog implementation slice 1 with ListProducts contract and constructor/skeleton only.
+Continue ProductCatalog implementation slice 1 with the first ListProducts behavior test only.
 
 - Do not start ProductCatalog PostgreSQL, Echo/runtime, migrations, capability seed, inventory mutation, or UI work in this slice.
 - Do not start a new runtime slice while local proof is not reflected in repository facts.
@@ -120,4 +121,4 @@ The same session must create or update a handoff when durable work was done.
 
 ## Context Window Status
 
-Current ledger update context status: updated after ProductCatalog GetProductDetail local aggregate proof; GetProductDetail connector validation pending; enough context remains to continue ProductCatalog slice 1 into ListProducts.
+Current ledger update context status: updated after ProductCatalog ListProducts contract and constructor/skeleton local focused proof; enough context remains to continue ProductCatalog slice 1 into the first ListProducts behavior test.
