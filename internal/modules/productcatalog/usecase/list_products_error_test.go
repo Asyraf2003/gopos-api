@@ -24,6 +24,7 @@ func TestListProductsPropagatesReaderListError(t *testing.T) {
 
 type listProductsReaderDouble struct {
 	listErr       error
+	listItems     []ports.ProductListItem
 	capturedQuery ports.ProductListQuery
 }
 
@@ -40,7 +41,7 @@ func (d *listProductsReaderDouble) List(
 ) ([]ports.ProductListItem, error) {
 	d.capturedQuery = query
 
-	return nil, d.listErr
+	return d.listItems, d.listErr
 }
 
 func (d *listProductsReaderDouble) Lookup(
