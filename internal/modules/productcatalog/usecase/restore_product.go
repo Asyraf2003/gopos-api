@@ -32,10 +32,17 @@ func (uc *RestoreProduct) Execute(
 	ctx context.Context,
 	cmd RestoreProductCommand,
 ) (RestoreProductResult, error) {
-	_, err := uc.repository.FindByID(ctx, cmd.ID)
+	product, err := uc.repository.FindByID(ctx, cmd.ID)
 	if err != nil {
 		return RestoreProductResult{}, err
 	}
 
-	return RestoreProductResult{}, nil
+	if err := product.Restore(); err != nil {
+		return RestoreProductResult{}, err
+	}
+
+	return RestoreProductResult{
+		ID:     product.ID(),
+		Status: string(product.Status()),
+	}, nil
 }
