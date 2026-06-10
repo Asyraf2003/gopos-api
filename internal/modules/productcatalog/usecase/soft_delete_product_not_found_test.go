@@ -10,13 +10,10 @@ import (
 )
 
 func TestSoftDeleteProductReturnsNotFound(t *testing.T) {
-	repository := &productRepositoryDouble{
-		findErr: ports.ErrProductNotFound,
-	}
 	usecase := NewSoftDeleteProduct(
-		repository,
-		&productVersionRepositoryDouble{},
-		&productAuditRecorderDouble{},
+		&fakeProductRepository{},
+		&fakeProductVersionRepository{},
+		&fakeProductAuditRecorder{},
 		func() time.Time { return time.Date(2026, 6, 10, 10, 0, 0, 0, time.UTC) },
 	)
 
