@@ -13,7 +13,7 @@ func TestGetProductDetailReturnsProductDetail(t *testing.T) {
 	criticalThresholdQty := 3
 	product, err := domain.NewProduct(domain.ProductInput{
 		ID:                   "product-1",
-		Code:                 stringPtr("FLT-001"),
+		Code:                 "FLT-001",
 		Name:                 "Filter Udara",
 		Brand:                "Aspira",
 		Size:                 &size,
@@ -69,8 +69,4 @@ func TestGetProductDetailReturnsProductDetail(t *testing.T) {
 	if result.Status != "active" {
 		t.Fatalf("Status = %q, want active", result.Status)
 	}
-}
-
-func stringPtr(value string) *string {
-	return &value
 }
