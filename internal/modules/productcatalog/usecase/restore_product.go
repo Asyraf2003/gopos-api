@@ -46,9 +46,15 @@ func (uc *RestoreProduct) Execute(
 	}
 
 	restoredAt := uc.now()
+	revisionNo, err := uc.recordRestoreProductVersion(ctx, product.ID(), cmd, restoredAt)
+	if err != nil {
+		return RestoreProductResult{}, err
+	}
+
 	return RestoreProductResult{
 		ID:         product.ID(),
 		Status:     string(product.Status()),
 		RestoredAt: restoredAt,
+		RevisionNo: revisionNo,
 	}, nil
 }
