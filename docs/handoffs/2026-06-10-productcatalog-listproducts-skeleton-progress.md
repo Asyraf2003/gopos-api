@@ -24,14 +24,17 @@ internal/modules/productcatalog/usecase
 
 ## FACT
 
-ListProducts contract, constructor/skeleton, and first behavior are now locally implemented.
+ListProducts behavior is now locally implemented.
 
 Implemented files:
 
 ```text
 internal/modules/productcatalog/usecase/list_products_contract.go
 internal/modules/productcatalog/usecase/list_products.go
+internal/modules/productcatalog/usecase/list_products_empty_test.go
 internal/modules/productcatalog/usecase/list_products_error_test.go
+internal/modules/productcatalog/usecase/list_products_mapping_test.go
+internal/modules/productcatalog/usecase/list_products_query_test.go
 ```
 
 Implemented:
@@ -43,8 +46,9 @@ Implemented:
 - `NewListProducts`
 - `ListProducts.Execute` calls `ProductReader.List`
 - `ListProducts.Execute` propagates `ProductReader.List` errors
-
-Success mapping is not implemented yet.
+- `ListProducts.Execute` forwards `Search`, `Status`, `Page`, and `PerPage` into `ports.ProductListQuery`
+- `ListProducts.Execute` maps `[]ports.ProductListItem` into `[]ListProductsItem`
+- `ListProducts.Execute` returns an empty `Items` list for an empty reader list
 
 Focused proof passed:
 
@@ -61,13 +65,37 @@ Expected first failing proof occurred before implementation:
 internal/modules/productcatalog/usecase/list_products_error_test.go:18:20: usecase.Execute undefined (type *ListProducts has no field or method Execute)
 ```
 
+Expected query-forwarding failing proof occurred before implementation:
+
+```text
+reader.capturedQuery.Search undefined (type ports.ProductListQuery has no field or method Search)
+reader.capturedQuery.Status undefined (type ports.ProductListQuery has no field or method Status)
+reader.capturedQuery.Page undefined (type ports.ProductListQuery has no field or method Page)
+reader.capturedQuery.PerPage undefined (type ports.ProductListQuery has no field or method PerPage)
+```
+
+Expected mapping failing proof occurred before implementation:
+
+```text
+unknown field ID in struct literal of type ports.ProductListItem
+unknown field Code in struct literal of type ports.ProductListItem
+unknown field Name in struct literal of type ports.ProductListItem
+unknown field Brand in struct literal of type ports.ProductListItem
+unknown field Size in struct literal of type ports.ProductListItem
+unknown field SalePriceRupiah in struct literal of type ports.ProductListItem
+unknown field Status in struct literal of type ports.ProductListItem
+```
+
 Line-count checkpoint:
 
 ```text
-  29 internal/modules/productcatalog/usecase/list_products.go
+  49 internal/modules/productcatalog/usecase/list_products.go
   22 internal/modules/productcatalog/usecase/list_products_contract.go
-  48 internal/modules/productcatalog/usecase/list_products_error_test.go
-  99 total
+  19 internal/modules/productcatalog/usecase/list_products_empty_test.go
+  52 internal/modules/productcatalog/usecase/list_products_error_test.go
+  59 internal/modules/productcatalog/usecase/list_products_mapping_test.go
+  37 internal/modules/productcatalog/usecase/list_products_query_test.go
+ 238 total
 ```
 
 Latest aggregate local proof passed:
@@ -89,41 +117,40 @@ Gosec summary:
 ```text
 Gosec  : dev
 Files  : 156
-Lines  : 6689
+Lines  : 6722
 Nosec  : 0
 Issues : 0
 ```
 
 ## GAP
 
-ListProducts success mapping is not implemented or behavior-tested yet.
-
-ListProducts query forwarding is not behavior-tested yet.
+ListProducts PostgreSQL adapter, Echo HTTP transport, presenters, route registration, capability seed, inventory stock mutation, UI, and runtime HTTP slice are still not implemented and remain out of scope for ProductCatalog slice 1.
 
 Remaining ProductCatalog slice 1 read-query work:
 
-- Add remaining ListProducts behavior one failing test at a time.
-- Add LookupProducts contract/behavior later.
+- Add LookupProducts contract and constructor/skeleton only.
+- Add LookupProducts behavior later.
 - Add ListProductVersions contract/behavior later.
 
 ## DECISION
 
-Stop ListProducts work at reader error propagation only until the next behavior-test step.
+Stop ListProducts work after behavior completion.
 
 Do not start PostgreSQL adapter, migrations, Echo HTTP transport, presenters, route registration, capability seed, inventory stock mutation, UI, or ProductCatalog runtime HTTP slice.
 
 ## PROOF
 
-Focused ProductCatalog proof passed after ListProducts error propagation implementation.
+Focused ProductCatalog proof passed after ListProducts behavior completion.
 
-Aggregate proof passed after ledger and handoff update.
+Aggregate proof passed before ledger and handoff update.
 
-Progress ledger was updated after focused proof:
+Progress ledger was updated after focused and aggregate proof:
 
 ```text
-Business Phase 1: 39%
+Business Phase 1: 40%
 Overall Laravel-to-Go transition: 31%
-ListProducts contract, constructor/skeleton, and reader error propagation have local focused and aggregate proof.
+ListProducts reader error propagation is remote-visible through GitHub connector with local focused and aggregate proof.
+ListProducts query forwarding, success mapping, and empty-list behavior are locally implemented with focused and aggregate proof; connector validation pending for latest ListProducts completion files.
 ```
 
 ## NEXT
@@ -132,17 +159,15 @@ Execution channel: owner/local terminal.
 
 Next valid implementation step:
 
-Add the next failing ListProducts behavior test only.
+Add LookupProducts contract and constructor/skeleton only.
 
-Recommended next behavior:
-
-Prove `ListProducts` forwards `ListProductsQuery` into `ports.ProductListQuery` for `ProductReader.List`.
+Do not start LookupProducts behavior, ProductCatalog PostgreSQL, Echo/runtime, migrations, capability seed, inventory mutation, UI, or ProductCatalog runtime HTTP slice.
 
 ## PROGRESS
 
 ProductCatalog domain: 100%.
 
-ProductCatalog ports: 95%.
+ProductCatalog ports: 96%.
 
 CreateProduct usecase behavior: 97%.
 
@@ -154,19 +179,19 @@ RestoreProduct usecase behavior: 100% locally proven and connector-validated.
 
 GetProductDetail usecase behavior: 100% locally proven and connector-validated.
 
-ListProducts error propagation: 100% locally proven.
+ListProducts behavior: 100% locally proven.
 
-ListProducts query forwarding and success mapping: not started.
+ListProducts latest completion connector validation: pending.
 
 ProductCatalog slice 1 overall: 99% locally proven.
 
-Business Phase 1: 39%.
+Business Phase 1: 40%.
 
 Overall transition: 31%.
 
 ## CONTEXT WINDOW STATUS
 
-Enough context remains to continue ProductCatalog slice 1 into the next ListProducts behavior test.
+Enough context remains to continue ProductCatalog slice 1 with LookupProducts contract and constructor/skeleton only.
 
 Forbidden scope remains out:
 
