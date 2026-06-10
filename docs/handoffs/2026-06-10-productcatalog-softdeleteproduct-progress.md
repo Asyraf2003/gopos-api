@@ -75,7 +75,7 @@ Issues : 0
 
 ## GAP
 
-Remote connector validation is pending until owner pushes local changes.
+Remote connector validation passed after owner pushed local changes.
 
 Remaining ProductCatalog slice 1 work:
 
@@ -103,7 +103,7 @@ Progress ledger was updated after aggregate proof:
 ```text
 Business Phase 1: 37%
 Overall Laravel-to-Go transition: 31%
-ProductCatalog domain, ports, CreateProduct, UpdateProduct, and SoftDeleteProduct are locally implemented with proof; connector validation pending.
+ProductCatalog domain, ports, CreateProduct, UpdateProduct, and SoftDeleteProduct are remote-visible through GitHub connector with local proof.
 ```
 
 ## NEXT
@@ -128,9 +128,9 @@ SoftDeleteProduct usecase behavior: 100% locally proven.
 
 ProductCatalog slice 1 overall: 99% locally proven.
 
-Business Phase 1: 37% ledger-visible after owner pushes.
+Business Phase 1: 37% ledger-visible and connector-validated.
 
-Overall transition: 31% ledger-visible after owner pushes.
+Overall transition: 31% ledger-visible and connector-validated.
 
 ## CONTEXT WINDOW STATUS
 
