@@ -32,3 +32,21 @@ func (uc *SoftDeleteProduct) recordSoftDeleteProductVersion(
 
 	return revisionNo, uc.versionRepository.Append(ctx, version)
 }
+
+func (uc *SoftDeleteProduct) recordSoftDeleteProductAudit(
+	ctx context.Context,
+	productID string,
+	cmd SoftDeleteProductCommand,
+	occurredAt time.Time,
+	revisionNo int,
+) error {
+	return uc.auditRecorder.RecordProductAudit(ctx, ports.ProductAuditRecord{
+		AggregateID: productID,
+		EventName:   productDeletedEventName,
+		Operation:   "delete",
+		ActorID:     cmd.ActorID,
+		Reason:      cmd.Reason,
+		OccurredAt:  occurredAt,
+		RevisionNo:  revisionNo,
+	})
+}
