@@ -158,20 +158,20 @@ New ProductCatalog persistence behavior.
 Base path:
 
 ```text
-/api/product-catalog/products
+/api/products
 ```
 
 Routes:
 
 ```text
-GET    /api/product-catalog/products
-POST   /api/product-catalog/products
-GET    /api/product-catalog/products/lookup
-GET    /api/product-catalog/products/:id
-PUT    /api/product-catalog/products/:id
-DELETE /api/product-catalog/products/:id
-POST   /api/product-catalog/products/:id/restore
-GET    /api/product-catalog/products/:id/versions
+GET    /api/products
+POST   /api/products
+GET    /api/products/lookup
+GET    /api/products/:id
+PUT    /api/products/:id
+DELETE /api/products/:id
+PATCH  /api/products/:id/restore
+GET    /api/products/:id/versions
 ```
 
 Route ordering rule:
@@ -180,17 +180,19 @@ Register `/lookup` before `/:id`.
 
 Register `/:id/restore` and `/:id/versions` before generic `/:id` if the router requires explicit ordering for nested paths.
 
+Restore uses `PATCH` to match the accepted Laravel inventory candidate contract.
+
 ## ROUTE AND CAPABILITY MAPPING
 
 ```text
-GET    /api/product-catalog/products              product_catalog.list     product_catalog.read
-POST   /api/product-catalog/products              product_catalog.create   product_catalog.manage
-GET    /api/product-catalog/products/lookup       product_catalog.lookup   product_catalog.read
-GET    /api/product-catalog/products/:id          product_catalog.show     product_catalog.read
-PUT    /api/product-catalog/products/:id          product_catalog.update   product_catalog.manage
-DELETE /api/product-catalog/products/:id          product_catalog.delete   product_catalog.manage
-POST   /api/product-catalog/products/:id/restore  product_catalog.restore  product_catalog.manage
-GET    /api/product-catalog/products/:id/versions product_catalog.versions product_catalog.read
+GET    /api/products              product_catalog.list     product_catalog.read
+POST   /api/products              product_catalog.create   product_catalog.manage
+GET    /api/products/lookup       product_catalog.lookup   product_catalog.read
+GET    /api/products/:id          product_catalog.show     product_catalog.read
+PUT    /api/products/:id          product_catalog.update   product_catalog.manage
+DELETE /api/products/:id          product_catalog.delete   product_catalog.manage
+PATCH  /api/products/:id/restore  product_catalog.restore  product_catalog.manage
+GET    /api/products/:id/versions product_catalog.versions product_catalog.read
 ```
 
 ## AUTHORIZATION POLICY
@@ -269,6 +271,20 @@ q
 page
 per_page
 status = active|deleted|all
+
+Laravel inventory also records richer list filters and sorting:
+
+sort_by = nama_barang|merek|ukuran|harga_jual|stok_saat_ini
+sort_dir = asc|desc
+merek
+ukuran_min
+ukuran_max
+harga_min
+harga_max
+
+This runtime slice only exposes the currently proven Go ProductReader subset unless a later persistence/query slice adds the richer filters.
+
+Do not expose stok_saat_ini sorting in this slice because inventory projection belongs to inventory behavior.
 ```
 
 Lookup query:
@@ -447,14 +463,14 @@ Because different ProductCatalog routes use different permissions/capabilities, 
 Add rows to `scripts/config/route_capabilities.tsv`:
 
 ```text
-GET	/api/product-catalog/products	product_catalog.list	product_catalog.read	exact	group.GET("/products"
-POST	/api/product-catalog/products	product_catalog.create	product_catalog.manage	exact	group.POST("/products"
-GET	/api/product-catalog/products/lookup	product_catalog.lookup	product_catalog.read	exact	group.GET("/products/lookup"
-GET	/api/product-catalog/products/:id	product_catalog.show	product_catalog.read	exact	group.GET("/products/:id"
-PUT	/api/product-catalog/products/:id	product_catalog.update	product_catalog.manage	exact	group.PUT("/products/:id"
-DELETE	/api/product-catalog/products/:id	product_catalog.delete	product_catalog.manage	exact	group.DELETE("/products/:id"
-POST	/api/product-catalog/products/:id/restore	product_catalog.restore	product_catalog.manage	exact	group.POST("/products/:id/restore"
-GET	/api/product-catalog/products/:id/versions	product_catalog.versions	product_catalog.read	exact	group.GET("/products/:id/versions"
+GET	/api/products	product_catalog.list	product_catalog.read	exact	group.GET("/products"
+POST	/api/products	product_catalog.create	product_catalog.manage	exact	group.POST("/products"
+GET	/api/products/lookup	product_catalog.lookup	product_catalog.read	exact	group.GET("/products/lookup"
+GET	/api/products/:id	product_catalog.show	product_catalog.read	exact	group.GET("/products/:id"
+PUT	/api/products/:id	product_catalog.update	product_catalog.manage	exact	group.PUT("/products/:id"
+DELETE	/api/products/:id	product_catalog.delete	product_catalog.manage	exact	group.DELETE("/products/:id"
+PATCH	/api/products/:id/restore	product_catalog.restore	product_catalog.manage	exact	group.PATCH("/products/:id/restore"
+GET	/api/products/:id/versions	product_catalog.versions	product_catalog.read	exact	group.GET("/products/:id/versions"
 ```
 
 Update `scripts/audit_route_capabilities.sh` if the audit script requires explicit seed/source file lists.
