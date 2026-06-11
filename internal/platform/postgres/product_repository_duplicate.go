@@ -26,10 +26,11 @@ func (r *ProductRepository) CheckCreateDuplicate(
 	ctx context.Context,
 	candidate ports.ProductDuplicateCandidate,
 ) error {
-	_ = ctx
-	_ = candidate
+	if err := r.checkProductDuplicateCode(ctx, "", candidate); err != nil {
+		return err
+	}
 
-	return errProductRepositoryNotImplemented
+	return r.checkProductDuplicateIdentity(ctx, "", candidate)
 }
 
 func (r *ProductRepository) CheckUpdateDuplicate(
@@ -37,9 +38,9 @@ func (r *ProductRepository) CheckUpdateDuplicate(
 	productID string,
 	candidate ports.ProductDuplicateCandidate,
 ) error {
-	_ = ctx
-	_ = productID
-	_ = candidate
+	if err := r.checkProductDuplicateCode(ctx, productID, candidate); err != nil {
+		return err
+	}
 
-	return errProductRepositoryNotImplemented
+	return r.checkProductDuplicateIdentity(ctx, productID, candidate)
 }
