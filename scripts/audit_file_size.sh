@@ -20,7 +20,8 @@ is_allowlisted() {
 
 has_marker() {
   local path="$1"
-  head -n 5 "$path" | grep -Fq "$MARKER_PREFIX"
+
+  head -n 40 "$path" | rg -Fq "$MARKER_PREFIX"
 }
 
 count_lines() {
