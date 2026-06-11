@@ -1,9 +1,12 @@
 ##@ Audit
 
-.PHONY: audit-ai-rules audit-file-size audit-hex arch audit-route-capabilities security-gosec security audit-all
+.PHONY: audit-ai-rules audit-license-headers audit-file-size audit-hex arch audit-route-capabilities security-gosec security audit-all
 
 audit-ai-rules: ## Run AI rules audit
 	bash scripts/audit_ai_rules.sh
+
+audit-license-headers: ## Run license header audit
+	bash scripts/audit_license_headers.sh
 
 audit-file-size: ## Run file size audit
 	bash scripts/audit_file_size.sh

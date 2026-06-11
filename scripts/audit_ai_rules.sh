@@ -42,6 +42,10 @@ required_files=(
   "scripts/audit_format.sh"
   "scripts/audit_go_vet.sh"
   "scripts/audit_hexagonal.sh"
+  "LICENSE"
+  "NOTICE"
+  "scripts/apply_license_headers.sh"
+  "scripts/audit_license_headers.sh"
 )
 
 required_readme_dirs=(
@@ -141,6 +145,14 @@ check_contains "docs/AGENTS.md" "context-window status"
 check_contains "scripts/audit_hexagonal.sh" "hexagonal import audit"
 check_contains "scripts/audit_format.sh" "format audit"
 check_contains "scripts/audit_go_vet.sh" "go vet audit"
+check_contains "LICENSE" "GNU AFFERO GENERAL PUBLIC LICENSE"
+check_contains "LICENSE" "END OF TERMS AND CONDITIONS"
+check_contains "NOTICE" "GNU Affero General Public License v3.0 only"
+check_contains "scripts/apply_license_headers.sh" "apply license headers"
+check_contains "scripts/audit_license_headers.sh" "license header audit"
+check_contains "make/audit.mk" "audit-license-headers"
+check_contains "scripts/audit_all.sh" "license header audit"
+check_contains "scripts/audit_file_size.sh" "skipping_license_header"
 check_contains "docs/adr/0001-foundation-raw-go-echo-postgres-hexagonal.md" "## Decision"
 
 echo

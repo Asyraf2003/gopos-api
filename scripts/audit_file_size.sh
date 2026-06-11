@@ -25,7 +25,30 @@ has_marker() {
 
 count_lines() {
   local path="$1"
-  awk 'END { print NR }' "$path"
+
+  awk '
+    NR == 1 && $0 == "// Copyright (C) 2026 Asyraf Mubarak" {
+      skipping_license_header = 1
+      next
+    }
+
+    skipping_license_header == 1 && $0 ~ /^\/\// {
+      next
+    }
+
+    skipping_license_header == 1 && $0 == "" {
+      skipping_license_header = 0
+      next
+    }
+
+    {
+      count++
+    }
+
+    END {
+      print count
+    }
+  ' "$path"
 }
 
 echo "== file size audit =="
@@ -75,7 +98,7 @@ while IFS= read -r file; do
 
   echo "[FAIL] oversized file: $file ($lines lines)"
   fail=1
-done < <(find internal -type f -name '*.go' | sort)
+done < <(fd -e go . internal | sort)
 
 echo
 if (( fail != 0 )); then

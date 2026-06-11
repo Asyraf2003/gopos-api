@@ -26,6 +26,7 @@ run_step "go test ./..." go test ./...
 run_step "go vet audit" bash scripts/audit_go_vet.sh
 run_step "format audit" bash scripts/audit_format.sh
 run_step "AI rules audit" bash scripts/audit_ai_rules.sh
+run_step "license header audit" bash scripts/audit_license_headers.sh
 run_step "file size audit" bash scripts/audit_file_size.sh
 run_step "hexagonal import audit" bash scripts/audit_hexagonal.sh
 run_step "route capability audit" bash scripts/audit_route_capabilities.sh
