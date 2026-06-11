@@ -14,32 +14,33 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with gopos-api. If not, see <https://www.gnu.org/licenses/>.
 
-//go:build integration
-
 package postgres
 
-import (
-	"testing"
-	"time"
+func productListSelectSQL() string {
+	return `
+		SELECT
+			id,
+			kode_barang,
+			nama_barang,
+			merek,
+			ukuran,
+			harga_jual,
+			CASE
+				WHEN deleted_at IS NULL THEN 'active'
+				ELSE 'deleted'
+			END AS status
+		FROM products
+	`
+}
 
-	"pos-go/internal/modules/productcatalog/domain"
-)
-
-func softDeleteProductForListTest(
-	t *testing.T,
-	repo *ProductRepository,
-	txCtx contextWithValue,
-	product *domain.Product,
-) {
-	t.Helper()
-
-	if err := product.SoftDelete(domain.DeleteInput{
-		DeletedAt: time.Now().UTC(),
-		Reason:    "integration test",
-	}); err != nil {
-		t.Fatalf("SoftDelete() error = %v", err)
-	}
-	if err := repo.Update(txCtx, product); err != nil {
-		t.Fatalf("Update() deleted error = %v", err)
-	}
+func productListOrderLimitSQL() string {
+	return `
+		ORDER BY
+			nama_barang_normalized ASC,
+			merek_normalized ASC,
+			ukuran ASC NULLS LAST,
+			id ASC
+		LIMIT %s
+		OFFSET %s
+	`
 }
