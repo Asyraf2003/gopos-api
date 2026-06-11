@@ -21,6 +21,10 @@
 audit-ai-rules: ## Run AI rules audit
 	bash scripts/audit_ai_rules.sh
 
+license-headers: ## Apply license headers to supported source files
+	bash scripts/apply_license_headers.sh
+	fd -e go . -x gofmt -w
+
 audit-license-headers: ## Run license header audit
 	bash scripts/audit_license_headers.sh
 
