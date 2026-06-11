@@ -23,10 +23,30 @@ import (
 )
 
 func (r *ProductRepository) Create(ctx context.Context, product *domain.Product) error {
-	_ = ctx
-	_ = product
+	sql := `
+		INSERT INTO products (
+			id,
+			kode_barang,
+			nama_barang,
+			nama_barang_normalized,
+			merek,
+			merek_normalized,
+			ukuran,
+			harga_jual,
+			reorder_point_qty,
+			critical_threshold_qty,
+			deleted_at,
+			deleted_by_actor_id,
+			delete_reason
+		)
+		VALUES (
+			$1, $2, $3, $4, $5, $6, $7,
+			$8, $9, $10, $11, $12, $13
+		)
+	`
 
-	return errProductRepositoryNotImplemented
+	_, err := r.exec(ctx, sql, productArgs(product)...)
+	return err
 }
 
 func (r *ProductRepository) Update(ctx context.Context, product *domain.Product) error {
