@@ -17,34 +17,45 @@
 package postgres
 
 import (
-	"context"
-	"fmt"
-	"strings"
+	"database/sql"
 
 	"pos-go/internal/modules/productcatalog/ports"
+
+	"github.com/jackc/pgx/v5"
 )
 
-func (r *ProductRepository) Lookup(
-	ctx context.Context,
-	query ports.ProductLookupQuery,
-) ([]ports.ProductLookupItem, error) {
-	where, args := productLookupWhere(query)
-	limit := productLookupLimit(query)
-
-	args = append(args, limit)
-	limitPlaceholder := fmt.Sprintf("$%d", len(args))
-
-	querySQL := productLookupSelectSQL()
-	if len(where) > 0 {
-		querySQL += "\n\t\tWHERE " + strings.Join(where, "\n\t\t\tAND ")
+func scanProductLookupRows(rows pgx.Rows) ([]ports.ProductLookupItem, error) {
+	items := []ports.ProductLookupItem{}
+	for rows.Next() {
+		item, err := scanProductLookupItem(rows)
+		if err != nil {
+			return nil, err
+		}
+		items = append(items, item)
 	}
-	querySQL += fmt.Sprintf(productLookupOrderLimitSQL(), limitPlaceholder)
+	return items, rows.Err()
+}
 
-	rows, err := r.query(ctx, querySQL, args...)
+func scanProductLookupItem(row productScanner) (ports.ProductLookupItem, error) {
+	var item ports.ProductLookupItem
+	var code sql.NullString
+	var size sql.NullInt64
+
+	err := row.Scan(
+		&item.ID,
+		&code,
+		&item.Name,
+		&item.Brand,
+		&size,
+		&item.SalePriceRupiah,
+		&item.Status,
+	)
 	if err != nil {
-		return nil, err
+		return ports.ProductLookupItem{}, err
 	}
-	defer rows.Close()
 
-	return scanProductLookupRows(rows)
+	item.Code = nullableStringPtr(code)
+	item.Size = nullableIntPtr(size)
+
+	return item, nil
 }
