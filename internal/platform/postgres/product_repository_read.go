@@ -18,15 +18,28 @@ package postgres
 
 import (
 	"context"
+	"errors"
 
 	"pos-go/internal/modules/productcatalog/domain"
+	"pos-go/internal/modules/productcatalog/ports"
+
+	"github.com/jackc/pgx/v5"
 )
 
 func (r *ProductRepository) FindByID(ctx context.Context, id string) (*domain.Product, error) {
-	_ = ctx
-	_ = id
+	row := r.queryRow(ctx, productSelectSQL()+`
+		WHERE id = $1
+	`, id)
 
-	return nil, errProductRepositoryNotImplemented
+	product, err := scanProduct(row)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, ports.ErrProductNotFound
+	}
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
 }
 
 func (r *ProductRepository) GetByID(ctx context.Context, id string) (*domain.Product, error) {
