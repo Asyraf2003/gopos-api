@@ -109,6 +109,20 @@ PATCH  /admin/products/{productId}/restore
 
 The Go API route shape remains API-only, while request and response field names preserve the Laravel/ProductCatalog public vocabulary where practical.
 
+Laravel runtime evidence confirms:
+
+```text
+ProductCatalog create/update web actions use:
+POST /product-catalog/products/create
+POST /product-catalog/products/{productId}/update
+
+Admin lifecycle actions use:
+DELETE /admin/products/{productId}
+PATCH  /admin/products/{productId}/restore
+```
+
+The Go API route shape remains API-only, while request and response field names preserve the Laravel/ProductCatalog public vocabulary where practical.
+
 ## SCOPE-IN
 
 ProductCatalog HTTP transport.
