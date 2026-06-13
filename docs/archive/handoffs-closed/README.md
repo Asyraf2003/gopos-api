@@ -79,6 +79,33 @@ ServiceCatalog completed slice history:
 - `2026-06-08-servicecatalog-implementation-slice-1.md`
 - `2026-06-08-servicecatalog-postgres-persistence-blueprint.md`
 
+ProductCatalog completed slice history:
+
+- `2026-06-09-productcatalog-domain-slice-1.md`
+- `2026-06-09-productcatalog-usecase-createproduct-progress.md`
+- `2026-06-10-productcatalog-updateproduct-progress.md`
+- `2026-06-10-productcatalog-softdeleteproduct-progress.md`
+- `2026-06-10-productcatalog-restoreproduct-progress.md`
+- `2026-06-10-productcatalog-getproductdetail-progress.md`
+- `2026-06-10-productcatalog-listproducts-skeleton-progress.md`
+- `2026-06-10-productcatalog-lookupproducts-skeleton-progress.md`
+- `2026-06-10-productcatalog-listproductversions-skeleton-progress.md`
+- `2026-06-10-productcatalog-listproductversions-behavior-progress.md`
+- `2026-06-10-productcatalog-implementation-slice-1-closeout.md`
+- `2026-06-10-productcatalog-postgres-persistence-blueprint-progress.md`
+- `2026-06-10-productcatalog-postgres-persistence-blueprint-accepted.md`
+- `2026-06-10-productcatalog-postgres-migration-checkpoint.md`
+- `2026-06-10-productcatalog-postgres-repository-skeleton-progress.md`
+- `2026-06-11-productcatalog-postgres-create-find-update-progress.md`
+- `2026-06-11-productcatalog-postgres-reader-getbyid-progress.md`
+- `2026-06-11-productcatalog-postgres-reader-list-progress.md`
+- `2026-06-12-productcatalog-postgres-reader-lookup-progress.md`
+- `2026-06-12-productcatalog-postgres-version-repository-progress.md`
+- `2026-06-12-productcatalog-postgres-duplicate-checker-progress.md`
+- `2026-06-12-productcatalog-postgres-persistence-closeout.md`
+- `2026-06-13-productcatalog-runtime-capability-closeout.md`
+- `2026-06-13-api-docs-error-envelope-closeout.md`
+
 ## Rule
 
 Archived handoffs are proof history only. They do not define the next active step unless the active ledger or current handoff explicitly revives them.
