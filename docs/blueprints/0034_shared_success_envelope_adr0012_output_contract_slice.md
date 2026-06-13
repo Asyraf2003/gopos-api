@@ -20,9 +20,9 @@ along with gopos-api. If not, see <https://www.gnu.org/licenses/>.
 
 ## Status
 
-Proposed.
+Closed with local proof.
 
-Analysis-only blueprint draft. Not implemented yet.
+Implemented and connector-visible for the shared success envelope foundation. This slice closes only ProductCatalog and ServiceCatalog success wrapping through the shared HTTP response helper. ADR `0012` remains partial for broader Capability/Auth/System output contract coverage.
 
 ## Active Scope
 

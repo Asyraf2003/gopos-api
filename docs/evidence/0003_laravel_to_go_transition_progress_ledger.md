@@ -132,7 +132,7 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 - ServiceCatalog domain contract is accepted.
 - ServiceCatalog implementation slice 1 plan is accepted and implemented with proof.
 - ProductCatalog domain, ports, CreateProduct, UpdateProduct, SoftDeleteProduct, RestoreProduct, GetProductDetail, ListProducts, LookupProducts, and ListProductVersions behavior are locally proven; connector validation passed for the latest behavior checkpoint.
-- ProductCatalog catalog API path is locally proven through domain/usecase, PostgreSQL persistence, runtime/capability, developer API docs, standardized ProductCatalog error envelope slices, and end-to-end local HTTP/auth/DB smoke proof. Product inventory/stock mutation, stock adjustment create/reverse, ProductCatalog audit/outbox persistence, runtime language switch, extended Laravel filters, and shared success envelope centralization remain incomplete.
+- ProductCatalog catalog API path is locally proven through domain/usecase, PostgreSQL persistence, runtime/capability, developer API docs, standardized ProductCatalog error envelope slices, shared success envelope foundation for ProductCatalog/ServiceCatalog, and end-to-end local HTTP/auth/DB smoke proof. Product inventory/stock mutation, stock adjustment create/reverse, ProductCatalog audit/outbox persistence, runtime language switch, extended Laravel filters, and broader ADR `0012` Capability/Auth/System output contract centralization remain incomplete.
 - ServiceCatalog runtime/capability implementation is remote-visible through GitHub connector with local proof; focused handler and disabled-capability proof are remote-visible through GitHub connector with local proof; connector validation passed for the latest closeout proof files.
 - ProductCatalog domain contract blueprint `docs/blueprints/0028_productcatalog_domain_contract.md` is accepted locally with Option A duplicate policy and `make verify` proof; connector validation pending.
 - ProductCatalog implementation slice 1 blueprint `docs/blueprints/0029_productcatalog_implementation_slice_1.md` is accepted locally with `make verify` proof; connector validation pending.
@@ -145,13 +145,14 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 
 ## Next Valid Active Step
 
-Shared success envelope and ADR `0012` output contract centralization.
+ADR `0012` remaining output contract centralization for Capability/Auth/System response coverage.
 
-- Start from the existing ADR `0012` context and draft or accept a small blueprint before implementation.
-- Centralize the success envelope across API surfaces without changing ProductCatalog business behavior.
+- Start from the shared success envelope foundation closeout and existing ADR `0012` context.
+- Keep ProductCatalog and ServiceCatalog shared success wrapping intact.
+- Do not change Capability/Auth/System public response shapes without an accepted blueprint or explicit owner decision.
 - Keep the existing shared error envelope behavior intact while expanding coverage where needed.
 - Do not start inventory mutation, audit/outbox implementation, localization, extended filters, or architecture folder renames in this output-contract slice.
-- Do not re-open ProductCatalog persistence, runtime/capability, API docs, error envelope, or runtime smoke proof work unless a bug is found.
+- Do not re-open ProductCatalog persistence, runtime/capability, API docs, error envelope, shared success envelope foundation, or runtime smoke proof work unless a bug is found.
 
 ## Handoff Requirement
 
