@@ -41,7 +41,7 @@ func (h ProductCatalogHandler) Delete(c echo.Context) error {
 		return mapProductCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(productcatalogid.FromDeletedProduct(result)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(productcatalogid.FromDeletedProduct(result)))
 }
 
 func (h ProductCatalogHandler) Restore(c echo.Context) error {
@@ -59,7 +59,7 @@ func (h ProductCatalogHandler) Restore(c echo.Context) error {
 		return mapProductCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(productcatalogid.FromRestoredProduct(result)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(productcatalogid.FromRestoredProduct(result)))
 }
 
 func bindProductLifecycleRequest(c echo.Context) (productLifecycleRequest, error) {

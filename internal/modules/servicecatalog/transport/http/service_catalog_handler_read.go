@@ -18,6 +18,7 @@ package http
 
 import (
 	stdhttp "net/http"
+	httpresponse "pos-go/internal/transport/http/response"
 
 	servicecatalogusecase "pos-go/internal/modules/servicecatalog/usecase"
 	servicecatalogid "pos-go/internal/presentation/http/id/servicecatalog"
@@ -51,7 +52,7 @@ func (h ServiceCatalogHandler) List(c echo.Context) error {
 		return mapServiceCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(servicecatalogid.FromServiceCatalogItems(results)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(servicecatalogid.FromServiceCatalogItems(results)))
 }
 
 func (h ServiceCatalogHandler) Lookup(c echo.Context) error {
@@ -74,7 +75,7 @@ func (h ServiceCatalogHandler) Lookup(c echo.Context) error {
 		return mapServiceCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(servicecatalogid.FromServiceCatalogLookups(results)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(servicecatalogid.FromServiceCatalogLookups(results)))
 }
 
 func (h ServiceCatalogHandler) Show(c echo.Context) error {
@@ -85,5 +86,5 @@ func (h ServiceCatalogHandler) Show(c echo.Context) error {
 		return mapServiceCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(servicecatalogid.FromServiceCatalogItem(result)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(servicecatalogid.FromServiceCatalogItem(result)))
 }

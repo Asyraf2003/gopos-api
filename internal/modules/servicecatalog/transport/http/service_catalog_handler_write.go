@@ -18,6 +18,7 @@ package http
 
 import (
 	stdhttp "net/http"
+	httpresponse "pos-go/internal/transport/http/response"
 
 	servicecatalogusecase "pos-go/internal/modules/servicecatalog/usecase"
 	servicecatalogid "pos-go/internal/presentation/http/id/servicecatalog"
@@ -39,7 +40,7 @@ func (h ServiceCatalogHandler) Create(c echo.Context) error {
 		return mapServiceCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusCreated, successEnvelope(servicecatalogid.FromServiceCatalogItem(result)))
+	return c.JSON(stdhttp.StatusCreated, httpresponse.Success(servicecatalogid.FromServiceCatalogItem(result)))
 }
 
 func (h ServiceCatalogHandler) Update(c echo.Context) error {
@@ -57,7 +58,7 @@ func (h ServiceCatalogHandler) Update(c echo.Context) error {
 		return mapServiceCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(servicecatalogid.FromServiceCatalogItem(result)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(servicecatalogid.FromServiceCatalogItem(result)))
 }
 
 func (h ServiceCatalogHandler) Activate(c echo.Context) error {
@@ -68,7 +69,7 @@ func (h ServiceCatalogHandler) Activate(c echo.Context) error {
 		return mapServiceCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(servicecatalogid.FromServiceCatalogItem(result)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(servicecatalogid.FromServiceCatalogItem(result)))
 }
 
 func (h ServiceCatalogHandler) Deactivate(c echo.Context) error {
@@ -87,5 +88,5 @@ func (h ServiceCatalogHandler) Deactivate(c echo.Context) error {
 		return mapServiceCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(servicecatalogid.FromServiceCatalogItem(result)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(servicecatalogid.FromServiceCatalogItem(result)))
 }

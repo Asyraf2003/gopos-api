@@ -47,7 +47,7 @@ func (h ProductCatalogHandler) Create(c echo.Context) error {
 		return mapProductCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusCreated, successEnvelope(productcatalogid.FromCreatedProduct(result)))
+	return c.JSON(stdhttp.StatusCreated, httpresponse.Success(productcatalogid.FromCreatedProduct(result)))
 }
 
 func (h ProductCatalogHandler) Update(c echo.Context) error {
@@ -72,5 +72,5 @@ func (h ProductCatalogHandler) Update(c echo.Context) error {
 		return mapProductCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(productcatalogid.FromUpdatedProduct(result)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(productcatalogid.FromUpdatedProduct(result)))
 }

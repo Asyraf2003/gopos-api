@@ -18,6 +18,7 @@ package http
 
 import (
 	stdhttp "net/http"
+	httpresponse "pos-go/internal/transport/http/response"
 
 	productcatalogusecase "pos-go/internal/modules/productcatalog/usecase"
 	productcatalogid "pos-go/internal/presentation/http/id/productcatalog"
@@ -51,7 +52,7 @@ func (h ProductCatalogHandler) List(c echo.Context) error {
 		return mapProductCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(productcatalogid.FromProductList(result)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(productcatalogid.FromProductList(result)))
 }
 
 func (h ProductCatalogHandler) Lookup(c echo.Context) error {
@@ -74,7 +75,7 @@ func (h ProductCatalogHandler) Lookup(c echo.Context) error {
 		return mapProductCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(productcatalogid.FromProductLookup(result)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(productcatalogid.FromProductLookup(result)))
 }
 
 func (h ProductCatalogHandler) Show(c echo.Context) error {
@@ -85,7 +86,7 @@ func (h ProductCatalogHandler) Show(c echo.Context) error {
 		return mapProductCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(productcatalogid.FromProductDetail(result)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(productcatalogid.FromProductDetail(result)))
 }
 
 func (h ProductCatalogHandler) Versions(c echo.Context) error {
@@ -96,5 +97,5 @@ func (h ProductCatalogHandler) Versions(c echo.Context) error {
 		return mapProductCatalogError(err)
 	}
 
-	return c.JSON(stdhttp.StatusOK, successEnvelope(productcatalogid.FromProductVersions(result)))
+	return c.JSON(stdhttp.StatusOK, httpresponse.Success(productcatalogid.FromProductVersions(result)))
 }
