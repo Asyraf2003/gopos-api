@@ -20,9 +20,9 @@ along with gopos-api. If not, see <https://www.gnu.org/licenses/>.
 
 ## Status
 
-Accepted locally for contract review.
+Accepted domain contract with local proof.
 
-This is a domain contract slice only. It must not implement Supplier code, migrations, HTTP routes, capability seed, Faktur, inventory mutation, stock movement, audit/outbox, localization, extended filters, or architecture folder cleanup.
+This is a domain contract slice only. It does not implement Supplier code, migrations, HTTP routes, capability seed, Faktur, inventory mutation, stock movement, audit/outbox, localization, extended filters, or architecture folder cleanup.
 
 ## Active Scope
 
@@ -291,13 +291,13 @@ Forbidden:
 Two active suppliers with the same normalized name.
 ```
 
-Owner decision needed before implementation:
+Owner decision:
 
 ```text
-Should inactive Supplier names block reuse, or may active Supplier reuse an inactive Supplier name?
+Inactive Supplier names do not block active Supplier name reuse.
 ```
 
-Default recommendation:
+Accepted policy:
 
 ```text
 Allow active reuse after deactivation, matching soft-delete style master-data behavior.
@@ -535,13 +535,13 @@ supplier.activate   -> supplier.manage
 supplier.deactivate -> supplier.manage
 ```
 
-Owner decision needed before implementation:
+Owner decision:
 
 ```text
-Use two permissions (supplier.read, supplier.manage) or operation-specific permissions.
+Use two permissions first: supplier.read and supplier.manage.
 ```
 
-Default recommendation:
+Accepted policy:
 
 ```text
 Use two permissions first, matching current ProductCatalog and ServiceCatalog style.
