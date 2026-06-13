@@ -48,6 +48,7 @@ type SupplierRepository interface {
 	Update(ctx context.Context, supplier domain.Supplier) error
 	FindByID(ctx context.Context, id domain.SupplierID) (domain.Supplier, bool, error)
 	FindByNormalizedName(ctx context.Context, normalizedName domain.NormalizedName) (domain.Supplier, bool, error)
+	FindActiveByNormalizedName(ctx context.Context, normalizedName domain.NormalizedName) (domain.Supplier, bool, error)
 	List(ctx context.Context, filter ListSuppliersFilter) ([]domain.Supplier, error)
 	Lookup(ctx context.Context, filter LookupSuppliersFilter) ([]domain.Supplier, error)
 	SetActive(ctx context.Context, id domain.SupplierID, active bool) (domain.Supplier, bool, error)
