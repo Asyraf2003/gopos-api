@@ -191,13 +191,46 @@ checked route capability rows: 21
 [PASS] route capability audit passed
 ```
 
-Final proof after docs changes must include:
+Final proof after docs changes:
 
 ```text
 GOCACHE=/tmp/gopos-go-build go test ./...
+initial sandbox run failed because local PostgreSQL socket access was blocked:
+internal/app/bootstrap: dial tcp 127.0.0.1:5432: socket: operation not permitted
+
+rerun with approved local DB access:
+ok   pos-go/internal/app/bootstrap 0.201s
+ok   pos-go/internal/modules/productcatalog/domain (cached)
+ok   pos-go/internal/modules/productcatalog/transport/http (cached)
+ok   pos-go/internal/modules/productcatalog/usecase (cached)
+ok   pos-go/internal/transport/http/middleware (cached)
+ok   pos-go/internal/transport/http/response (cached)
+all packages passed or had no test files
+```
+
+```text
 bash scripts/audit_hexagonal.sh
+[PASS] hexagonal import audit passed
+```
+
+```text
 bash scripts/audit_route_capabilities.sh
+checked route capability rows: 21
+[PASS] route capability audit passed
+```
+
+```text
 make verify
+[PASS] go test ./...
+[PASS] go vet audit
+[PASS] format audit
+[PASS] AI rules audit
+[PASS] license header audit
+[PASS] file size audit
+[PASS] hexagonal import audit
+[PASS] route capability audit
+[PASS] security gosec audit
+[PASS] aggregate audit passed
 ```
 
 ## NEXT
