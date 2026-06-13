@@ -18,11 +18,13 @@ package middleware
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"pos-go/internal/modules/capability/domain"
+	httpresponse "pos-go/internal/transport/http/response"
 
 	"github.com/labstack/echo/v4"
 )
@@ -64,6 +66,7 @@ func TestProtectedRoutesRejectDisabledCapabilityBeforeHandler(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			e := echo.New()
+			e.HTTPErrorHandler = httpresponse.HTTPErrorHandler
 			gotKey := ""
 
 			checker := capabilityCheckerFunc(func(ctx context.Context, key string) error {
@@ -86,6 +89,21 @@ func TestProtectedRoutesRejectDisabledCapabilityBeforeHandler(t *testing.T) {
 			if rec.Code != http.StatusForbidden {
 				t.Fatalf("status = %d, want 403", rec.Code)
 			}
+
+			var body httpresponse.ErrorEnvelope
+			if err := json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
+				t.Fatalf("decode response: %v", err)
+			}
+			if body.Success {
+				t.Fatal("success = true, want false")
+			}
+			if body.Error.Code != "capability_disabled" {
+				t.Fatalf("error.code = %q, want capability_disabled", body.Error.Code)
+			}
+			if body.Error.Message != "capability disabled" {
+				t.Fatalf("error.message = %q, want capability disabled", body.Error.Message)
+			}
+
 			if gotKey != tt.capabilityKey {
 				t.Fatalf("capability key = %q, want %q", gotKey, tt.capabilityKey)
 			}

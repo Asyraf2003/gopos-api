@@ -37,6 +37,7 @@ import (
 	"pos-go/internal/platform/state/memory"
 	jwtissuer "pos-go/internal/platform/token/jwt"
 	httpmw "pos-go/internal/transport/http/middleware"
+	httpresponse "pos-go/internal/transport/http/response"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -59,6 +60,7 @@ func New(ctx context.Context, cfg config.Config) (*App, error) {
 	}
 
 	e := echo.New()
+	e.HTTPErrorHandler = httpresponse.HTTPErrorHandler
 	e.HideBanner = true
 	e.HidePort = true
 
