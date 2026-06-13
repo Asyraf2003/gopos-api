@@ -22,42 +22,19 @@ import (
 	"pos-go/internal/modules/supplier/domain"
 )
 
-const (
-	defaultListPage    = 1
-	defaultListPerPage = 10
-	maxListPerPage     = 50
-	defaultLookupLimit = 20
-	maxLookupLimit     = 50
-)
+func ensureClock(clock Clock) Clock {
+	if clock != nil {
+		return clock
+	}
 
-type SupplierIDGenerator func() (domain.SupplierID, error)
-
-type Clock func() time.Time
-
-type SupplierContactInput struct {
-	Phone   string
-	Email   string
-	Address string
-	Notes   string
+	return time.Now
 }
 
-type SupplierResult struct {
-	ID             string
-	Name           string
-	NormalizedName string
-	Phone          string
-	Email          string
-	Address        string
-	Notes          string
-	IsActive       bool
-	Status         string
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
-}
-
-type SupplierLookupResult struct {
-	ID    string
-	Name  string
-	Phone string
-	Email string
+func mapContactInput(input SupplierContactInput) domain.SupplierContact {
+	return domain.SupplierContact{
+		Phone:   input.Phone,
+		Email:   input.Email,
+		Address: input.Address,
+		Notes:   input.Notes,
+	}
 }
