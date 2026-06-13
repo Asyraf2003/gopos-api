@@ -69,7 +69,7 @@ func bindProductLifecycleRequest(c echo.Context) (productLifecycleRequest, error
 	}
 
 	if err := c.Bind(&req); err != nil {
-		return productLifecycleRequest{}, echo.NewHTTPError(stdhttp.StatusBadRequest, "invalid request body")
+		return productLifecycleRequest{}, httpresponse.NewHTTPError(stdhttp.StatusBadRequest, "invalid_request_body", "invalid request body")
 	}
 
 	return req, nil
