@@ -138,10 +138,20 @@ list_products_after_reenable status=200 success=True
 [PASS] product catalog runtime smoke proof passed
 ```
 
-Docs closeout verification is expected to run after this handoff update:
+Docs closeout verification:
 
 ```text
-make verify
+GOCACHE=/tmp/gopos-go-build make verify
+[PASS] go test ./...
+[PASS] go vet audit
+[PASS] format audit
+[PASS] AI rules audit
+[PASS] license header audit
+[PASS] file size audit
+[PASS] hexagonal import audit
+[PASS] route capability audit
+[PASS] security gosec audit
+[PASS] aggregate audit passed
 ```
 
 ## GAP
