@@ -28,13 +28,6 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
-const (
-	supplierDefaultListPage    = 1
-	supplierDefaultListPerPage = 10
-	supplierDefaultLookupLimit = 20
-	supplierMaxQueryLimit      = 50
-)
-
 func (r *SupplierRepository) query(ctx context.Context, sql string, args ...any) (pgx.Rows, error) {
 	if tx, ok := TxFromContext(ctx); ok {
 		return tx.Query(ctx, sql, args...)
@@ -91,36 +84,38 @@ func (r *SupplierRepository) List(
 	ctx context.Context,
 	filter ports.ListSuppliersFilter,
 ) ([]domain.Supplier, error) {
-	args, where := supplierQueryConditions(filter.Query)
-	switch filter.Status {
-	case ports.ListStatusInactive:
-		where = append(where, "is_active = false")
-	case ports.ListStatusAll:
-	default:
-		where = append(where, "is_active = true")
-	}
+	query, normalizedPattern, displayPattern := supplierSearchArgs(filter.Query)
+	status := supplierListStatusArg(filter.Status)
 	page := filter.Page
 	if page <= 0 {
-		page = supplierDefaultListPage
+		page = 1
 	}
-	perPage := supplierBoundedLimit(filter.PerPage, supplierDefaultListPerPage)
+	perPage := supplierBoundedLimit(filter.PerPage, 10)
 	offset := (page - 1) * perPage
-	args = append(args, perPage, offset)
-	sql := supplierManySQL(where, len(args)-1) + " OFFSET $" + strconvFormatInt(int64(len(args)))
-	return r.findManySuppliers(ctx, sql, args...)
+	return r.findManySuppliers(ctx, supplierSelectSQL()+`
+		WHERE ($1 = '' OR name_normalized LIKE $2 OR name ILIKE $3)
+		AND (
+			$4 = 'all'
+			OR ($4 = 'active' AND is_active = true)
+			OR ($4 = 'inactive' AND is_active = false)
+		)
+		ORDER BY name_normalized, id
+		LIMIT $5 OFFSET $6
+	`, query, normalizedPattern, displayPattern, status, perPage, offset)
 }
 
 func (r *SupplierRepository) Lookup(
 	ctx context.Context,
 	filter ports.LookupSuppliersFilter,
 ) ([]domain.Supplier, error) {
-	args, where := supplierQueryConditions(filter.Query)
-	if filter.ActiveOnly {
-		where = append(where, "is_active = true")
-	}
-	limit := supplierBoundedLimit(filter.Limit, supplierDefaultLookupLimit)
-	args = append(args, limit)
-	return r.findManySuppliers(ctx, supplierManySQL(where, len(args)), args...)
+	query, normalizedPattern, displayPattern := supplierSearchArgs(filter.Query)
+	limit := supplierBoundedLimit(filter.Limit, 20)
+	return r.findManySuppliers(ctx, supplierSelectSQL()+`
+		WHERE ($1 = '' OR name_normalized LIKE $2 OR name ILIKE $3)
+		AND ($4 = false OR is_active = true)
+		ORDER BY name_normalized, id
+		LIMIT $5
+	`, query, normalizedPattern, displayPattern, filter.ActiveOnly, limit)
 }
 
 func scanOptionalSupplier(row supplierScanner) (domain.Supplier, bool, error) {
@@ -134,32 +129,28 @@ func scanOptionalSupplier(row supplierScanner) (domain.Supplier, bool, error) {
 	return supplier, true, nil
 }
 
-func supplierQueryConditions(query string) ([]any, []string) {
+func supplierSearchArgs(query string) (string, string, string) {
 	query = strings.TrimSpace(query)
-	if query == "" {
-		return []any{}, []string{}
-	}
-	normalizedPattern := "%" + string(domain.NormalizeName(query)) + "%"
-	displayPattern := "%" + query + "%"
-	return []any{normalizedPattern, displayPattern}, []string{
-		"(name_normalized LIKE $1 OR name ILIKE $2)",
-	}
+	return query, "%" + string(domain.NormalizeName(query)) + "%", "%" + query + "%"
 }
 
-func supplierManySQL(where []string, limitArg int) string {
-	sql := supplierSelectSQL()
-	if len(where) > 0 {
-		sql += "\n\t\tWHERE " + strings.Join(where, " AND ")
+func supplierListStatusArg(status ports.ListStatusFilter) string {
+	switch status {
+	case ports.ListStatusInactive:
+		return "inactive"
+	case ports.ListStatusAll:
+		return "all"
+	default:
+		return "active"
 	}
-	return sql + "\n\t\tORDER BY name_normalized, id\n\t\tLIMIT $" + strconvFormatInt(int64(limitArg))
 }
 
 func supplierBoundedLimit(value int, fallback int) int {
 	if value <= 0 {
 		return fallback
 	}
-	if value > supplierMaxQueryLimit {
-		return supplierMaxQueryLimit
+	if value > 50 {
+		return 50
 	}
 	return value
 }
@@ -170,13 +161,7 @@ func (r *SupplierRepository) findManySuppliers(ctx context.Context, sql string, 
 		return nil, err
 	}
 	defer rows.Close()
-	suppliers := []domain.Supplier{}
-	for rows.Next() {
-		supplier, err := scanSupplier(rows)
-		if err != nil {
-			return nil, err
-		}
-		suppliers = append(suppliers, supplier)
-	}
-	return suppliers, rows.Err()
+	return pgx.CollectRows(rows, func(row pgx.CollectableRow) (domain.Supplier, error) {
+		return scanSupplier(row)
+	})
 }
