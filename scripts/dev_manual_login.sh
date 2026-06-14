@@ -70,7 +70,17 @@ fi
 
 tmp_body="$(mktemp)"
 tmp_headers="$(mktemp)"
-trap 'rm -f "$tmp_body" "$tmp_headers"' EXIT
+tmp_payload="$(mktemp)"
+trap 'rm -f "$tmp_body" "$tmp_headers" "$tmp_payload"' EXIT
+
+python3 - "$tmp_payload" "$EMAIL" "$PASSWORD" <<'PYJSON'
+import json
+import sys
+
+path, email, password = sys.argv[1], sys.argv[2], sys.argv[3]
+with open(path, "w", encoding="utf-8") as f:
+    json.dump({"email": email, "password": password}, f)
+PYJSON
 
 echo "== manual login =="
 echo "api: ${API_BASE_URL}"
@@ -84,7 +94,7 @@ status="$(
     -w '%{http_code}' \
     -X POST "${API_BASE_URL}/api/auth/manual/login" \
     -H 'Content-Type: application/json' \
-    -d "{\"email\":\"${EMAIL}\",\"password\":\"${PASSWORD}\"}"
+    --data-binary "@${tmp_payload}"
 )"
 
 echo "HTTP_STATUS=${status}"

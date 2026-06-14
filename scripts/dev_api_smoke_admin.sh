@@ -56,7 +56,17 @@ fi
 
 tmp_login_body="$(mktemp)"
 tmp_request_body="$(mktemp)"
-trap 'rm -f "$tmp_login_body" "$tmp_request_body"' EXIT
+tmp_login_payload="$(mktemp)"
+trap 'rm -f "$tmp_login_body" "$tmp_request_body" "$tmp_login_payload"' EXIT
+
+python3 - "$tmp_login_payload" "$ADMIN_EMAIL" "$ADMIN_PASSWORD" <<'PYJSON'
+import json
+import sys
+
+path, email, password = sys.argv[1], sys.argv[2], sys.argv[3]
+with open(path, "w", encoding="utf-8") as f:
+    json.dump({"email": email, "password": password}, f)
+PYJSON
 
 echo "== admin api smoke =="
 echo "api: ${API_BASE_URL}"
