@@ -28,20 +28,11 @@ import (
 func (r *SupplierRepository) Create(ctx context.Context, supplier domain.Supplier) error {
 	sql := `
 		INSERT INTO suppliers (
-			id,
-			name,
-			name_normalized,
-			phone,
-			email,
-			address,
-			notes,
-			is_active,
-			created_at,
-			updated_at
+			id, name, name_normalized, phone, email,
+			address, notes, is_active, created_at, updated_at
 		)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 	`
-
 	_, err := r.exec(ctx, sql, supplierArgs(supplier)...)
 	return err
 }
@@ -50,17 +41,11 @@ func (r *SupplierRepository) Update(ctx context.Context, supplier domain.Supplie
 	sql := `
 		UPDATE suppliers
 		SET
-			name = $2,
-			name_normalized = $3,
-			phone = $4,
-			email = $5,
-			address = $6,
-			notes = $7,
-			is_active = $8,
+			name = $2, name_normalized = $3, phone = $4, email = $5,
+			address = $6, notes = $7, is_active = $8,
 			updated_at = $9
 		WHERE id = $1
 	`
-
 	_, err := r.exec(ctx, sql, supplierUpdateArgs(supplier)...)
 	return err
 }
@@ -74,7 +59,6 @@ func (r *SupplierRepository) SetActive(
 		WHERE id = $1
 		FOR UPDATE
 	`, string(id))
-
 	supplier, err := scanSupplier(row)
 	if errors.Is(err, pgx.ErrNoRows) {
 		return domain.Supplier{}, false, nil
@@ -88,11 +72,9 @@ func (r *SupplierRepository) SetActive(
 	} else {
 		supplier.Deactivate(nowUTC())
 	}
-
 	if err := r.Update(ctx, supplier); err != nil {
 		return domain.Supplier{}, false, err
 	}
-
 	return r.FindByID(ctx, id)
 }
 
@@ -115,7 +97,6 @@ func supplierNullableText(value string) any {
 	if value == "" {
 		return nil
 	}
-
 	return value
 }
 
