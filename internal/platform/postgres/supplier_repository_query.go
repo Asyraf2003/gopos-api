@@ -34,90 +34,53 @@ func (r *SupplierRepository) query(ctx context.Context, sql string, args ...any)
 	}
 	return r.pool.Query(ctx, sql, args...)
 }
-
 func (r *SupplierRepository) queryRow(ctx context.Context, sql string, args ...any) pgx.Row {
 	if tx, ok := TxFromContext(ctx); ok {
 		return tx.QueryRow(ctx, sql, args...)
 	}
 	return r.pool.QueryRow(ctx, sql, args...)
 }
-
 func (r *SupplierRepository) exec(ctx context.Context, sql string, args ...any) (pgconn.CommandTag, error) {
 	if tx, ok := TxFromContext(ctx); ok {
 		return tx.Exec(ctx, sql, args...)
 	}
 	return r.pool.Exec(ctx, sql, args...)
 }
-
 func (r *SupplierRepository) FindByID(ctx context.Context, id domain.SupplierID) (domain.Supplier, bool, error) {
-	row := r.queryRow(ctx, supplierSelectSQL()+`
-		WHERE id = $1
-	`, string(id))
-	return scanOptionalSupplier(row)
+	return scanOptionalSupplier(r.queryRow(ctx, supplierSelectSQL()+" WHERE id = $1", string(id)))
 }
-
-func (r *SupplierRepository) FindByNormalizedName(
-	ctx context.Context,
-	normalizedName domain.NormalizedName,
-) (domain.Supplier, bool, error) {
-	row := r.queryRow(ctx, supplierSelectSQL()+`
-		WHERE name_normalized = $1
-		ORDER BY is_active DESC, updated_at DESC, id
-		LIMIT 1
-	`, string(normalizedName))
-	return scanOptionalSupplier(row)
+func (r *SupplierRepository) FindByNormalizedName(ctx context.Context, name domain.NormalizedName) (domain.Supplier, bool, error) {
+	sql := supplierSelectSQL() + " WHERE name_normalized = $1 ORDER BY is_active DESC, updated_at DESC, id LIMIT 1"
+	return scanOptionalSupplier(r.queryRow(ctx, sql, string(name)))
 }
-
-func (r *SupplierRepository) FindActiveByNormalizedName(
-	ctx context.Context,
-	normalizedName domain.NormalizedName,
-) (domain.Supplier, bool, error) {
-	row := r.queryRow(ctx, supplierSelectSQL()+`
-		WHERE name_normalized = $1
-		AND is_active = true
-		LIMIT 1
-	`, string(normalizedName))
-	return scanOptionalSupplier(row)
+func (r *SupplierRepository) FindActiveByNormalizedName(ctx context.Context, name domain.NormalizedName) (domain.Supplier, bool, error) {
+	sql := supplierSelectSQL() + " WHERE name_normalized = $1 AND is_active = true LIMIT 1"
+	return scanOptionalSupplier(r.queryRow(ctx, sql, string(name)))
 }
-
-func (r *SupplierRepository) List(
-	ctx context.Context,
-	filter ports.ListSuppliersFilter,
-) ([]domain.Supplier, error) {
+func (r *SupplierRepository) List(ctx context.Context, filter ports.ListSuppliersFilter) ([]domain.Supplier, error) {
 	query, normalizedPattern, displayPattern := supplierSearchArgs(filter.Query)
-	status := supplierListStatusArg(filter.Status)
+	status := map[ports.ListStatusFilter]string{ports.ListStatusInactive: "inactive", ports.ListStatusAll: "all"}[filter.Status]
+	if status == "" {
+		status = "active"
+	}
 	page := filter.Page
 	if page <= 0 {
 		page = 1
 	}
 	perPage := supplierBoundedLimit(filter.PerPage, 10)
 	offset := (page - 1) * perPage
-	return r.findManySuppliers(ctx, supplierSelectSQL()+`
-		WHERE ($1 = '' OR name_normalized LIKE $2 OR name ILIKE $3)
-		AND (
-			$4 = 'all'
-			OR ($4 = 'active' AND is_active = true)
-			OR ($4 = 'inactive' AND is_active = false)
-		)
-		ORDER BY name_normalized, id
-		LIMIT $5 OFFSET $6
-	`, query, normalizedPattern, displayPattern, status, perPage, offset)
+	sql := supplierSelectSQL() + " WHERE ($1 = '' OR name_normalized LIKE $2 OR name ILIKE $3)"
+	sql += " AND ($4 = 'all' OR ($4 = 'active' AND is_active = true) OR ($4 = 'inactive' AND is_active = false))"
+	sql += " ORDER BY name_normalized, id LIMIT $5 OFFSET $6"
+	return r.findManySuppliers(ctx, sql, query, normalizedPattern, displayPattern, status, perPage, offset)
 }
-
-func (r *SupplierRepository) Lookup(
-	ctx context.Context,
-	filter ports.LookupSuppliersFilter,
-) ([]domain.Supplier, error) {
+func (r *SupplierRepository) Lookup(ctx context.Context, filter ports.LookupSuppliersFilter) ([]domain.Supplier, error) {
 	query, normalizedPattern, displayPattern := supplierSearchArgs(filter.Query)
 	limit := supplierBoundedLimit(filter.Limit, 20)
-	return r.findManySuppliers(ctx, supplierSelectSQL()+`
-		WHERE ($1 = '' OR name_normalized LIKE $2 OR name ILIKE $3)
-		AND ($4 = false OR is_active = true)
-		ORDER BY name_normalized, id
-		LIMIT $5
-	`, query, normalizedPattern, displayPattern, filter.ActiveOnly, limit)
+	sql := supplierSelectSQL() + " WHERE ($1 = '' OR name_normalized LIKE $2 OR name ILIKE $3)"
+	sql += " AND ($4 = false OR is_active = true) ORDER BY name_normalized, id LIMIT $5"
+	return r.findManySuppliers(ctx, sql, query, normalizedPattern, displayPattern, filter.ActiveOnly, limit)
 }
-
 func scanOptionalSupplier(row supplierScanner) (domain.Supplier, bool, error) {
 	supplier, err := scanSupplier(row)
 	if errors.Is(err, pgx.ErrNoRows) {
@@ -128,23 +91,10 @@ func scanOptionalSupplier(row supplierScanner) (domain.Supplier, bool, error) {
 	}
 	return supplier, true, nil
 }
-
 func supplierSearchArgs(query string) (string, string, string) {
 	query = strings.TrimSpace(query)
 	return query, "%" + string(domain.NormalizeName(query)) + "%", "%" + query + "%"
 }
-
-func supplierListStatusArg(status ports.ListStatusFilter) string {
-	switch status {
-	case ports.ListStatusInactive:
-		return "inactive"
-	case ports.ListStatusAll:
-		return "all"
-	default:
-		return "active"
-	}
-}
-
 func supplierBoundedLimit(value int, fallback int) int {
 	if value <= 0 {
 		return fallback
@@ -154,13 +104,11 @@ func supplierBoundedLimit(value int, fallback int) int {
 	}
 	return value
 }
-
 func (r *SupplierRepository) findManySuppliers(ctx context.Context, sql string, args ...any) ([]domain.Supplier, error) {
 	rows, err := r.query(ctx, sql, args...)
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
 	return pgx.CollectRows(rows, func(row pgx.CollectableRow) (domain.Supplier, error) {
 		return scanSupplier(row)
 	})
