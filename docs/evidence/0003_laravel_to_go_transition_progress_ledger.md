@@ -216,15 +216,18 @@ Current Supplier PostgreSQL persistence status:
 - blueprint accepted;
 - migration-only step complete;
 - repository adapter skeletons locally implemented with compile-time port assertion;
-- integration tests not started;
-- repository behavior implementation not started;
+- Create, FindByID, FindByNormalizedName, and FindActiveByNormalizedName behavior implemented;
+- integration tests for create and direct lookup behavior added;
+- DB-backed integration execution proof pending because `DATABASE_URL` is not set in this shell;
 - query-plan proof not collected;
 - remote connector validation pending for final local changes.
 
 Remaining open gaps:
 
-- Supplier PostgreSQL repository behavior.
-- Supplier repository integration tests.
+- Supplier PostgreSQL repository Update behavior.
+- Supplier PostgreSQL repository SetActive behavior.
+- Supplier PostgreSQL repository List and Lookup behavior.
+- Supplier DB-backed integration execution proof.
 - Supplier query-plan proof.
 - Supplier HTTP routes.
 - Supplier capability seed.
@@ -237,7 +240,7 @@ Remaining open gaps:
 
 Auth/System ADR 0012 output contract centralization remains deferred by owner decision.
 
-Next Valid Active Step: Supplier PostgreSQL repository Create and FindByID behavior.
+Next Valid Active Step: Supplier PostgreSQL repository Update behavior.
 
 ### Supplier PostgreSQL repository adapter skeleton checkpoint - 2026-06-14
 
@@ -267,19 +270,18 @@ Current Supplier PostgreSQL persistence status:
 - migration-only step complete;
 - repository adapter skeletons implemented;
 - compile-time port assertion exists;
-- repository behavior is still pending;
-- integration tests are not implemented;
+- Create, FindByID, FindByNormalizedName, and FindActiveByNormalizedName behavior implemented;
+- integration tests for create and direct lookup behavior added;
+- DB-backed integration execution proof pending because `DATABASE_URL` is not set in this shell;
 - query-plan proof is not collected;
 - remote connector validation pending for local changes.
 
 Remaining open gaps:
 
-- Supplier PostgreSQL repository Create and FindByID behavior.
 - Supplier PostgreSQL repository Update behavior.
-- Supplier PostgreSQL repository FindByNormalizedName and FindActiveByNormalizedName behavior.
 - Supplier PostgreSQL repository SetActive behavior.
 - Supplier PostgreSQL repository List and Lookup behavior.
-- Supplier repository integration tests.
+- Supplier DB-backed integration execution proof.
 - Supplier query-plan proof.
 - Supplier HTTP routes.
 - Supplier capability seed.
@@ -290,7 +292,7 @@ Remaining open gaps:
 - Extended filters.
 - Laravel Supplier MySQL/source parity.
 
-Next Valid Active Step: Supplier PostgreSQL repository Create and FindByID behavior.
+Next Valid Active Step: Supplier PostgreSQL repository Update behavior.
 
 ### Supplier PostgreSQL repository create and direct lookup checkpoint - 2026-06-14
 
