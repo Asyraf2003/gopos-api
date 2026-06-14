@@ -143,6 +143,35 @@ Protected POS CRUD implementation must wait for accepted domain contracts, POS P
 - ProductCatalog protected runtime/capability blueprint `docs/blueprints/0031_productcatalog_runtime_capability_slice.md` and API docs/error envelope blueprint `docs/blueprints/0032_api_docs_error_envelope_slice.md` are locally implemented with proof.
 - ProductCatalog runtime smoke proof blueprint `docs/blueprints/0033_productcatalog_runtime_smoke_proof_slice.md` is locally proven by `docs/evidence/2026-06-14_productcatalog_runtime_smoke_proof.md`.
 
+
+
+### Supplier implementation slice 1 closeout - 2026-06-14
+
+Business Phase 1 progress updated: Supplier implementation slice 1 domain/ports/usecase is locally implemented with proof and remote connector validation checked.
+
+Proof:
+
+```bash
+go test ./internal/modules/supplier/...
+bash scripts/audit_hexagonal.sh
+make verify
+```
+
+Remaining open gaps:
+
+- Supplier PostgreSQL persistence.
+- Supplier HTTP routes.
+- Supplier capability seed.
+- Faktur.
+- Inventory/stock movement.
+- Audit/outbox.
+- Localization.
+- Extended filters.
+
+Auth/System ADR 0012 output contract centralization remains deferred by owner decision.
+
+Next Valid Active Step: Supplier PostgreSQL persistence blueprint.
+
 ## Next Valid Active Step
 
 Supplier domain contract blueprint.

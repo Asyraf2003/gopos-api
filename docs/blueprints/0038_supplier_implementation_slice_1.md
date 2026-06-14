@@ -20,7 +20,7 @@ along with gopos-api. If not, see <https://www.gnu.org/licenses/>.
 
 ## Status
 
-Accepted locally for implementation.
+Closed with local proof.
 
 ## Active Scope
 
@@ -69,6 +69,40 @@ go test ./internal/modules/supplier/...
 bash scripts/audit_hexagonal.sh
 make verify
 ```
+
+## CLOSEOUT
+
+Supplier implementation slice 1 is closed with local proof.
+
+Remote connector validation was checked on branch visible to the connector and confirms the Supplier domain, ports, and usecase implementation files are present for this slice.
+
+Scope remains domain/ports/usecase only.
+
+Local proof provided by owner:
+
+```bash
+go test ./internal/modules/supplier/...
+bash scripts/audit_hexagonal.sh
+make verify
+```
+
+Visible owner result:
+
+- `go test ./internal/modules/supplier/...` passed for supplier domain/usecase, with ports having no test files.
+- `bash scripts/audit_hexagonal.sh` passed.
+- `make verify` passed aggregate audit, including `go test ./...`, vet audit, format audit, AI rules audit, license header audit, file size audit, hexagonal import audit, route capability audit, and gosec audit.
+
+Remaining gaps stay out of this slice:
+
+- Supplier PostgreSQL persistence.
+- Supplier HTTP routes.
+- Supplier capability seed.
+- Faktur.
+- Inventory/stock movement.
+- Audit/outbox.
+- Localization.
+- Extended filters.
+
 
 ## NEXT
 

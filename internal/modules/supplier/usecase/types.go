@@ -12,7 +12,7 @@
 // GNU Affero General Public License for more details.
 //
 // You should have received a copy of the GNU Affero General Public License
-// along with gopos-api. If not, see <https://www.gnu.org/licenses/>.
+// along with gopos-api. If not, see https://www.gnu.org/licenses/.
 
 package usecase
 
@@ -60,4 +60,60 @@ type SupplierLookupResult struct {
 	Name  string
 	Phone string
 	Email string
+}
+
+func mapSupplierResult(supplier domain.Supplier) SupplierResult {
+	return SupplierResult{
+		ID:             string(supplier.ID()),
+		Name:           supplier.Name(),
+		NormalizedName: string(supplier.NormalizedName()),
+		Phone:          supplier.Phone(),
+		Email:          supplier.Email(),
+		Address:        supplier.Address(),
+		Notes:          supplier.Notes(),
+		IsActive:       supplier.IsActive(),
+		Status:         string(supplier.Status()),
+		CreatedAt:      supplier.CreatedAt(),
+		UpdatedAt:      supplier.UpdatedAt(),
+	}
+}
+
+func mapSupplierResults(suppliers []domain.Supplier) []SupplierResult {
+	results := make([]SupplierResult, 0, len(suppliers))
+	for _, supplier := range suppliers {
+		results = append(results, mapSupplierResult(supplier))
+	}
+
+	return results
+}
+
+func mapSupplierLookupResults(suppliers []domain.Supplier) []SupplierLookupResult {
+	results := make([]SupplierLookupResult, 0, len(suppliers))
+	for _, supplier := range suppliers {
+		results = append(results, SupplierLookupResult{
+			ID:    string(supplier.ID()),
+			Name:  supplier.Name(),
+			Phone: supplier.Phone(),
+			Email: supplier.Email(),
+		})
+	}
+
+	return results
+}
+
+func ensureClock(clock Clock) Clock {
+	if clock != nil {
+		return clock
+	}
+
+	return time.Now
+}
+
+func mapContactInput(input SupplierContactInput) domain.SupplierContact {
+	return domain.SupplierContact{
+		Phone:   input.Phone,
+		Email:   input.Email,
+		Address: input.Address,
+		Notes:   input.Notes,
+	}
 }

@@ -48,11 +48,11 @@ func (uc CreateSupplier) Execute(ctx context.Context, cmd CreateSupplierCommand)
 	}
 
 	normalizedName := domain.NormalizeName(cmd.Name)
-	_, found, err := uc.repo.FindActiveByNormalizedName(ctx, normalizedName)
+	existing, found, err := uc.repo.FindByNormalizedName(ctx, normalizedName)
 	if err != nil {
 		return SupplierResult{}, err
 	}
-	if found {
+	if found && existing.IsActive() {
 		return SupplierResult{}, ErrDuplicateSupplierActiveName
 	}
 

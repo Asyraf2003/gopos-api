@@ -12,7 +12,7 @@
 // GNU Affero General Public License for more details.
 //
 // You should have received a copy of the GNU Affero General Public License
-// along with gopos-api. If not, see <https://www.gnu.org/licenses/>.
+// along with gopos-api. If not, see https://www.gnu.org/licenses/.
 
 package usecase
 
@@ -50,15 +50,15 @@ func (uc ActivateSupplier) Execute(ctx context.Context, cmd ActivateSupplierComm
 		return SupplierResult{}, ErrSupplierNotFound
 	}
 
-	existing, duplicateFound, err := uc.repo.FindActiveByNormalizedName(ctx, supplier.NormalizedName())
+	existing, duplicateFound, err := uc.repo.FindByNormalizedName(ctx, supplier.NormalizedName())
 	if err != nil {
 		return SupplierResult{}, err
 	}
-	if duplicateFound && existing.ID() != supplier.ID() {
+	if duplicateFound && existing.ID() != supplier.ID() && existing.IsActive() {
 		return SupplierResult{}, ErrDuplicateSupplierActiveName
 	}
 
-	supplier, found, err = uc.repo.SetActive(ctx, id, true)
+	activated, found, err := uc.repo.SetActive(ctx, id, true)
 	if err != nil {
 		return SupplierResult{}, err
 	}
@@ -66,5 +66,5 @@ func (uc ActivateSupplier) Execute(ctx context.Context, cmd ActivateSupplierComm
 		return SupplierResult{}, ErrSupplierNotFound
 	}
 
-	return mapSupplierResult(supplier), nil
+	return mapSupplierResult(activated), nil
 }
