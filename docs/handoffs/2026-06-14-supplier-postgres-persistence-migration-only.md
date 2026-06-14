@@ -30,9 +30,9 @@ Migration-only step is locally implemented and applied.
 
 Repository adapter skeletons are locally implemented with compile-time port assertion.
 
-Repository Create, FindByID, FindByNormalizedName, and FindActiveByNormalizedName behavior is locally implemented with compile and aggregate proof.
+Repository Create, FindByID, FindByNormalizedName, FindActiveByNormalizedName, and Update behavior is locally implemented with compile, targeted DB-backed integration, and aggregate proof.
 
-Update, SetActive, List, and Lookup remain explicit placeholder behavior.
+SetActive, List, and Lookup remain explicit placeholder behavior.
 
 ## Files Changed
 
@@ -47,6 +47,7 @@ internal/platform/postgres/supplier_repository_query.go
 internal/platform/postgres/supplier_repository_integration_helpers_test.go
 internal/platform/postgres/supplier_repository_create_integration_test.go
 internal/platform/postgres/supplier_repository_query_integration_test.go
+internal/platform/postgres/supplier_repository_update_integration_test.go
 docs/handoffs/2026-06-14-supplier-postgres-persistence-migration-only.md
 docs/handoffs/README.md
 docs/evidence/0003_laravel_to_go_transition_progress_ledger.md
@@ -92,8 +93,11 @@ docs/evidence/0003_laravel_to_go_transition_progress_ledger.md
 - FindByID returns `(supplier, true, nil)` when found and `(domain.Supplier{}, false, nil)` when missing.
 - FindByNormalizedName returns a matching supplier by `name_normalized`, preferring active rows to keep active duplicate guards safe when inactive duplicates exist.
 - FindActiveByNormalizedName filters by `name_normalized` and `is_active = true`.
-- Update, SetActive, List, and Lookup remain explicit placeholder behavior.
+- Update persists Supplier `name`, `name_normalized`, contact fields, `is_active`, and `updated_at` by primary key.
+- Update follows ProductCatalog and ServiceCatalog local convention for missing ids: no explicit not-found error is returned when zero rows are affected.
+- SetActive, List, and Lookup remain explicit placeholder behavior.
 - Supplier repository integration test files were added for Create and direct find behavior.
+- Supplier repository integration tests were added for Update behavior.
 
 The active normalized-name uniqueness rule uses a PostgreSQL partial unique index:
 
@@ -164,17 +168,29 @@ Visible result:
 Supplier PostgreSQL integration-tagged proof:
 
 ```bash
+set -a
+source .env
+set +a
 go test -tags integration ./internal/platform/postgres/... -run Supplier -count=1 -v
 ```
 
 Visible result:
 
 ```text
+--- PASS: TestSupplierRepository_CreateStoresFields
+--- PASS: TestSupplierRepository_CreateRejectsDuplicateActiveNormalizedName
+--- PASS: TestSupplierRepository_CreateAllowsInactiveNameReuse
+--- PASS: TestSupplierRepository_FindByIDMissing
+--- PASS: TestSupplierRepository_FindByNormalizedName
+--- PASS: TestSupplierRepository_FindActiveByNormalizedName
+--- PASS: TestSupplierRepository_FindActiveByNormalizedNameIgnoresInactive
+--- PASS: TestSupplierRepository_UpdateChangesFields
+--- PASS: TestSupplierRepository_UpdateStoresNormalizedNameFromDomain
+--- PASS: TestSupplierRepository_UpdateMissingSupplierUsesLocalConvention
+--- PASS: TestSupplierRepository_UpdateRejectsDuplicateActiveNormalizedName
 PASS
 ok   pos-go/internal/platform/postgres
 ```
-
-All Supplier integration tests skipped because `DATABASE_URL` is not set in this shell, so DB-backed behavior execution proof is still pending.
 
 Migration proof:
 
@@ -203,6 +219,9 @@ COMMIT
 ```bash
 go test ./internal/modules/supplier/...
 go test ./internal/platform/postgres/... -run Supplier
+set -a
+source .env
+set +a
 go test -tags integration ./internal/platform/postgres/... -run Supplier -count=1 -v
 bash scripts/audit_hexagonal.sh
 make verify
@@ -211,10 +230,8 @@ bash scripts/db_migrate.sh
 
 ## Open Gaps
 
-- Supplier PostgreSQL repository Update behavior is not implemented.
 - Supplier PostgreSQL repository SetActive behavior is not implemented.
 - Supplier PostgreSQL repository List and Lookup behavior is not implemented.
-- Supplier repository integration tests are added, but DB-backed execution proof is pending because `DATABASE_URL` was not set in this shell.
 - Supplier query-plan proof is not collected.
 - Supplier HTTP runtime is not implemented.
 - Supplier capability seed is not implemented.
@@ -229,9 +246,9 @@ bash scripts/db_migrate.sh
 
 ## Next Valid Active Step
 
-Supplier PostgreSQL repository Update behavior.
+Supplier PostgreSQL repository SetActive behavior.
 
-Keep the next step limited to Update behavior plus the focused repository proof needed for that behavior.
+Keep the next step limited to SetActive behavior plus the focused repository proof needed for that behavior.
 
 ## Scope Guard
 
@@ -257,7 +274,7 @@ Auth/System ADR 0012 output contract centralization remains deferred by owner de
 
 ## Estimated Scope Progress Percentage
 
-Supplier PostgreSQL persistence slice: 42%.
+Supplier PostgreSQL persistence slice: 55%.
 
 Reason:
 
@@ -266,17 +283,17 @@ Reason:
 - migration applied locally;
 - repository adapter skeleton files created;
 - compile-time port assertion exists;
-- Create, FindByID, FindByNormalizedName, and FindActiveByNormalizedName behavior implemented;
+- Create, FindByID, FindByNormalizedName, FindActiveByNormalizedName, and Update behavior implemented;
 - focused Supplier and PostgreSQL compile proof passed;
+- targeted Supplier DB-backed integration proof passed with `.env` loaded;
 - aggregate `make verify` proof passed;
-- integration tests for this behavior were added and compile under the integration tag;
-- DB-backed integration execution skipped because `DATABASE_URL` is not set in this shell;
-- Update, SetActive, List, and Lookup remain pending;
+- integration tests for Create, direct lookup, and Update behavior were added;
+- SetActive, List, and Lookup remain pending;
 - query-plan proof not collected.
 
 ## Estimated Context-Window Status
 
-Current context is sufficient to start Supplier PostgreSQL repository Update behavior in the next session.
+Current context is sufficient to start Supplier PostgreSQL repository SetActive behavior in the next session.
 
 Recommended next session target:
 
