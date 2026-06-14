@@ -12,22 +12,19 @@
 // GNU Affero General Public License for more details.
 //
 // You should have received a copy of the GNU Affero General Public License
-// along with gopos-api. If not, see https://www.gnu.org/licenses/.
+// along with gopos-api. If not, see <https://www.gnu.org/licenses/>.
 
 package usecase
 
 import (
 	"context"
-	"testing"
-	"time"
 
 	"pos-go/internal/modules/supplier/domain"
 	"pos-go/internal/modules/supplier/ports"
 )
 
 type fakeSupplierRepository struct {
-	byID map[domain.SupplierID]domain.Supplier
-
+	byID         map[domain.SupplierID]domain.Supplier
 	createCalls  int
 	updateCalls  int
 	listFilter   ports.ListSuppliersFilter
@@ -68,43 +65,15 @@ func (r *fakeSupplierRepository) FindByNormalizedName(
 	return domain.Supplier{}, false, nil
 }
 
-	filter ports.ListSuppliersFilter,
-) ([]domain.Supplier, error) {
-	r.listFilter = filter
-	results := make([]domain.Supplier, 0, len(r.byID))
-	for _, supplier := range r.byID {
-		results = append(results, supplier)
-	}
-
-	return results, nil
-}
-
-	filter ports.LookupSuppliersFilter,
-) ([]domain.Supplier, error) {
-	r.lookupFilter = filter
-	results := make([]domain.Supplier, 0, len(r.byID))
-	for _, supplier := range r.byID {
-		results = append(results, supplier)
-	}
-
-	return results, nil
-}
-
-	id domain.SupplierID,
-	active bool,
+func (r *fakeSupplierRepository) FindActiveByNormalizedName(
+	_ context.Context,
+	normalizedName domain.NormalizedName,
 ) (domain.Supplier, bool, error) {
-	supplier, found := r.byID[id]
-	if !found {
-		return domain.Supplier{}, false, nil
+	for _, supplier := range r.byID {
+		if supplier.NormalizedName() == normalizedName && supplier.IsActive() {
+			return supplier, true, nil
+		}
 	}
 
-	if active {
-		supplier.Activate(time.Date(2026, 6, 14, 12, 0, 0, 0, time.UTC))
-	} else {
-		supplier.Deactivate(time.Date(2026, 6, 14, 12, 0, 0, 0, time.UTC))
-	}
-	r.byID[id] = supplier
-
-	return supplier, true, nil
+	return domain.Supplier{}, false, nil
 }
-
