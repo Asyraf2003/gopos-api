@@ -336,6 +336,62 @@ Do not start architecture folder cleanup.
 
 Auth/System ADR 0012 output contract centralization remains deferred by owner decision and must not block Supplier/Faktur progress.
 
+## Hardening Checkpoint
+
+Supplier PostgreSQL persistence hardening passed after closeout.
+
+Hardening added:
+
+```text
+internal/platform/postgres/supplier_repository_query_hardening_integration_test.go
+```
+
+Covered cases:
+
+- List direct-call Page <= 0 fallback.
+- List direct-call PerPage <= 0 fallback.
+- List direct-call PerPage > max cap.
+- List unknown status fallback to active behavior.
+- List whitespace-only query behavior.
+- List case-insensitive display-name query.
+- List normalized multi-space query.
+- Lookup Limit <= 0 fallback.
+- Lookup Limit > max cap.
+- Lookup whitespace-only query behavior.
+- Lookup case-insensitive display-name query.
+- Lookup normalized multi-space query.
+- Lookup ActiveOnly=true excludes inactive.
+- Lookup ActiveOnly=false includes inactive.
+- Test function: `SupplierRepository_ListAndLookupDirectCallHardening`.
+
+Hardening proof:
+
+```bash
+set -a
+source .env
+set +a
+go test -tags integration ./internal/platform/postgres/... -run 'SupplierRepository_(ListAndLookup|ListAndLookupDirectCallHardening)' -count=1 -v
+go test -tags integration ./internal/platform/postgres/... -run Supplier -count=1 -v
+go test ./internal/modules/supplier/...
+go test ./internal/platform/postgres/... -run Supplier
+bash scripts/audit_hexagonal.sh
+make verify
+```
+
+Visible result:
+
+- Supplier List/Lookup hardening integration proof passed.
+- Supplier PostgreSQL integration proof passed.
+- Supplier module proof passed.
+- PostgreSQL compile lane passed.
+- Hexagonal import audit passed.
+- Aggregate make verify passed.
+
+This hardening checkpoint does not reopen Supplier PostgreSQL persistence.
+
+Supplier PostgreSQL persistence remains closed at 100%.
+
+
 ## Estimated Scope Progress Percentage
 
 Supplier PostgreSQL persistence slice: 100%.

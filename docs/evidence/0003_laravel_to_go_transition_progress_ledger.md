@@ -615,6 +615,61 @@ Remaining open gaps after this persistence closeout:
 Next Valid Active Step: Select the next accepted Supplier slice.
 
 
+### Supplier PostgreSQL persistence hardening checkpoint - 2026-06-14
+
+Supplier PostgreSQL persistence hardening passed after closeout.
+
+Hardening added:
+
+```text
+internal/platform/postgres/supplier_repository_query_hardening_integration_test.go
+```
+
+Covered cases:
+
+- List direct-call fallback and bounded behavior.
+- List unknown status fallback to active behavior.
+- List whitespace-only query behavior.
+- List case-insensitive display-name query.
+- List normalized multi-space query.
+- Lookup fallback and bounded behavior.
+- Lookup whitespace-only query behavior.
+- Lookup case-insensitive display-name query.
+- Lookup normalized multi-space query.
+- Lookup ActiveOnly=true excludes inactive.
+- Lookup ActiveOnly=false includes inactive.
+- Test function: `SupplierRepository_ListAndLookupDirectCallHardening`.
+
+Proof:
+
+```bash
+set -a
+source .env
+set +a
+go test -tags integration ./internal/platform/postgres/... -run 'SupplierRepository_(ListAndLookup|ListAndLookupDirectCallHardening)' -count=1 -v
+go test -tags integration ./internal/platform/postgres/... -run Supplier -count=1 -v
+go test ./internal/modules/supplier/...
+go test ./internal/platform/postgres/... -run Supplier
+bash scripts/audit_hexagonal.sh
+make verify
+```
+
+Visible result:
+
+- Supplier List/Lookup hardening integration proof passed.
+- Supplier PostgreSQL integration proof passed.
+- Supplier module proof passed.
+- PostgreSQL compile lane passed.
+- Hexagonal import audit passed.
+- Aggregate make verify passed.
+
+Decision:
+
+Supplier PostgreSQL persistence remains closed at 100%.
+
+Next valid active step remains selecting the next accepted Supplier slice.
+
+
 ## Next Valid Active Step
 
 Select the next accepted Supplier slice.
@@ -632,7 +687,7 @@ The same session must create or update a handoff when durable work was done.
 
 ## Context Window Status
 
-Current ledger update context status: updated after Supplier PostgreSQL persistence closeout. Auth/System output contract centralization is deferred by owner decision. The next valid step is selecting the next accepted Supplier slice.
+Current ledger update context status: updated after Supplier PostgreSQL persistence hardening checkpoint. Supplier PostgreSQL persistence remains closed at 100%. Auth/System output contract centralization is deferred by owner decision. The next valid step is selecting the next accepted Supplier slice.
 
 ## 2026-06-13 ProductCatalog runtime/capability closeout
 
