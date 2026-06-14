@@ -50,11 +50,11 @@ func (uc ActivateSupplier) Execute(ctx context.Context, cmd ActivateSupplierComm
 		return SupplierResult{}, ErrSupplierNotFound
 	}
 
-	existing, duplicateFound, err := uc.repo.FindByNormalizedName(ctx, supplier.NormalizedName())
+	existing, duplicateFound, err := uc.repo.FindActiveByNormalizedName(ctx, supplier.NormalizedName())
 	if err != nil {
 		return SupplierResult{}, err
 	}
-	if duplicateFound && existing.ID() != supplier.ID() && existing.IsActive() {
+	if duplicateFound && existing.ID() != supplier.ID() {
 		return SupplierResult{}, ErrDuplicateSupplierActiveName
 	}
 
