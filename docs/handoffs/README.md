@@ -43,7 +43,7 @@ docs/archive/handoffs-closed/README.md
 ## Current
 
 - 2026-06-14-supplier-postgres-persistence-migration-only.md: Supplier PostgreSQL persistence closeout; next active step is selecting the next accepted Supplier slice.
--  2026-06-14-supplier-implementation-slice-1-closeout.md: Supplier domain/ports/usecase closeout context and proof summary.
+- 2026-06-14-supplier-implementation-slice-1-closeout.md: Supplier domain/ports/usecase closeout context and proof summary.
 - `2026-06-14-productcatalog-runtime-smoke-proof-closeout.md`: ProductCatalog runtime smoke proof closeout context and next ADR `0012` output-contract slice pointer.
 - `2026-06-08-servicecatalog-runtime-capability-implementation.md`: latest ServiceCatalog runtime/capability closeout context and next planning-only scope.
 - `2026-06-08-servicecatalog-runtime-capability-blueprint-accepted.md`: accepted blueprint 0027 context retained until the next scoped session prompt is prepared.
