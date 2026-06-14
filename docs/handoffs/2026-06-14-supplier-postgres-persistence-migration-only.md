@@ -24,7 +24,7 @@ Supplier PostgreSQL persistence slice, migration-only through repository List/Lo
 
 ## Status
 
-In progress.
+Closed.
 
 Migration-only step is locally implemented and applied.
 
@@ -32,7 +32,7 @@ Repository adapter skeletons are locally implemented with compile-time port asse
 
 Repository Create, FindByID, FindByNormalizedName, FindActiveByNormalizedName, Update, SetActive, List, and Lookup behavior are locally implemented with compile, targeted DB-backed integration, query-plan, and aggregate proof.
 
-Supplier PostgreSQL persistence is ready for connector validation. It is not marked fully closed until connector validation is complete.
+Supplier PostgreSQL persistence is closed with local proof and Web AI read-only connector validation.
 
 ## Files Changed
 
@@ -263,6 +263,25 @@ Index Cond: (name_normalized = 'supplier plan 42')
 
 No timing or SLA claim is made from this proof.
 
+## Connector Validation
+
+Web AI read-only connector validation passed after final local proof.
+
+Remote-visible files checked:
+
+```text
+internal/platform/postgres/supplier_repository_query.go
+internal/platform/postgres/supplier_repository_query_integration_test.go
+docs/handoffs/2026-06-14-supplier-postgres-persistence-migration-only.md
+docs/evidence/0003_laravel_to_go_transition_progress_ledger.md
+docs/handoffs/README.md
+```
+
+Result:
+
+Supplier PostgreSQL persistence behavior, tests, query-plan proof, handoff, ledger, and handoff index are remote-visible.
+
+
 ## Tests Run
 
 ```bash
@@ -288,14 +307,12 @@ bash scripts/db_migrate.sh
 - Localization is not implemented.
 - Extended filters are not implemented.
 - Laravel Supplier MySQL/source parity remains unproven.
-- Remote connector validation for final local Supplier PostgreSQL changes remains pending.
-- Supplier PostgreSQL persistence final closeout remains pending until connector validation is complete.
 
 ## Next Valid Active Step
 
-Supplier PostgreSQL persistence connector validation and final closeout.
+Select the next accepted Supplier slice.
 
-Keep the next step limited to validating the final local Supplier PostgreSQL persistence changes and closing the persistence slice.
+Recommended planning target: Supplier HTTP runtime/capability blueprint. Do not implement it before blueprint acceptance.
 
 ## Scope Guard
 
@@ -321,7 +338,7 @@ Auth/System ADR 0012 output contract centralization remains deferred by owner de
 
 ## Estimated Scope Progress Percentage
 
-Supplier PostgreSQL persistence slice: 90%.
+Supplier PostgreSQL persistence slice: 100%.
 
 Reason:
 
@@ -336,20 +353,21 @@ Reason:
 - aggregate `make verify` proof passed;
 - integration tests for Create, direct lookup, Update, SetActive, List, and Lookup behavior were added;
 - query-plan proof collected locally;
-- connector validation and final closeout remain pending.
+- Web AI read-only connector validation passed.
+- final local proof passed after closeout docs sync.
 
 ## Estimated Context-Window Status
 
-Current context is sufficient to start Supplier PostgreSQL persistence connector validation and final closeout in the next session.
+Current context is sufficient to plan the next accepted Supplier slice.
 
 Recommended next session target:
 
 ```text
-Terminal Codex
+Web AI
 ```
 
 Recommended template source:
 
 ```text
-docs/templates/0121_codex_session_prompts.md
+docs/templates/0122_web_ai_session_prompts.md
 ```
