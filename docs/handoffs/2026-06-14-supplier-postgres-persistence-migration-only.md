@@ -20,7 +20,7 @@ along with gopos-api. If not, see <https://www.gnu.org/licenses/>.
 
 ## Active Scope
 
-Supplier PostgreSQL persistence slice, migration-only through repository SetActive checkpoint.
+Supplier PostgreSQL persistence slice, migration-only through repository List/Lookup and query-plan checkpoint.
 
 ## Status
 
@@ -30,9 +30,9 @@ Migration-only step is locally implemented and applied.
 
 Repository adapter skeletons are locally implemented with compile-time port assertion.
 
-Repository Create, FindByID, FindByNormalizedName, FindActiveByNormalizedName, Update, and SetActive behavior are locally implemented with compile, targeted DB-backed integration, and aggregate proof.
+Repository Create, FindByID, FindByNormalizedName, FindActiveByNormalizedName, Update, SetActive, List, and Lookup behavior are locally implemented with compile, targeted DB-backed integration, query-plan, and aggregate proof.
 
-List and Lookup remain explicit placeholder behavior.
+Supplier PostgreSQL persistence is ready for connector validation. It is not marked fully closed until connector validation is complete.
 
 ## Files Changed
 
@@ -101,10 +101,15 @@ docs/evidence/0003_laravel_to_go_transition_progress_ledger.md
 - SetActive returns `(domain.Supplier{}, false, nil)` for missing Supplier ids.
 - SetActive updates `updated_at` when the active state changes.
 - Activating an inactive Supplier is rejected by the PostgreSQL partial unique index when another active Supplier already owns the same normalized name.
-- List and Lookup remain explicit placeholder behavior.
+- List filters by active, inactive, and all statuses.
+- List supports bounded pagination, query search, and deterministic ordering by `name_normalized, id`.
+- Lookup defaults are owned by usecase, while the adapter keeps direct calls bounded.
+- Lookup supports active-only filtering, inactive inclusion when `ActiveOnly` is false, query search, limits, and deterministic ordering by `name_normalized, id`.
+- Supplier query-plan proof was collected locally with rollback-only synthetic Supplier rows and `EXPLAIN (COSTS OFF)`.
 - Supplier repository integration test files were added for Create and direct find behavior.
 - Supplier repository integration tests were added for Update behavior.
 - Supplier repository integration tests were added for SetActive behavior.
+- Supplier repository integration tests were added for List and Lookup behavior.
 
 The active normalized-name uniqueness rule uses a PostgreSQL partial unique index:
 
@@ -191,10 +196,8 @@ Visible result:
 --- PASS: TestSupplierRepository_SetActiveActivatesSupplier
 --- PASS: TestSupplierRepository_SetActiveMissing
 --- PASS: TestSupplierRepository_SetActiveRejectsDuplicateActivation
---- PASS: TestSupplierRepository_FindByIDMissing
---- PASS: TestSupplierRepository_FindByNormalizedName
---- PASS: TestSupplierRepository_FindActiveByNormalizedName
---- PASS: TestSupplierRepository_FindActiveByNormalizedNameIgnoresInactive
+--- PASS: TestSupplierRepository_FindQueries
+--- PASS: TestSupplierRepository_ListAndLookup
 --- PASS: TestSupplierRepository_UpdateChangesFields
 --- PASS: TestSupplierRepository_UpdateStoresNormalizedNameFromDomain
 --- PASS: TestSupplierRepository_UpdateMissingSupplierUsesLocalConvention
@@ -225,6 +228,41 @@ COMMIT
 [PASS] db migrate completed
 ```
 
+## Query-Plan Proof
+
+Command:
+
+```bash
+set -a
+source .env
+set +a
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -q
+```
+
+The local query-plan proof used `BEGIN`, inserted 300 synthetic Supplier rows, ran `ANALYZE suppliers`, collected `EXPLAIN (COSTS OFF)`, and ended with `ROLLBACK`.
+
+Summarized local result:
+
+```text
+supplier primary-key show/find-by-id
+Index Scan using suppliers_pkey on suppliers
+
+supplier active list first page
+Index Scan using suppliers_active_name_idx on suppliers
+Index Cond: (is_active = true)
+
+supplier bounded lookup search
+Index Scan using suppliers_active_name_idx on suppliers
+Index Cond: (is_active = true)
+Filter: name_normalized LIKE / name ILIKE bounded-search predicate
+
+supplier active-name duplicate guard
+Index Scan using suppliers_active_name_normalized_unique on suppliers
+Index Cond: (name_normalized = 'supplier plan 42')
+```
+
+No timing or SLA claim is made from this proof.
+
 ## Tests Run
 
 ```bash
@@ -241,8 +279,6 @@ bash scripts/db_migrate.sh
 
 ## Open Gaps
 
-- Supplier PostgreSQL repository List and Lookup behavior is not implemented.
-- Supplier query-plan proof is not collected.
 - Supplier HTTP runtime is not implemented.
 - Supplier capability seed is not implemented.
 - Supplier route capability manifest rows are not implemented.
@@ -252,13 +288,14 @@ bash scripts/db_migrate.sh
 - Localization is not implemented.
 - Extended filters are not implemented.
 - Laravel Supplier MySQL/source parity remains unproven.
-- Remote connector validation for final local Supplier PostgreSQL changes remains pending unless the files become visible through connector.
+- Remote connector validation for final local Supplier PostgreSQL changes remains pending.
+- Supplier PostgreSQL persistence final closeout remains pending until connector validation is complete.
 
 ## Next Valid Active Step
 
-Supplier PostgreSQL repository List and Lookup behavior.
+Supplier PostgreSQL persistence connector validation and final closeout.
 
-Keep the next step limited to List and Lookup behavior plus the focused repository proof needed for that behavior.
+Keep the next step limited to validating the final local Supplier PostgreSQL persistence changes and closing the persistence slice.
 
 ## Scope Guard
 
@@ -284,7 +321,7 @@ Auth/System ADR 0012 output contract centralization remains deferred by owner de
 
 ## Estimated Scope Progress Percentage
 
-Supplier PostgreSQL persistence slice: 65%.
+Supplier PostgreSQL persistence slice: 90%.
 
 Reason:
 
@@ -293,17 +330,17 @@ Reason:
 - migration applied locally;
 - repository adapter skeleton files created;
 - compile-time port assertion exists;
-- Create, FindByID, FindByNormalizedName, FindActiveByNormalizedName, Update, and SetActive behavior implemented;
+- Create, FindByID, FindByNormalizedName, FindActiveByNormalizedName, Update, SetActive, List, and Lookup behavior implemented;
 - focused Supplier and PostgreSQL compile proof passed;
 - targeted Supplier DB-backed integration proof passed with `.env` loaded;
 - aggregate `make verify` proof passed;
-- integration tests for Create, direct lookup, Update, and SetActive behavior were added;
-- List and Lookup remain pending;
-- query-plan proof not collected.
+- integration tests for Create, direct lookup, Update, SetActive, List, and Lookup behavior were added;
+- query-plan proof collected locally;
+- connector validation and final closeout remain pending.
 
 ## Estimated Context-Window Status
 
-Current context is sufficient to start Supplier PostgreSQL repository List and Lookup behavior in the next session.
+Current context is sufficient to start Supplier PostgreSQL persistence connector validation and final closeout in the next session.
 
 Recommended next session target:
 
