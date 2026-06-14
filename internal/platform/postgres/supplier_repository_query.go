@@ -18,6 +18,7 @@ package postgres
 
 import (
 	"context"
+	"errors"
 
 	"pos-go/internal/modules/supplier/domain"
 	"pos-go/internal/modules/supplier/ports"
@@ -54,21 +55,37 @@ func (r *SupplierRepository) FindByID(
 	ctx context.Context,
 	id domain.SupplierID,
 ) (domain.Supplier, bool, error) {
-	return domain.Supplier{}, false, errSupplierRepositoryNotImplemented
+	row := r.queryRow(ctx, supplierSelectSQL()+`
+		WHERE id = $1
+	`, string(id))
+
+	return scanOptionalSupplier(row)
 }
 
 func (r *SupplierRepository) FindByNormalizedName(
 	ctx context.Context,
 	normalizedName domain.NormalizedName,
 ) (domain.Supplier, bool, error) {
-	return domain.Supplier{}, false, errSupplierRepositoryNotImplemented
+	row := r.queryRow(ctx, supplierSelectSQL()+`
+		WHERE name_normalized = $1
+		ORDER BY is_active DESC, updated_at DESC, id
+		LIMIT 1
+	`, string(normalizedName))
+
+	return scanOptionalSupplier(row)
 }
 
 func (r *SupplierRepository) FindActiveByNormalizedName(
 	ctx context.Context,
 	normalizedName domain.NormalizedName,
 ) (domain.Supplier, bool, error) {
-	return domain.Supplier{}, false, errSupplierRepositoryNotImplemented
+	row := r.queryRow(ctx, supplierSelectSQL()+`
+		WHERE name_normalized = $1
+		AND is_active = true
+		LIMIT 1
+	`, string(normalizedName))
+
+	return scanOptionalSupplier(row)
 }
 
 func (r *SupplierRepository) List(
@@ -83,4 +100,16 @@ func (r *SupplierRepository) Lookup(
 	filter ports.LookupSuppliersFilter,
 ) ([]domain.Supplier, error) {
 	return nil, errSupplierRepositoryNotImplemented
+}
+
+func scanOptionalSupplier(row supplierScanner) (domain.Supplier, bool, error) {
+	supplier, err := scanSupplier(row)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return domain.Supplier{}, false, nil
+	}
+	if err != nil {
+		return domain.Supplier{}, false, err
+	}
+
+	return supplier, true, nil
 }

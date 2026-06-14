@@ -23,7 +23,24 @@ import (
 )
 
 func (r *SupplierRepository) Create(ctx context.Context, supplier domain.Supplier) error {
-	return errSupplierRepositoryNotImplemented
+	sql := `
+		INSERT INTO suppliers (
+			id,
+			name,
+			name_normalized,
+			phone,
+			email,
+			address,
+			notes,
+			is_active,
+			created_at,
+			updated_at
+		)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+	`
+
+	_, err := r.exec(ctx, sql, supplierArgs(supplier)...)
+	return err
 }
 
 func (r *SupplierRepository) Update(ctx context.Context, supplier domain.Supplier) error {
