@@ -93,3 +93,20 @@ func mustReadSupplierNormalizedName(
 
 	return normalizedName
 }
+
+func assertSupplierFields(t *testing.T, got domain.Supplier, want domain.Supplier) {
+	t.Helper()
+
+	if got.ID() != want.ID() || got.Name() != want.Name() {
+		t.Fatalf("supplier identity = (%q, %q), want (%q, %q)", got.ID(), got.Name(), want.ID(), want.Name())
+	}
+	if got.NormalizedName() != want.NormalizedName() || got.IsActive() != want.IsActive() {
+		t.Fatalf("supplier state = (%q, %v), want (%q, %v)", got.NormalizedName(), got.IsActive(), want.NormalizedName(), want.IsActive())
+	}
+	if got.Phone() != want.Phone() || got.Email() != want.Email() || got.Address() != want.Address() || got.Notes() != want.Notes() {
+		t.Fatalf("supplier contact mismatch: got (%q, %q, %q, %q)", got.Phone(), got.Email(), got.Address(), got.Notes())
+	}
+	if !got.CreatedAt().Equal(want.CreatedAt()) || !got.UpdatedAt().Equal(want.UpdatedAt()) {
+		t.Fatalf("supplier timestamps mismatch: got (%s, %s)", got.CreatedAt(), got.UpdatedAt())
+	}
+}
