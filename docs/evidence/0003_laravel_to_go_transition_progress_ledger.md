@@ -292,14 +292,80 @@ Remaining open gaps:
 
 Next Valid Active Step: Supplier PostgreSQL repository Create and FindByID behavior.
 
+### Supplier PostgreSQL repository create and direct lookup checkpoint - 2026-06-14
+
+Supplier PostgreSQL repository Create, FindByID, FindByNormalizedName, and FindActiveByNormalizedName behavior is locally implemented with compile and aggregate proof.
+
+Files changed:
+
+```text
+internal/platform/postgres/supplier_repository_write.go
+internal/platform/postgres/supplier_repository_query.go
+internal/platform/postgres/supplier_repository_integration_helpers_test.go
+internal/platform/postgres/supplier_repository_create_integration_test.go
+internal/platform/postgres/supplier_repository_query_integration_test.go
+docs/handoffs/2026-06-14-supplier-postgres-persistence-migration-only.md
+docs/evidence/0003_laravel_to_go_transition_progress_ledger.md
+```
+
+Local proof:
+
+```bash
+go test ./internal/modules/supplier/...
+go test ./internal/platform/postgres/... -run Supplier
+go test -tags integration ./internal/platform/postgres/... -run Supplier -count=1 -v
+bash scripts/audit_hexagonal.sh
+make verify
+```
+
+Proof status:
+
+- Supplier module proof passed.
+- PostgreSQL package compile proof passed.
+- Integration-tagged Supplier repository tests compile and the command passed, but every Supplier DB test skipped because `DATABASE_URL` is not set in this shell.
+- Hexagonal import audit passed.
+- Aggregate `make verify` passed.
+
+Current Supplier PostgreSQL persistence status:
+
+- blueprint accepted;
+- migration-only step complete;
+- repository adapter skeletons implemented;
+- Create behavior implemented;
+- FindByID behavior implemented;
+- FindByNormalizedName behavior implemented;
+- FindActiveByNormalizedName behavior implemented;
+- integration tests for create and direct lookup behavior added;
+- DB-backed integration execution proof pending because `DATABASE_URL` is not set in this shell;
+- query-plan proof is not collected;
+- remote connector validation pending for local changes.
+
+Remaining open gaps:
+
+- Supplier PostgreSQL repository Update behavior.
+- Supplier PostgreSQL repository SetActive behavior.
+- Supplier PostgreSQL repository List and Lookup behavior.
+- Supplier DB-backed integration execution proof.
+- Supplier query-plan proof.
+- Supplier HTTP routes.
+- Supplier capability seed.
+- Faktur.
+- Inventory/stock movement.
+- Audit/outbox.
+- Localization.
+- Extended filters.
+- Laravel Supplier MySQL/source parity.
+
+Next Valid Active Step: Supplier PostgreSQL repository Update behavior.
+
 
 ## Next Valid Active Step
 
-Supplier PostgreSQL repository Create and FindByID behavior.
+Supplier PostgreSQL repository Update behavior.
 
 - Start from accepted blueprint `docs/blueprints/0039_supplier_postgres_persistence_slice.md`.
-- Keep the next active step limited to Create and FindByID behavior plus focused repository proof.
-- Do not start Update, SetActive, List, Lookup, HTTP routes, capability seed, Faktur, inventory/stock movement, audit/outbox, localization, extended filters, or architecture folder cleanup.
+- Keep the next active step limited to Update behavior plus focused repository proof.
+- Do not start SetActive, List, Lookup, HTTP routes, capability seed, Faktur, inventory/stock movement, audit/outbox, localization, extended filters, or architecture folder cleanup.
 - Do not re-open ProductCatalog persistence, runtime/capability, API docs, error envelope, shared success envelope foundation, Capability envelope, Product API readiness, or runtime smoke proof work unless a bug is found.
 
 ## Handoff Requirement
@@ -310,7 +376,7 @@ The same session must create or update a handoff when durable work was done.
 
 ## Context Window Status
 
-Current ledger update context status: updated after Supplier PostgreSQL repository adapter skeleton checkpoint. Auth/System output contract centralization is deferred by owner decision. The next valid step is Supplier PostgreSQL repository Create and FindByID behavior.
+Current ledger update context status: updated after Supplier PostgreSQL repository create and direct lookup checkpoint. Auth/System output contract centralization is deferred by owner decision. The next valid step is Supplier PostgreSQL repository Update behavior.
 
 ## 2026-06-13 ProductCatalog runtime/capability closeout
 

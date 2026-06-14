@@ -30,7 +30,9 @@ Migration-only step is locally implemented and applied.
 
 Repository adapter skeletons are locally implemented with compile-time port assertion.
 
-Repository behavior implementation has not started; skeleton methods return explicit placeholder errors.
+Repository Create, FindByID, FindByNormalizedName, and FindActiveByNormalizedName behavior is locally implemented with compile and aggregate proof.
+
+Update, SetActive, List, and Lookup remain explicit placeholder behavior.
 
 ## Files Changed
 
@@ -42,6 +44,9 @@ internal/platform/postgres/supplier_repository.go
 internal/platform/postgres/supplier_repository_row.go
 internal/platform/postgres/supplier_repository_write.go
 internal/platform/postgres/supplier_repository_query.go
+internal/platform/postgres/supplier_repository_integration_helpers_test.go
+internal/platform/postgres/supplier_repository_create_integration_test.go
+internal/platform/postgres/supplier_repository_query_integration_test.go
 docs/handoffs/2026-06-14-supplier-postgres-persistence-migration-only.md
 docs/handoffs/README.md
 docs/evidence/0003_laravel_to_go_transition_progress_ledger.md
@@ -83,7 +88,12 @@ docs/evidence/0003_laravel_to_go_transition_progress_ledger.md
 - Compile-time assertion verifies the adapter satisfies `ports.SupplierRepository`.
 - Query helpers follow the existing transaction-aware `TxFromContext` pattern.
 - Row mapping structure targets the `suppliers` table columns from migration `0014`.
-- Create, Update, SetActive, FindByID, FindByNormalizedName, FindActiveByNormalizedName, List, and Lookup are present as explicit placeholder behavior.
+- Create inserts all Supplier fields into `suppliers`.
+- FindByID returns `(supplier, true, nil)` when found and `(domain.Supplier{}, false, nil)` when missing.
+- FindByNormalizedName returns a matching supplier by `name_normalized`, preferring active rows to keep active duplicate guards safe when inactive duplicates exist.
+- FindActiveByNormalizedName filters by `name_normalized` and `is_active = true`.
+- Update, SetActive, List, and Lookup remain explicit placeholder behavior.
+- Supplier repository integration test files were added for Create and direct find behavior.
 
 The active normalized-name uniqueness rule uses a PostgreSQL partial unique index:
 
@@ -151,6 +161,21 @@ Visible result:
 ?    pos-go/internal/platform/postgres [no test files]
 ```
 
+Supplier PostgreSQL integration-tagged proof:
+
+```bash
+go test -tags integration ./internal/platform/postgres/... -run Supplier -count=1 -v
+```
+
+Visible result:
+
+```text
+PASS
+ok   pos-go/internal/platform/postgres
+```
+
+All Supplier integration tests skipped because `DATABASE_URL` is not set in this shell, so DB-backed behavior execution proof is still pending.
+
 Migration proof:
 
 ```bash
@@ -178,6 +203,7 @@ COMMIT
 ```bash
 go test ./internal/modules/supplier/...
 go test ./internal/platform/postgres/... -run Supplier
+go test -tags integration ./internal/platform/postgres/... -run Supplier -count=1 -v
 bash scripts/audit_hexagonal.sh
 make verify
 bash scripts/db_migrate.sh
@@ -185,8 +211,10 @@ bash scripts/db_migrate.sh
 
 ## Open Gaps
 
-- Supplier PostgreSQL repository behavior is not implemented beyond compile-safe skeletons.
-- Supplier repository integration tests are not implemented.
+- Supplier PostgreSQL repository Update behavior is not implemented.
+- Supplier PostgreSQL repository SetActive behavior is not implemented.
+- Supplier PostgreSQL repository List and Lookup behavior is not implemented.
+- Supplier repository integration tests are added, but DB-backed execution proof is pending because `DATABASE_URL` was not set in this shell.
 - Supplier query-plan proof is not collected.
 - Supplier HTTP runtime is not implemented.
 - Supplier capability seed is not implemented.
@@ -201,9 +229,9 @@ bash scripts/db_migrate.sh
 
 ## Next Valid Active Step
 
-Supplier PostgreSQL repository Create and FindByID behavior.
+Supplier PostgreSQL repository Update behavior.
 
-Keep the next step limited to Create and FindByID behavior plus the focused repository proof needed for that behavior.
+Keep the next step limited to Update behavior plus the focused repository proof needed for that behavior.
 
 ## Scope Guard
 
@@ -229,7 +257,7 @@ Auth/System ADR 0012 output contract centralization remains deferred by owner de
 
 ## Estimated Scope Progress Percentage
 
-Supplier PostgreSQL persistence slice: 30%.
+Supplier PostgreSQL persistence slice: 42%.
 
 Reason:
 
@@ -238,14 +266,17 @@ Reason:
 - migration applied locally;
 - repository adapter skeleton files created;
 - compile-time port assertion exists;
+- Create, FindByID, FindByNormalizedName, and FindActiveByNormalizedName behavior implemented;
 - focused Supplier and PostgreSQL compile proof passed;
-- integration tests not started;
-- repository behavior still pending;
+- aggregate `make verify` proof passed;
+- integration tests for this behavior were added and compile under the integration tag;
+- DB-backed integration execution skipped because `DATABASE_URL` is not set in this shell;
+- Update, SetActive, List, and Lookup remain pending;
 - query-plan proof not collected.
 
 ## Estimated Context-Window Status
 
-Current context is sufficient to start Supplier PostgreSQL repository Create and FindByID behavior in the next session.
+Current context is sufficient to start Supplier PostgreSQL repository Update behavior in the next session.
 
 Recommended next session target:
 
