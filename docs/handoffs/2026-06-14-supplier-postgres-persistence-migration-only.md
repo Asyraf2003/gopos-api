@@ -20,7 +20,7 @@ along with gopos-api. If not, see <https://www.gnu.org/licenses/>.
 
 ## Active Scope
 
-Supplier PostgreSQL persistence slice, migration-only through repository Update checkpoint.
+Supplier PostgreSQL persistence slice, migration-only through repository SetActive checkpoint.
 
 ## Status
 
@@ -30,9 +30,9 @@ Migration-only step is locally implemented and applied.
 
 Repository adapter skeletons are locally implemented with compile-time port assertion.
 
-Repository Create, FindByID, FindByNormalizedName, FindActiveByNormalizedName, and Update behavior are locally implemented with compile, targeted DB-backed integration, and aggregate proof.
+Repository Create, FindByID, FindByNormalizedName, FindActiveByNormalizedName, Update, and SetActive behavior are locally implemented with compile, targeted DB-backed integration, and aggregate proof.
 
-SetActive, List, and Lookup remain explicit placeholder behavior.
+List and Lookup remain explicit placeholder behavior.
 
 ## Files Changed
 
@@ -48,6 +48,7 @@ internal/platform/postgres/supplier_repository_integration_helpers_test.go
 internal/platform/postgres/supplier_repository_create_integration_test.go
 internal/platform/postgres/supplier_repository_query_integration_test.go
 internal/platform/postgres/supplier_repository_update_integration_test.go
+internal/platform/postgres/supplier_repository_lifecycle_integration_test.go
 docs/handoffs/2026-06-14-supplier-postgres-persistence-migration-only.md
 docs/handoffs/README.md
 docs/evidence/0003_laravel_to_go_transition_progress_ledger.md
@@ -95,9 +96,15 @@ docs/evidence/0003_laravel_to_go_transition_progress_ledger.md
 - FindActiveByNormalizedName filters by `name_normalized` and `is_active = true`.
 - Update persists Supplier `name`, `name_normalized`, contact fields, `is_active`, and `updated_at` by primary key.
 - Update follows ProductCatalog and ServiceCatalog local convention for missing ids: no explicit not-found error is returned when zero rows are affected.
-- SetActive, List, and Lookup remain explicit placeholder behavior.
+- SetActive deactivates an existing Supplier and returns the stored inactive Supplier row.
+- SetActive activates an existing Supplier and returns the stored active Supplier row.
+- SetActive returns `(domain.Supplier{}, false, nil)` for missing Supplier ids.
+- SetActive updates `updated_at` when the active state changes.
+- Activating an inactive Supplier is rejected by the PostgreSQL partial unique index when another active Supplier already owns the same normalized name.
+- List and Lookup remain explicit placeholder behavior.
 - Supplier repository integration test files were added for Create and direct find behavior.
 - Supplier repository integration tests were added for Update behavior.
+- Supplier repository integration tests were added for SetActive behavior.
 
 The active normalized-name uniqueness rule uses a PostgreSQL partial unique index:
 
@@ -180,6 +187,10 @@ Visible result:
 --- PASS: TestSupplierRepository_CreateStoresFields
 --- PASS: TestSupplierRepository_CreateRejectsDuplicateActiveNormalizedName
 --- PASS: TestSupplierRepository_CreateAllowsInactiveNameReuse
+--- PASS: TestSupplierRepository_SetActiveDeactivatesSupplier
+--- PASS: TestSupplierRepository_SetActiveActivatesSupplier
+--- PASS: TestSupplierRepository_SetActiveMissing
+--- PASS: TestSupplierRepository_SetActiveRejectsDuplicateActivation
 --- PASS: TestSupplierRepository_FindByIDMissing
 --- PASS: TestSupplierRepository_FindByNormalizedName
 --- PASS: TestSupplierRepository_FindActiveByNormalizedName
@@ -230,7 +241,6 @@ bash scripts/db_migrate.sh
 
 ## Open Gaps
 
-- Supplier PostgreSQL repository SetActive behavior is not implemented.
 - Supplier PostgreSQL repository List and Lookup behavior is not implemented.
 - Supplier query-plan proof is not collected.
 - Supplier HTTP runtime is not implemented.
@@ -246,9 +256,9 @@ bash scripts/db_migrate.sh
 
 ## Next Valid Active Step
 
-Supplier PostgreSQL repository SetActive behavior.
+Supplier PostgreSQL repository List and Lookup behavior.
 
-Keep the next step limited to SetActive behavior plus the focused repository proof needed for that behavior.
+Keep the next step limited to List and Lookup behavior plus the focused repository proof needed for that behavior.
 
 ## Scope Guard
 
@@ -274,7 +284,7 @@ Auth/System ADR 0012 output contract centralization remains deferred by owner de
 
 ## Estimated Scope Progress Percentage
 
-Supplier PostgreSQL persistence slice: 55%.
+Supplier PostgreSQL persistence slice: 65%.
 
 Reason:
 
@@ -283,17 +293,17 @@ Reason:
 - migration applied locally;
 - repository adapter skeleton files created;
 - compile-time port assertion exists;
-- Create, FindByID, FindByNormalizedName, FindActiveByNormalizedName, and Update behavior implemented;
+- Create, FindByID, FindByNormalizedName, FindActiveByNormalizedName, Update, and SetActive behavior implemented;
 - focused Supplier and PostgreSQL compile proof passed;
 - targeted Supplier DB-backed integration proof passed with `.env` loaded;
 - aggregate `make verify` proof passed;
-- integration tests for Create, direct lookup, and Update behavior were added;
-- SetActive, List, and Lookup remain pending;
+- integration tests for Create, direct lookup, Update, and SetActive behavior were added;
+- List and Lookup remain pending;
 - query-plan proof not collected.
 
 ## Estimated Context-Window Status
 
-Current context is sufficient to start Supplier PostgreSQL repository SetActive behavior in the next session.
+Current context is sufficient to start Supplier PostgreSQL repository List and Lookup behavior in the next session.
 
 Recommended next session target:
 
