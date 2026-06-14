@@ -18,8 +18,11 @@ package postgres
 
 import (
 	"context"
+	"errors"
 
 	"pos-go/internal/modules/supplier/domain"
+
+	"github.com/jackc/pgx/v5"
 )
 
 func (r *SupplierRepository) Create(ctx context.Context, supplier domain.Supplier) error {
@@ -67,7 +70,30 @@ func (r *SupplierRepository) SetActive(
 	id domain.SupplierID,
 	active bool,
 ) (domain.Supplier, bool, error) {
-	return domain.Supplier{}, false, errSupplierRepositoryNotImplemented
+	row := r.queryRow(ctx, supplierSelectSQL()+`
+		WHERE id = $1
+		FOR UPDATE
+	`, string(id))
+
+	supplier, err := scanSupplier(row)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return domain.Supplier{}, false, nil
+	}
+	if err != nil {
+		return domain.Supplier{}, false, err
+	}
+
+	if active {
+		supplier.Activate(nowUTC())
+	} else {
+		supplier.Deactivate(nowUTC())
+	}
+
+	if err := r.Update(ctx, supplier); err != nil {
+		return domain.Supplier{}, false, err
+	}
+
+	return supplier, true, nil
 }
 
 func supplierArgs(supplier domain.Supplier) []any {
