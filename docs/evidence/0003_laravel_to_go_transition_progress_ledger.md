@@ -47,6 +47,9 @@ docs/blueprints/0030_productcatalog_postgres_persistence_slice.md
 docs/blueprints/0031_productcatalog_runtime_capability_slice.md
 docs/blueprints/0032_api_docs_error_envelope_slice.md
 docs/blueprints/0033_productcatalog_runtime_smoke_proof_slice.md
+docs/blueprints/0037_supplier_domain_contract.md
+docs/blueprints/0038_supplier_implementation_slice_1.md
+docs/blueprints/0039_supplier_postgres_persistence_slice.md
 ```
 
 Related evidence:
@@ -68,6 +71,8 @@ docs/handoffs/2026-06-06-auth-runtime-local-dev.md
 docs/handoffs/2026-06-08-servicecatalog-runtime-capability-blueprint-accepted.md
 docs/handoffs/2026-06-08-servicecatalog-runtime-capability-implementation.md
 docs/handoffs/2026-06-14-productcatalog-runtime-smoke-proof-closeout.md
+docs/handoffs/2026-06-14-supplier-implementation-slice-1-closeout.md
+docs/handoffs/2026-06-14-supplier-postgres-persistence-migration-only.md
 docs/archive/handoffs-closed/README.md
 ```
 
@@ -172,6 +177,68 @@ Auth/System ADR 0012 output contract centralization remains deferred by owner de
 
 Next Valid Active Step: Supplier PostgreSQL persistence blueprint.
 
+### Supplier PostgreSQL persistence migration-only checkpoint - 2026-06-14
+
+Supplier PostgreSQL persistence blueprint 0039_supplier_postgres_persistence_slice.md is accepted locally.
+
+Migration-only step is locally implemented and applied.
+
+Files created:
+
+```text
+migrations/0014_create_suppliers_table.up.sql
+migrations/0014_create_suppliers_table.down.sql
+```
+
+Local proof:
+
+```bash
+go test ./internal/modules/supplier/...
+bash scripts/audit_hexagonal.sh
+make verify
+bash scripts/db_migrate.sh
+```
+
+Visible migration proof:
+
+```text
+[APPLY] 0014_create_suppliers_table.up.sql
+CREATE TABLE
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+CREATE INDEX
+[PASS] db migrate completed
+```
+
+Current Supplier PostgreSQL persistence status:
+
+- blueprint accepted;
+- migration-only step complete;
+- repository adapter not started;
+- integration tests not started;
+- query-plan proof not collected;
+- remote connector validation pending for final local changes.
+
+Remaining open gaps:
+
+- Supplier PostgreSQL repository adapter.
+- Supplier repository integration tests.
+- Supplier query-plan proof.
+- Supplier HTTP routes.
+- Supplier capability seed.
+- Faktur.
+- Inventory/stock movement.
+- Audit/outbox.
+- Localization.
+- Extended filters.
+- Laravel Supplier MySQL/source parity.
+
+Auth/System ADR 0012 output contract centralization remains deferred by owner decision.
+
+Next Valid Active Step: Supplier PostgreSQL repository adapter skeletons.
+
+
 ## Next Valid Active Step
 
 Supplier domain contract blueprint.
@@ -192,7 +259,7 @@ The same session must create or update a handoff when durable work was done.
 
 ## Context Window Status
 
-Current ledger update context status: updated after Product API readiness closeout. Auth/System output contract centralization is deferred by owner decision. The next valid slice is Supplier domain contract blueprint.
+Current ledger update context status: updated after Supplier PostgreSQL migration-only checkpoint. Auth/System output contract centralization is deferred by owner decision. The next valid slice is Supplier domain contract blueprint.
 
 ## 2026-06-13 ProductCatalog runtime/capability closeout
 
